@@ -1,0 +1,253 @@
+[
+  {
+    "id": 0,
+    "source_id": 0,
+    "name": "barbarian",
+    "description": "A fierce warrior of primitive background who can enter a battle rage.",
+    "hit_die": "1d12",
+    "primary_ability": "strength",
+    "saving_throw_proficiencies": "strength & constitution",
+    "armor_proficiencies": [
+      "light",
+      "medium"
+    ],
+    "shield_proficiencies": [
+      "shield"
+    ],
+    "weapon_proficiencies": [
+      "simple",
+      "martial"
+    ]
+  },
+  {
+    "id": 1,
+    "source_id": 0,
+    "name": "bard",
+    "description": "An inspiring magician whose power echoes the music of creation.",
+    "hit_die": "1d8",
+    "primary_ability": "charisma",
+    "saving_throw_proficiencies": "dexterity & charisma",
+    "armor_proficiencies": [
+      "light"
+    ],
+    "shield_proficiencies": [],
+    "weapon_proficiencies": [
+      "simple",
+      "hand_crossbow",
+      "longsword",
+      "rapier",
+      "shortsword"
+    ]
+  },
+  {
+    "id": 2,
+    "source_id": 0,
+    "name": "cleric",
+    "description": "A priestly champio who wields divine magic in service of higher power.",
+    "hit_die": "1d8",
+    "primary_ability": "wisdom",
+    "saving_throw_proficiencies": "wisdom & charisma",
+    "armor_proficiencies": [
+      "light",
+      "medium"
+    ],
+    "shield_proficiencies": [
+      "shield"
+    ],
+    "weapon_proficiencies": [
+      "simple"
+    ]
+  },
+  {
+    "id": 3,
+    "source_id": 0,
+    "name": "druid",
+    "description": "A priest of the Old Faith, wielding the powers of nature -- moonlight and plant growth, fire and lightning -- and adopting animal forms.",
+    "hit_die": "1d8",
+    "primary_ability": "wisdom",
+    "saving_throw_proficiencies": "intelligence & wisdom",
+    "armor_proficiencies": [
+      "light",
+      "medium_nonmetal"
+    ],
+    "shield_proficiencies": [
+      "nonmetal"
+    ],
+    "weapon_proficiencies": [
+      "club",
+      "dagger",
+      "dart",
+      "javelin",
+      "mace",
+      "quarterstaff",
+      "scimitar",
+      "sickle",
+      "sling",
+      "spear"
+    ]
+  },
+  {
+    "id": 4,
+    "source_id": 0,
+    "name": "fighter",
+    "description": "A master of martial combat, skilled with a variety of weapons and armor.",
+    "hit_die": "1d10",
+    "primary_ability": "strength or dexterity",
+    "saving_throw_proficiencies": "strength & constitution",
+    "armor_proficiencies": [
+      "armor_proficiencies"
+    ],
+    "shield_proficiencies": [
+      "shield"
+    ],
+    "weapon_proficiencies": [
+      "simple",
+      "martial"
+    ]
+  },
+  {
+    "id": 5,
+    "source_id": 0,
+    "name": "monk",
+    "description": "A master of martial arts, harnessing the power of the body in pursuit of physical and piritual perfection.",
+    "hit_die": "1d8",
+    "primary_ability": "dexterity & wisdom",
+    "saving_throw_proficiencies": "strength & dexterity",
+    "armor_proficiencies": [],
+    "shield_proficiencies": [],
+    "weapon_proficiencies": [
+      "simple",
+      "shortsword"
+    ]
+  },
+  {
+    "id": 6,
+    "source_id": 0,
+    "name": "paladin",
+    "description": "A holy warrior bound to a sacred oath.",
+    "hit_die": "1d10",
+    "primary_ability": "strength & dexterity",
+    "saving_throw_proficiencies": "wisdom & charisma",
+    "armor_proficiencies": [
+      "armor_proficiencies"
+    ],
+    "shield_proficiencies": [
+      "shield"
+    ],
+    "weapon_proficiencies": [
+      "simple",
+      "martial"
+    ]
+  },
+  {
+    "id": 7,
+    "source_id": 0,
+    "name": "ranger",
+    "description": "A warrior who uses martial prowess and nature magic to combat threats on the edges of civilization.",
+    "hit_die": "1d10",
+    "primary_ability": "dexterity & wisdom",
+    "saving_throw_proficiencies": "strength & dexterity",
+    "armor_proficiencies": [
+      "light",
+      "medium"
+    ],
+    "shield_proficiencies": [
+      "shield"
+    ],
+    "weapon_proficiencies": [
+      "simple",
+      "martial"
+    ]
+  },
+  {
+    "id": 8,
+    "source_id": 0,
+    "name": "rogue",
+    "description": "A warrior who uses martial prowess and nature magic to combat threats on the edges of civilization.",
+    "hit_die": "1d8",
+    "primary_ability": "dexterity",
+    "saving_throw_proficiencies": "dexterity & intelligence",
+    "armor_proficiencies": [
+      "light"
+    ],
+    "shield_proficiencies": [],
+    "weapon_proficiencies": [
+      "simple",
+      "hand_crossbow",
+      "longsword",
+      "rapier",
+      "shortsword"
+    ]
+  },
+  {
+    "id": 9,
+    "source_id": 0,
+    "name": "sorcerer",
+    "description": "A spellcaster who draws on inherent magic from a gift or bloodline.",
+    "hit_die": "1d6",
+    "primary_ability": "charisma",
+    "saving_throw_proficiencies": "constitution & charisma",
+    "armor_proficiencies": [],
+    "shield_proficiencies": [],
+    "weapon_proficiencies": [
+      "dagger",
+      "dart",
+      "sling",
+      "quarterstaff",
+      "light_crossbow"
+    ]
+  },
+  {
+    "id": 10,
+    "source_id": 0,
+    "name": "warlock",
+    "description": "A wielder of magic that is derived from a bargain with an extraplanar entity.",
+    "hit_die": "1d8",
+    "primary_ability": "charisma",
+    "saving_throw_proficiencies": "wisdom & charisma",
+    "armor_proficiencies": [
+      "light"
+    ],
+    "shield_proficiencies": [],
+    "weapon_proficiencies": [
+      "simple"
+    ]
+  },
+  {
+    "id": 11,
+    "source_id": 0,
+    "name": "wizard",
+    "description": "A scholarly magic-user capable of manipulating the structures of reality.",
+    "hit_die": "1d6",
+    "primary_ability": "intelligence",
+    "saving_throw_proficiencies": "intelligence & wisdom",
+    "armor_proficiencies": [],
+    "shield_proficiencies": [],
+    "weapon_proficiencies": [
+      "dagger",
+      "dart",
+      "sling",
+      "quarterstaff",
+      "light_crossbow"
+    ]
+  },
+  {
+    "id": 12,
+    "source_id": 2,
+    "name": "artificer",
+    "description": "Masters of invention, artificers use ingenuity and magic to unlock extraordinary capabilities in objects.",
+    "hit_die": "1d8",
+    "primary_ability": "intelligence",
+    "saving_throw_proficiencies": "constitution & intelligence",
+    "armor_proficiencies": [
+      "light",
+      "medium"
+    ],
+    "shield_proficiencies": [
+      "shield"
+    ],
+    "weapon_proficiencies": [
+      "simple"
+    ]
+  }
+]

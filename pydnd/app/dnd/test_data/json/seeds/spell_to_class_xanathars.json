@@ -1,0 +1,443 @@
+[
+  {
+    "source_id": 1,
+    "source_name": "xanathar's guide to everything",
+    "class_id": 1,
+    "class_name": "bard",
+    "spells": {
+      "0": [
+        "thunderclap"
+      ],
+      "1": [
+        "earth tremor"
+      ],
+      "2": [
+        "pyrotechnics",
+        "skywrite",
+        "warding wind"
+      ],
+      "3": [
+        "catnap",
+        "enemies abound"
+      ],
+      "4": [
+        "charm monster"
+      ],
+      "5": [
+        "skill empowerment",
+        "synaptic static"
+      ],
+      "6": [],
+      "7": [],
+      "8": [],
+      "9": [
+        "mass polymorph",
+        "psychic scream"
+      ]
+    }
+  },
+  {
+    "source_id": 1,
+    "source_name": "xanathar's guide to everything",
+    "class_id": 2,
+    "class_name": "cleric",
+    "spells": {
+      "0": [
+        "toll the dead",
+        "word of radiance"
+      ],
+      "1": [
+        "ceremony"
+      ],
+      "2": [],
+      "3": [
+        "life transference"
+      ],
+      "4": [],
+      "5": [
+        "dawn",
+        "holy weapon"
+      ],
+      "6": [],
+      "7": [
+        "temple of the gods"
+      ],
+      "8": [],
+      "9": []
+    }
+  },
+  {
+    "source_id": 1,
+    "source_name": "xanathar's guide to everything",
+    "class_id": 3,
+    "class_name": "druid",
+    "spells": {
+      "0": [
+        "control flames",
+        "create bonfire",
+        "frostbite",
+        "gust",
+        "infestation",
+        "magic stone",
+        "mold earth",
+        "primal savagery",
+        "shape water",
+        "thunderclap"
+      ],
+      "1": [
+        "absorb elements",
+        "beast bond",
+        "earth tremor",
+        "ice knife",
+        "snare"
+      ],
+      "2": [
+        "dust devil",
+        "earthbind",
+        "healing spirit",
+        "skywrite",
+        "warding wind"
+      ],
+      "3": [
+        "erupting earth",
+        "flame arrows",
+        "tidal wave",
+        "wall of water"
+      ],
+      "4": [
+        "charm monster",
+        "elemental bane",
+        "guardian of nature",
+        "watery sphere"
+      ],
+      "5": [
+        "control winds",
+        "maelstrom",
+        "transmute rock",
+        "wrath of nature"
+      ],
+      "6": [
+        "bones of the earth",
+        "druid grove",
+        "investiture of flame",
+        "investiture of ice",
+        "investiture of stone",
+        "investiture of wind",
+        "primordial ward"
+      ],
+      "7": [
+        "whirlwind"
+      ],
+      "8": [],
+      "9": []
+    }
+  },
+  {
+    "source_id": 1,
+    "source_name": "xanathar's guide to everything",
+    "class_id": 6,
+    "class_name": "paladin",
+    "spells": {
+      "0": [],
+      "1": [
+        "ceremony"
+      ],
+      "2": [],
+      "3": [],
+      "4": [
+        "find greater steed"
+      ],
+      "5": [
+        "holy weapon"
+      ],
+      "6": [],
+      "7": [],
+      "8": [],
+      "9": []
+    }
+  },
+  {
+    "source_id": 1,
+    "source_name": "xanathar's guide to everything",
+    "class_id": 7,
+    "class_name": "ranger",
+    "spells": {
+      "0": [],
+      "1": [
+        "absorb elements",
+        "beast bond",
+        "snare",
+        "zephyr strike"
+      ],
+      "2": [
+        "healing spirit"
+      ],
+      "3": [
+        "flame arrows"
+      ],
+      "4": [
+        "guardian of nature"
+      ],
+      "5": [
+        "steel wind strike",
+        "wrath of nature"
+      ],
+      "6": [],
+      "7": [],
+      "8": [],
+      "9": []
+    }
+  },
+  {
+    "source_id": 1,
+    "source_name": "xanathar's guide to everything",
+    "class_id": 9,
+    "class_name": "sorcerer",
+    "spells": {
+      "0": [
+        "control flames",
+        "create bonfire",
+        "frostbite",
+        "gust",
+        "infestation",
+        "mold earth",
+        "shape water",
+        "thunderclap"
+      ],
+      "1": [
+        "absorb elements",
+        "catapult",
+        "chaos bolt",
+        "earth tremor",
+        "ice knife"
+      ],
+      "2": [
+        "aganazzar's scorcher",
+        "dragon's breath",
+        "dust devil",
+        "earthbind",
+        "maximillan's earthen grasp",
+        "mind spike",
+        "pyrotechnics",
+        "shadow blade",
+        "snilloc's snowball swarm",
+        "warding wind"
+      ],
+      "3": [
+        "catnap",
+        "enemies abound",
+        "erupting earth",
+        "flame arrows",
+        "melf's minute meteors",
+        "thunder step",
+        "tidal wave",
+        "wall of water"
+      ],
+      "4": [
+        "charm monster",
+        "sickening radiance",
+        "storm sphere",
+        "vitriolic sphere",
+        "watery sphere"
+      ],
+      "5": [
+        "control winds",
+        "enervation",
+        "far step",
+        "immolation",
+        "skill empowerment",
+        "synaptic static",
+        "wall of light"
+      ],
+      "6": [
+        "investiture of flame",
+        "investiture of ice",
+        "investiture of stone",
+        "investiture of wind",
+        "mental prison",
+        "scatter"
+      ],
+      "7": [
+        "crown of stars",
+        "power word pain",
+        "whirlwind"
+      ],
+      "8": [
+        "abi-dalzim's horrid writing"
+      ],
+      "9": [
+        "mass polymorph",
+        "psychic scream"
+      ]
+    }
+  },
+  {
+    "source_id": 1,
+    "source_name": "xanathar's guide to everything",
+    "class_id": 10,
+    "class_name": "warlock",
+    "spells": {
+      "0": [
+        "create bonfire",
+        "frostbite",
+        "infestation",
+        "magic stone",
+        "thunderclap",
+        "toll the dead"
+      ],
+      "1": [
+        "cause fear"
+      ],
+      "2": [
+        "earthbind",
+        "mind spike",
+        "shadow blade"
+      ],
+      "3": [
+        "enemies abound",
+        "thunder step",
+        "summon lesser demons"
+      ],
+      "4": [
+        "charm monster",
+        "elemental bane",
+        "shadow of moil",
+        "sickening radiance",
+        "summon greater demon"
+      ],
+      "5": [
+        "danse macabre",
+        "enervation",
+        "far step",
+        "infernal calling",
+        "negative energy flood",
+        "synaptic static",
+        "wall of light"
+      ],
+      "6": [
+        "investiture of flame",
+        "investiture of ice",
+        "investiture of stone",
+        "investiture of wind",
+        "mental prison",
+        "scatter",
+        "soul cage"
+      ],
+      "7": [
+        "crown of stars",
+        "power word pain"
+      ],
+      "8": [
+        "maddening darkness"
+      ],
+      "9": [
+        "psychic scream"
+      ]
+    }
+  },
+  {
+    "source_id": 1,
+    "source_name": "xanathar's guide to everything",
+    "class_id": 11,
+    "class_name": "wizard",
+    "spells": {
+      "0": [
+        "control flames",
+        "create bonfire",
+        "frostbite",
+        "gust",
+        "infestation",
+        "mold earth",
+        "shape water",
+        "thunderclap",
+        "toll the dead"
+      ],
+      "1": [
+        "absorb elements",
+        "catapult",
+        "cause fear",
+        "earth tremor",
+        "ice knife",
+        "snare"
+      ],
+      "2": [
+        "aganazzar's scorcher",
+        "dragon's breath",
+        "dust devil",
+        "earthbind",
+        "maximillan's earthen grasp",
+        "mind spike",
+        "pyrotechnics",
+        "shadow blade",
+        "skywrite",
+        "snilloc's snowball swarm",
+        "warding wind"
+      ],
+      "3": [
+        "catnap",
+        "enemies abound",
+        "erupting earth",
+        "flame arrows",
+        "life transference",
+        "melf's minute meteors",
+        "summon lesser demons",
+        "thunder step",
+        "tidal wave",
+        "tiny servant",
+        "wall of sand",
+        "wall of water"
+      ],
+      "4": [
+        "charm monster",
+        "elemental bane",
+        "sickening radiance",
+        "storm sphere",
+        "summon greater demon",
+        "vitriolic sphere",
+        "watery sphere"
+      ],
+      "5": [
+        "control winds",
+        "danse macabre",
+        "dawn",
+        "enervation",
+        "far step",
+        "immolation",
+        "infernal calling",
+        "negative energy flood",
+        "skill empowerment",
+        "steel wind strike",
+        "synaptic static",
+        "transmute rock",
+        "wall of light"
+      ],
+      "6": [
+        "create homunculus",
+        "investiture of flame",
+        "investiture of ice",
+        "investiture of stone",
+        "investiture of wind",
+        "mental prison",
+        "scatter",
+        "soul cage",
+        "tenser's transformation"
+      ],
+      "7": [
+        "crown of stars",
+        "power word pain",
+        "whirlwind"
+      ],
+      "8": [
+        "abi-dalzim's horrid writing",
+        "illusory dragon",
+        "maddening darkness",
+        "mighty fortress"
+      ],
+      "9": [
+        "invulnerability",
+        "mass polymorph",
+        "psychic scream"
+      ]
+    }
+  }
+]

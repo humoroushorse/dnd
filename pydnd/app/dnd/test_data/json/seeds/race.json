@@ -1,0 +1,47 @@
+[
+  {
+    "id": 0,
+    "source_id": 0,
+    "name": "dwarf"
+  },
+  {
+    "id": 1,
+    "source_id": 0,
+    "name": "elf"
+  },
+  {
+    "id": 2,
+    "source_id": 0,
+    "name": "halfling"
+  },
+  {
+    "id": 3,
+    "source_id": 0,
+    "name": "human"
+  },
+  {
+    "id": 4,
+    "source_id": 0,
+    "name": "dragonborn"
+  },
+  {
+    "id": 5,
+    "source_id": 0,
+    "name": "gnome"
+  },
+  {
+    "id": 6,
+    "source_id": 0,
+    "name": "half-elf"
+  },
+  {
+    "id": 7,
+    "source_id": 0,
+    "name": "half-orc"
+  },
+  {
+    "id": 8,
+    "source_id": 0,
+    "name": "tiefling"
+  }
+]
