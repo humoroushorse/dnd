@@ -1,0 +1,650 @@
+[
+  {
+    "source_id": 2,
+    "source_name": "tasha's cauldron of everything",
+    "class_id": 12,
+    "class_name": "artificer",
+    "spells": {
+      "0": [
+        "booming blade",
+        "green-flame blade",
+        "lightning lure",
+        "sword burst"
+      ],
+      "1": [
+        "tasha's caustic brew"
+      ],
+      "2": [],
+      "3": [
+        "intellect fortress"
+      ],
+      "4": [
+        "summon construct"
+      ],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": [],
+      "9": []
+    }
+  },
+  {
+    "source_id": 2,
+    "source_name": "tasha's cauldron of everything",
+    "class_id": 1,
+    "class_name": "bard",
+    "spells": {
+      "0": [],
+      "1": [],
+      "2": [],
+      "3": [
+        "intellect fortress"
+      ],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [
+        "dream of the blue veil"
+      ],
+      "8": [],
+      "9": []
+    }
+  },
+  {
+    "source_id": 2,
+    "source_name": "tasha's cauldron of everything",
+    "class_id": 2,
+    "class_name": "cleric",
+    "spells": {
+      "0": [],
+      "1": [],
+      "2": [],
+      "3": [
+        "spirit shroud"
+      ],
+      "4": [],
+      "5": [
+        "summon celestial"
+      ],
+      "6": [],
+      "7": [],
+      "8": [],
+      "9": []
+    }
+  },
+  {
+    "source_id": 2,
+    "source_name": "tasha's cauldron of everything",
+    "class_id": 3,
+    "class_name": "druid",
+    "spells": {
+      "0": [],
+      "1": [],
+      "2": [
+        "summon beast"
+      ],
+      "3": [
+        "summon fey"
+      ],
+      "4": [
+        "summon elemental"
+      ],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": [],
+      "9": []
+    }
+  },
+  {
+    "source_id": 2,
+    "source_name": "tasha's cauldron of everything",
+    "class_id": 6,
+    "class_name": "paladin",
+    "spells": {
+      "0": [],
+      "1": [],
+      "2": [],
+      "3": [
+        "spirit shroud"
+      ],
+      "4": [],
+      "5": [
+        "summon celestial"
+      ],
+      "6": [],
+      "7": [],
+      "8": [],
+      "9": []
+    }
+  },
+  {
+    "source_id": 2,
+    "source_name": "tasha's cauldron of everything",
+    "class_id": 7,
+    "class_name": "ranger",
+    "spells": {
+      "0": [],
+      "1": [],
+      "2": [
+        "summon beast"
+      ],
+      "3": [
+        "summon fey"
+      ],
+      "4": [
+        "summon elemental"
+      ],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": [],
+      "9": []
+    }
+  },
+  {
+    "source_id": 2,
+    "source_name": "tasha's cauldron of everything",
+    "class_id": 9,
+    "class_name": "sorcerer",
+    "spells": {
+      "0": [
+        "booming blade",
+        "green-flame blade",
+        "lightning lure",
+        "mind sliver",
+        "sword burst"
+      ],
+      "1": [
+        "tasha's caustic brew"
+      ],
+      "2": [
+        "tasha's mind whip"
+      ],
+      "3": [
+        "intellect fortress"
+      ],
+      "4": [],
+      "5": [],
+      "6": [
+        "tasha's otherworldly guise"
+      ],
+      "7": [
+        "dream of the blue veil"
+      ],
+      "8": [],
+      "9": [
+        "blade of disaster"
+      ]
+    }
+  },
+  {
+    "source_id": 2,
+    "source_name": "tasha's cauldron of everything",
+    "class_id": 10,
+    "class_name": "warlock",
+    "spells": {
+      "0": [
+        "booming blade",
+        "green-flame blade",
+        "lightning lure",
+        "mind sliver",
+        "sword burst"
+      ],
+      "1": [],
+      "2": [],
+      "3": [
+        "intellect fortress",
+        "spirit shroud",
+        "summon fey",
+        "summon shadowspawn",
+        "summon undead"
+      ],
+      "4": [
+        "summon aberration"
+      ],
+      "5": [],
+      "6": [
+        "summon fiend",
+        "tasha's otherworldly guise"
+      ],
+      "7": [
+        "dream of the blue veil"
+      ],
+      "8": [],
+      "9": [
+        "blade of disaster"
+      ]
+    }
+  },
+  {
+    "source_id": 2,
+    "source_name": "tasha's cauldron of everything",
+    "class_id": 11,
+    "class_name": "wizard",
+    "spells": {
+      "0": [
+        "booming blade",
+        "green-flame blade",
+        "lightning lure",
+        "mind sliver",
+        "sword burst"
+      ],
+      "1": [
+        "tasha's caustic brew"
+      ],
+      "2": [
+        "tasha's mind whip"
+      ],
+      "3": [
+        "intellect fortress",
+        "spirit shroud",
+        "summon fey",
+        "summon shadowspawn",
+        "summon undead"
+      ],
+      "4": [
+        "summon aberration",
+        "summon construct",
+        "summon elemental"
+      ],
+      "5": [],
+      "6": [
+        "summon fiend",
+        "tasha's otherworldly guise"
+      ],
+      "7": [
+        "dream of the blue veil"
+      ],
+      "8": [],
+      "9": [
+        "blade of disaster"
+      ]
+    }
+  },
+  {
+    "source_id": 0,
+    "source_name": "player's handbook",
+    "class_id": 12,
+    "class_name": "artificer",
+    "spells": {
+      "0": [
+        "acid splash",
+        "dancing lights",
+        "fire bolt",
+        "guidance",
+        "light",
+        "mage hand",
+        "mending",
+        "message",
+        "poison spray",
+        "prestidigitation",
+        "ray of frost",
+        "resistance",
+        "shocking grasp",
+        "spare the dying",
+        "thorn whip"
+      ],
+      "1": [
+        "alarm",
+        "cure wounds",
+        "detect magic",
+        "disguise self",
+        "expeditious retreat",
+        "faerie fire",
+        "false life",
+        "feather fall",
+        "grease",
+        "identify",
+        "jump",
+        "longstrider",
+        "purify food and drink",
+        "sanctuary"
+      ],
+      "2": [
+        "aid",
+        "alter self",
+        "arcane lock",
+        "blur",
+        "continual flame",
+        "darkvision",
+        "enhance ability",
+        "enlarge/reduce",
+        "heat metal",
+        "invisibility",
+        "lesser restoration",
+        "levitate",
+        "magic mouth",
+        "magic weapon",
+        "protection from poison",
+        "rope trick",
+        "see invisibility",
+        "spider climb",
+        "web"
+      ],
+      "3": [
+        "blink",
+        "create food and water",
+        "dispel magic",
+        "elemental weapon",
+        "fly",
+        "glyph of warding",
+        "haste",
+        "protection from energy",
+        "revivify",
+        "water breathing",
+        "water walk"
+      ],
+      "4": [
+        "arcane eye",
+        "fabricate",
+        "freedom of movement",
+        "leomund's secret chest",
+        "mordenkainen's faithful hound",
+        "mordenkainen's private sanctum",
+        "otiluke's resilient sphere",
+        "stone shape",
+        "stoneskin"
+      ],
+      "5": [
+        "animate objects",
+        "bigby's hand",
+        "creation",
+        "greater restoration",
+        "wall of stone"
+      ],
+      "6": [],
+      "7": [],
+      "8": [],
+      "9": []
+    }
+  },
+  {
+    "source_id": 1,
+    "source_name": "xanathar's guide to everything",
+    "class_id": 12,
+    "class_name": "artificer",
+    "spells": {
+      "0": [
+        "create bonfire",
+        "frostbite",
+        "magic stone",
+        "thunderclap"
+      ],
+      "1": [
+        "absorb elements",
+        "catapult",
+        "snare"
+      ],
+      "2": [
+        "pyrotechnics",
+        "skywrite"
+      ],
+      "3": [
+        "catnap",
+        "flame arrows",
+        "tiny servant"
+      ],
+      "4": [
+        "elemental bane"
+      ],
+      "5": [
+        "skill empowerment",
+        "transmute rock"
+      ],
+      "6": [],
+      "7": [],
+      "8": [],
+      "9": []
+    }
+  },
+  {
+    "source_id": 0,
+    "source_name": "player's handbook",
+    "class_id": 1,
+    "class_name": "bard",
+    "spells": {
+      "0": [],
+      "1": [
+        "color spray",
+        "command"
+      ],
+      "2": [
+        "aid",
+        "enlarge/reduce",
+        "mirror image"
+      ],
+      "3": [
+        "mass healing word",
+        "slow"
+      ],
+      "4": [
+        "phantasmal killer"
+      ],
+      "5": [
+        "rary's telepathic bond"
+      ],
+      "6": [
+        "heroes' feast"
+      ],
+      "7": [
+        "prismatic spray"
+      ],
+      "8": [
+        "antipathy/sympathy"
+      ],
+      "9": [
+        "prismatic wall"
+      ]
+    }
+  },
+  {
+    "source_id": 0,
+    "source_name": "player's handbook",
+    "class_id": 2,
+    "class_name": "cleric",
+    "spells": {
+      "0": [],
+      "1": [],
+      "2": [],
+      "3": [
+        "aura of vitality"
+      ],
+      "4": [
+        "aura of life",
+        "aura of purity"
+      ],
+      "5": [],
+      "6": [
+        "sunbeam"
+      ],
+      "7": [],
+      "8": [
+        "sunburst"
+      ],
+      "9": [
+        "power word heal"
+      ]
+    }
+  },
+  {
+    "source_id": 0,
+    "source_name": "player's handbook",
+    "class_id": 3,
+    "class_name": "druid",
+    "spells": {
+      "0": [],
+      "1": [
+        "protection from evil and good"
+      ],
+      "2": [
+        "augury",
+        "continual flame",
+        "enlarge/reduce"
+      ],
+      "3": [
+        "aura of vitality",
+        "elemental weapon",
+        "revivify"
+      ],
+      "4": [
+        "divination",
+        "fire shield"
+      ],
+      "5": [
+        "cone of cold"
+      ],
+      "6": [
+        "flesh to stone"
+      ],
+      "7": [
+        "symbol"
+      ],
+      "8": [
+        "incendiary cloud"
+      ],
+      "9": []
+    }
+  },
+  {
+    "source_id": 0,
+    "source_name": "player's handbook",
+    "class_id": 6,
+    "class_name": "paladin",
+    "spells": {
+      "0": [],
+      "1": [],
+      "2": [
+        "gentle repose",
+        "prayer of healing",
+        "warding bond"
+      ],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": [],
+      "9": []
+    }
+  },
+  {
+    "source_id": 0,
+    "source_name": "player's handbook",
+    "class_id": 7,
+    "class_name": "ranger",
+    "spells": {
+      "0": [],
+      "1": [
+        "entangle",
+        "searing smite"
+      ],
+      "2": [
+        "aid",
+        "enhance ability",
+        "gust of wind",
+        "magic weapon"
+      ],
+      "3": [
+        "elemental weapon",
+        "meld into stone",
+        "revivify"
+      ],
+      "4": [
+        "dominate beast"
+      ],
+      "5": [
+        "greater restoration"
+      ],
+      "6": [],
+      "7": [],
+      "8": [],
+      "9": []
+    }
+  },
+  {
+    "source_id": 0,
+    "source_name": "player's handbook",
+    "class_id": 9,
+    "class_name": "sorcerer",
+    "spells": {
+      "0": [],
+      "1": [
+        "grease"
+      ],
+      "2": [
+        "flame blade",
+        "flaming sphere",
+        "magic weapon"
+      ],
+      "3": [
+        "vampiric touch"
+      ],
+      "4": [
+        "fire shield"
+      ],
+      "5": [
+        "bigby's hand"
+      ],
+      "6": [
+        "flesh to stone",
+        "otiluke's freezing sphere"
+      ],
+      "7": [],
+      "8": [
+        "demiplane"
+      ],
+      "9": []
+    }
+  },
+  {
+    "source_id": 0,
+    "source_name": "player's handbook",
+    "class_id": 10,
+    "class_name": "warlock",
+    "spells": {
+      "0": [],
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [
+        "mislead",
+        "planar binding",
+        "teleportation circle"
+      ],
+      "6": [],
+      "7": [],
+      "8": [],
+      "9": [
+        "gate",
+        "weird"
+      ]
+    }
+  },
+  {
+    "source_id": 0,
+    "source_name": "player's handbook",
+    "class_id": 11,
+    "class_name": "wizard",
+    "spells": {
+      "0": [],
+      "1": [],
+      "2": [
+        "augury",
+        "enhance ability"
+      ],
+      "3": [
+        "speak with dead"
+      ],
+      "4": [
+        "divination"
+      ],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": [],
+      "9": []
+    }
+  }
+]
