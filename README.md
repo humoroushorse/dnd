@@ -10,6 +10,7 @@ For further documentation run
 ```shell
 make pydnd-mkdocs
 ```
+And then go to `http://localhost:8001`
 ___
 ## Project Technologies Et Cetera
 ### Poetry
@@ -26,9 +27,4 @@ poetry was chosen as the package management solution
 
 ## TODO
 - in `./pylintrc` investigate removing the disables for [consider-using-with, broad-except]
-- in `./pydnd/docs` finish pointing references for all modules
-- tracing && logging for python
-- /bulk endpoints return Any right now, create type for that
 - investigate if I want to use UOW pattern or just Repository pattern
-- change `__init__.py` imports for say schemas (maybe more) -> less 'flattening'
-- convert print statements to logging (search for prints with noqa T001)
