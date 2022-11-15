@@ -1,9 +1,14 @@
 # Repository Module
+Welcome to the repository module!
 
+This module is made up of repositories for interacting with our database!
 ___
-## Base
 ::: dnd.repository.base
-
 ___
-## DndClass
 ::: dnd.repository.dnd_class
+___
+::: dnd.repository.jt_spell_to_class
+___
+::: dnd.repository.source
+___
+::: dnd.repository.spell

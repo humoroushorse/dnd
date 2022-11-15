@@ -34,7 +34,13 @@ nav:
     - Alembic: tutorial/alembic.md
     - Testing: tutorial/testing.md
   - Code:
-    - API Module: code/api-module.md
+    - API:
+      - API Module: code/api-module.md
+      - Endpoints:
+        - /classes: code/endpoints/classes.md
+        - /sources: code/endpoints/sources.md
+        - /spell-to-class: code/endpoints/spell-to-class.md
+        - /spells: code/endpoints/spells.md
     - Core Module: code/core-module.md
     - Database Module: code/database-module.md
     - Models Module: code/models-module.md

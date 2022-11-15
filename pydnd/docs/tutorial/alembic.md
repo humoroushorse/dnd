@@ -21,6 +21,7 @@ DROP TYPE IF EXISTS spellschoolenum;
 ```
 ### 2. `poetry run alembic init alembic` create alembic folder
 ### 3. replace env.py
+
 ```python
 from logging.config import fileConfig
 
@@ -112,6 +113,7 @@ if context.is_offline_mode():
 else:
     run_migrations_online()
 ```
+
 ### 4. `poetry run alembic revision --autogenerate -m "init"` generate first revision
 ### 5. add the following to the generated version's upgrade() function
 ```python

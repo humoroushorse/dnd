@@ -57,6 +57,12 @@ docker-pg-tests-up:
 pydnd-docker-pg-tests-alembic-upgrade:
 	cd pydnd && poetry run alembic -x db_override=${DOCKER_PG_TEST_CONN} upgrade head
 
+.PHONY: docker-db-tests-up
+docker-db-up:
+	make docker-pg-up
+	sleep 2
+	make pydnd-docker-pg-alembic-upgraded
+
 .PHONY: pydnd-unit
 pydnd-unit:
 	cd pydnd && poetry run pytest ${PYDND_UNIT_TEST_PATH} -v --cov=app
@@ -68,9 +74,7 @@ pydnd-unit-html:
 # For integration: create clean database and then run integration tests
 .PHONY: pydnd-integration
 pydnd-integration:
-	make docker-pg-tests-up
-	sleep 2
-	make pydnd-docker-pg-tests-alembic-upgrade
+	make docker-db-tests-up
 	# run the tests and even if they fail, destroy the docker container
 	cd pydnd && poetry run pytest ${PYDND_INTEGRATION_TEST_PATH} --seed="${SEED}" --skip-d20="${SKIP_D20}" -v --cov=app || echo "continuing even if error"
 	docker kill dnd-pg-tests
