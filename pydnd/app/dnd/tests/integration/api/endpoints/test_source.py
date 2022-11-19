@@ -94,9 +94,9 @@ def test_post_bulk(client: TestClient, test_data_directory: str, count) -> None:
         files=files,
         headers={"accept": "application/json"},
     )
-    response_json: dict = response.json()
+    bulk_load_response = schemas.BulkLoadResponse(**response.json())
     assert response.status_code == status.HTTP_200_OK
-    assert response_json.get("totals", {}).get("errored") == 0
+    assert bulk_load_response.totals.errored == 0
 
 
 def test_post_bulk_bad_filetype(client: TestClient, test_data_directory: str) -> None:
@@ -132,9 +132,9 @@ def test_post_bulk_bad_json_data(client: TestClient, test_data_directory: str) -
         files=files,
         headers={"accept": "application/json"},
     )
-    response_json: dict = response.json()
+    bulk_load_response = schemas.BulkLoadResponse(**response.json())
     assert response.status_code == status.HTTP_200_OK
-    assert response_json.get("totals", {}).get("errored") > 0
+    assert bulk_load_response.totals.errored > 0
 
 
 def test_clean_up(client: TestClient, db: Session) -> None:

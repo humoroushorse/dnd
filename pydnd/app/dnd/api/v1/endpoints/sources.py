@@ -64,7 +64,7 @@ def delete_source(
     return {"message": f"Source with ID = {id} deleted."}
 
 
-@router.post("/bulk")
+@router.post("/bulk", response_model=schemas.BulkLoadResponse)
 def create_upload_file(
     *,
     db: Session = Depends(get_db),
@@ -80,31 +80,20 @@ def create_upload_file(
             400,
             detail=f"Invalid document type. Expected: {allowed_file_types}, Received: {upload_file.content_type}",
         )
+    response = schemas.BulkLoadResponse(filename=upload_file.filename)
     json_data: List[dict] = json.load(upload_file.file)
-    created = []
-    warnings = []
-    errors = []
     for jd in json_data:
         try:
             source = schemas.SourceCreate(**jd)
             existing_source = repository.source.query(db, params={"name": source.name})
             if len(existing_source) > 0:
-                warnings.append(
+                response.warnings.append(
                     f"Source with name '{source.name}' already exists, skipping."
                 )
             else:
                 repository.source.create(db, obj_in=source)
-                created.append(source.name)
+                response.created.append(source.name)
         except Exception as e:
-            errors.append(str(e))
-    return {
-        "filename": upload_file.filename,
-        "totals": {
-            "created": len(created),
-            "errored": len(errors),
-            "warning": len(warnings),
-        },
-        "created": created,
-        "warnings": warnings,
-        "errors": errors,
-    }
+            response.errors.append(f"[{jd.get('name')}]: {str(e)}")
+    response.update_totals()
+    return response.dict()

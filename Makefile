@@ -15,13 +15,14 @@ docker-pg-up:
 .PHONY: pydnd-docker-pg-alembic-upgrade
 pydnd-docker-pg-alembic-upgrade:
 	# passing in override variable `db_override` to be read in `alembic/env.py`
-	cd pydnd && poetry run alembic -x db_override=${DOCKER_PG_TEST_CONN} upgrade head
+	cd pydnd && poetry run alembic upgrade head
 
-.PHONY: docker-db-up
-docker-db-up:
+.PHONY: pydnd-docker-db-up
+pydnd-docker-db-up:
 	make docker-pg-up
 	sleep 2
-	make pydnd-docker-pg-alembic-upgraded
+	make pydnd-docker-pg-alembic-upgrade
+	make pydnd-load-seeds
 
 .PHONY: pydnd-start
 pydnd-start:
@@ -58,10 +59,10 @@ pydnd-docker-pg-tests-alembic-upgrade:
 	cd pydnd && poetry run alembic -x db_override=${DOCKER_PG_TEST_CONN} upgrade head
 
 .PHONY: docker-db-tests-up
-docker-db-up:
-	make docker-pg-up
+docker-db-tests-up:
+	make docker-pg-tests-up
 	sleep 2
-	make pydnd-docker-pg-alembic-upgraded
+	make pydnd-docker-pg-tests-alembic-upgrade
 
 .PHONY: pydnd-unit
 pydnd-unit:

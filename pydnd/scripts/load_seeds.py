@@ -73,7 +73,7 @@ files = {
 class_response = requests.post(
     url=f"{api_root}/classes/bulk", files=files, headers=headers
 )
-update_report(report, sources_response, files.get("upload_file")[0])
+update_report(report, class_response, files.get("upload_file")[0])
 
 ################################################################################
 # 3. Spells

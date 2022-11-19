@@ -66,7 +66,7 @@ def delete_dnd_class(
     return {"message": f"Item with ID = {id} deleted."}
 
 
-@router.post("/bulk")
+@router.post("/bulk", response_model=schemas.BulkLoadResponse)
 def create_upload_file(
     *,
     db: Session = Depends(get_db),
@@ -82,10 +82,8 @@ def create_upload_file(
             400,
             detail=f"Invalid document type. Expected: {allowed_file_types}, Received: {upload_file.content_type}",
         )
+    response = schemas.BulkLoadResponse(filename=upload_file.filename)
     json_data: List[dict] = json.load(upload_file.file)
-    created = []
-    warnings = []
-    errors = []
     for jd in json_data:
         try:
             dnd_class = schemas.DndClassCreate(**jd)
@@ -93,22 +91,13 @@ def create_upload_file(
                 db, params={"name": dnd_class.name}
             )
             if len(existing_dnd_class) > 0:
-                warnings.append(
+                response.warnings.append(
                     f"Class with name '{dnd_class.name}' already exists, skipping."
                 )
             else:
                 repository.dnd_class.create(db, obj_in=dnd_class)
-                created.append(dnd_class.name)
+                response.created.append(dnd_class.name)
         except Exception as e:
-            errors.append(str(e))
-    return {
-        "filename": upload_file.filename,
-        "totals": {
-            "created": len(created),
-            "errored": len(errors),
-            "warning": len(warnings),
-        },
-        "created": created,
-        "warnings": warnings,
-        "errors": errors,
-    }
+            response.errors.append(f"[{jd.get('name')}]: {str(e)}")
+    response.update_totals()
+    return response.dict()
