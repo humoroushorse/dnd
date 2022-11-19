@@ -18,7 +18,10 @@ from dnd.schemas.jt_spell_to_class import (  # noqa: W0611
     JtSpellToClassUpdate,
 )
 from dnd.schemas.message import Message  # noqa: W0611
-from dnd.schemas.shared_responses import GenericListResponse  # noqa: W0611
+from dnd.schemas.responses_schema import (  # noqa: W0611
+    BulkLoadResponse,
+    GenericListResponse,
+)
 from dnd.schemas.source import (  # noqa: W0611
     SourceBase,
     SourceCreate,

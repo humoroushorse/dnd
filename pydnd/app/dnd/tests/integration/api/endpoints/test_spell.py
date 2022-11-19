@@ -9,6 +9,9 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
+# spells_phb.json adds like 3-4 seconds to the integration tests runtime
+BULK_SPELLS_SEEDS_FILE = "spells_tashas.json"
+
 
 # TODO: re-evaluate scope?
 @pytest.fixture(scope="module")
@@ -117,8 +120,8 @@ def test_post_bulk(client: TestClient, test_data_directory: str, count) -> None:
     assert count is not None, "avoiding W0613: unused-argument"
     files = {
         "upload_file": (
-            "spells_phb.json",
-            open(f"{test_data_directory}/json/seeds/spells_phb.json", "rb"),
+            BULK_SPELLS_SEEDS_FILE,
+            open(f"{test_data_directory}/json/seeds/{BULK_SPELLS_SEEDS_FILE}", "rb"),
             "application/json",
         )
     }
@@ -127,17 +130,17 @@ def test_post_bulk(client: TestClient, test_data_directory: str, count) -> None:
         files=files,
         headers={"accept": "application/json"},
     )
-    response_json: dict = response.json()
+    bulk_load_response = schemas.BulkLoadResponse(**response.json())
     assert response.status_code == status.HTTP_200_OK
-    assert response_json.get("totals", {}).get("errored") == 0
+    assert bulk_load_response.totals.errored == 0
 
 
 def test_post_bulk_bad_filetype(client: TestClient, test_data_directory: str) -> None:
     """Test /bulk post: illegal file type (foo/bar)."""
     files = {
         "upload_file": (
-            "spells_phb.json",
-            open(f"{test_data_directory}/json/seeds/spells_phb.json", "rb"),
+            BULK_SPELLS_SEEDS_FILE,
+            open(f"{test_data_directory}/json/seeds/{BULK_SPELLS_SEEDS_FILE}", "rb"),
             "foo/bar",
         )
     }
@@ -165,9 +168,9 @@ def test_post_bulk_bad_json_data(client: TestClient, test_data_directory: str) -
         files=files,
         headers={"accept": "application/json"},
     )
-    response_json: dict = response.json()
+    bulk_load_response = schemas.BulkLoadResponse(**response.json())
     assert response.status_code == status.HTTP_200_OK
-    assert response_json.get("totals", {}).get("errored") > 0
+    assert bulk_load_response.totals.errored > 0
 
 
 def test_clean_up(client: TestClient, db: Session) -> None:

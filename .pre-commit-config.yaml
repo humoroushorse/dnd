@@ -3,7 +3,7 @@ default_language_version:
 
 default_stages: [commit, push]
 
-fail_fast: true
+# fail_fast: true
 
 repos:
   # BUILT INTS

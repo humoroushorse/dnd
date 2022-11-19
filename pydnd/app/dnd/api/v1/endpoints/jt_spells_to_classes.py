@@ -103,7 +103,7 @@ def delete_jt_spell_to_class(
     return {"message": f"JtSpellToClass with ID = {id} deleted."}
 
 
-@router.post("/bulk")
+@router.post("/bulk", response_model=schemas.BulkLoadResponse)
 def create_upload_file(  # noqa: C901 <- ignore code complexity (12 > 9)
     *,
     db: Session = Depends(get_db),
@@ -119,14 +119,13 @@ def create_upload_file(  # noqa: C901 <- ignore code complexity (12 > 9)
             400,
             detail=f"Invalid document type. Expected: {allowed_file_types}, Received: {upload_file.content_type}",
         )
+    response = schemas.BulkLoadResponse(filename=upload_file.filename)
     json_data: List[dict] = json.load(upload_file.file)
-    created: List[str] = []
-    warnings: List[str] = []
-    errors: List[str] = []
     for jd in json_data:
-        # jd_source_id = jd.get('source_id')
+
+        jd_source_id = jd.get("source_id")
         jd_source_name = jd.get("source_name")
-        # jd_class_id = jd.get('class_id')
+        jd_class_id = jd.get("class_id")
         jd_class_name = jd.get("class_name")
 
         still_legal = True
@@ -134,14 +133,14 @@ def create_upload_file(  # noqa: C901 <- ignore code complexity (12 > 9)
         sources = repository.source.query(db, params={"name": jd_source_name})
         if len(sources) == 0:
             still_legal = False
-            errors.append(f"Source with name '{jd_source_name}' not found!")
+            response.errors.append(f"Source with name '{jd_source_name}' not found!")
         else:
             source = sources[0]
 
         dnd_classes = repository.dnd_class.query(db, params={"name": jd_class_name})
         if len(dnd_classes) == 0:
             still_legal = False
-            errors.append(f"Class with name '{jd_class_name}' not found!")
+            response.errors.append(f"Class with name '{jd_class_name}' not found!")
         else:
             dnd_class = dnd_classes[0]
 
@@ -153,7 +152,7 @@ def create_upload_file(  # noqa: C901 <- ignore code complexity (12 > 9)
                             db, params={"name": jd_spell_name, "source_id": source.id}
                         )
                         if len(spells_by_name) == 0:
-                            errors.append(
+                            response.errors.append(
                                 f"Spell with name '{jd_spell_name}' not found! "
                                 + "(class_id={dnd_class.id}, source_id={source.id}, level={jd_spell_level})"
                             )
@@ -170,14 +169,14 @@ def create_upload_file(  # noqa: C901 <- ignore code complexity (12 > 9)
                                 )
                             )
                             if len(existing_spells_to_classes) > 0:
-                                warnings.append(
+                                response.warnings.append(
                                     f"Link source '{source.name}', "
                                     + "class '{dnd_class.name}' "
                                     + "spell '{spell.name}' "
                                     + "already exists, skipping."
                                 )
                             else:
-                                spell_to_class = schemas.JtSpellToClassCreate(
+                                spell_to_class = schemas.JtSpellToClassBase(
                                     dnd_class_id=dnd_class.id,
                                     source_id=source.id,
                                     spell_id=spell.id,
@@ -185,19 +184,12 @@ def create_upload_file(  # noqa: C901 <- ignore code complexity (12 > 9)
                                 repository.jt_spell_to_class.create(
                                     db, obj_in=spell_to_class
                                 )
-                                created.append(
+                                response.created.append(
                                     f"Linked source '{source.name}', class '{dnd_class.name}' spell '{spell.name}'"
                                 )
                     except Exception as e:
-                        errors.append(f"[{jd.get('name')}]: {str(e)}")
-    return {
-        "filename": upload_file.filename,
-        "totals": {
-            "created": len(created),
-            "errored": len(errors),
-            "warning": len(warnings),
-        },
-        "created": created,
-        "warnings": warnings,
-        "errors": errors,
-    }
+                        response.errors.append(
+                            f"[source_id={jd_source_id}, class_id={jd_class_id}, spell_name={jd_spell_name}]: {str(e)}"
+                        )
+    response.update_totals()
+    return response.dict()

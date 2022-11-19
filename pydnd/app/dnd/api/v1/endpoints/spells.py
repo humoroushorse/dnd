@@ -146,36 +146,20 @@ def create_upload_file(
             400,
             detail=f"Invalid document type. Expected: {allowed_file_types}, Received: {upload_file.content_type}",
         )
+    response = schemas.BulkLoadResponse(filename=upload_file.filename)
     json_data: List[dict] = json.load(upload_file.file)
-    created = []
-    warnings = []
-    errors = []
     for jd in json_data:
         try:
             spell = schemas.SpellCreate(**jd)
             existing_spell = repository.spell.query(db, params={"name": spell.name})
             if len(existing_spell) > 0:
-                warnings.append(
+                response.warnings.append(
                     f"Spell with name '{spell.name}' already exists, skipping."
                 )
             else:
                 repository.spell.create(db, obj_in=spell)
-                created.append(spell.name)
+                response.created.append(spell.name)
         except Exception as e:
-            errors.append(
-                {
-                    "name": jd.get("name"),
-                    "error": str(e),
-                }
-            )
-    return {
-        "filename": upload_file.filename,
-        "totals": {
-            "created": len(created),
-            "errored": len(errors),
-            "warning": len(warnings),
-        },
-        "created": created,
-        "warnings": warnings,
-        "errors": errors,
-    }
+            response.errors.append(f"[{jd.get('name')}]: {str(e)}")
+    response.update_totals()
+    return response.dict()
