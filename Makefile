@@ -21,7 +21,8 @@ pydnd-docker-pg-alembic-upgrade:
 pydnd-docker-db-up:
 	make docker-pg-up
 	sleep 2
-	make pydnd-docker-pg-alembic-upgraded
+	make pydnd-docker-pg-alembic-upgrade
+	make pydnd-load-seeds
 
 .PHONY: pydnd-start
 pydnd-start:
