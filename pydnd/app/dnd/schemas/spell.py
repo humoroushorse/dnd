@@ -43,7 +43,7 @@ class SpellBase(BaseModel):
     ritual: Optional[bool] = Field(
         title="Ritual", description="Can you cast the spell as a ritual"
     )
-    school: Optional[schemas.SpellSchoolEnum] = Field(
+    school: Optional[schemas.enums.SpellSchoolEnum] = Field(
         title="School", description="The school of magic of the spell"
     )
     created_at: Optional[datetime] = Field(
@@ -97,7 +97,7 @@ class SpellCreate(SpellBase):
     ritual: bool = Field(
         title="Ritual", description="Can you cast the spell as a ritual"
     )
-    school: schemas.SpellSchoolEnum = Field(
+    school: schemas.enums.SpellSchoolEnum = Field(
         title="School", description="The school of magic of the spell"
     )
     created_by: str = Field(

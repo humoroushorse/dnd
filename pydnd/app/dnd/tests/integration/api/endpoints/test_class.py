@@ -11,10 +11,10 @@ from sqlalchemy.orm import Session
 
 # TODO: re-evaluate scope?
 @pytest.fixture(scope="module")
-def random_dnd_class(integration_global_data) -> schemas.DndClassCreate:
+def random_dnd_class(integration_global_data) -> schemas.dnd_class.DndClassCreate:
     """Returns a random dnd_class from global test data and keeps that reference for the module."""
     r_source = random.choice(integration_global_data.get("dnd_class"))
-    random_dnd_class = schemas.DndClassCreate(**r_source)
+    random_dnd_class = schemas.dnd_class.DndClassCreate(**r_source)
     return random_dnd_class
 
 
@@ -38,7 +38,9 @@ def test_set_up(client: TestClient, test_data_directory: str) -> None:
     assert response_json.get("totals", {}).get("errored") == 0
 
 
-def test_post(client: TestClient, random_dnd_class: schemas.DndClassCreate) -> None:
+def test_post(
+    client: TestClient, random_dnd_class: schemas.dnd_class.DndClassCreate
+) -> None:
     """Test post: happy path."""
     response = client.post(
         f"{settings.API_V1_STR}/classes", json=random_dnd_class.dict()
@@ -56,9 +58,11 @@ def test_get(client: TestClient) -> None:
     assert len(response_json.get("data")) > 0
 
 
-def test_put(client: TestClient, random_dnd_class: schemas.DndClassCreate) -> None:
+def test_put(
+    client: TestClient, random_dnd_class: schemas.dnd_class.DndClassCreate
+) -> None:
     """Test put: happy path."""
-    random_dnd_class_copy = schemas.DndClassCreate(**random_dnd_class.dict())
+    random_dnd_class_copy = schemas.dnd_class.DndClassCreate(**random_dnd_class.dict())
     random_dnd_class_copy.description = "testing_update"
     response = client.put(
         f"{settings.API_V1_STR}/classes", json=random_dnd_class_copy.dict()
@@ -69,10 +73,10 @@ def test_put(client: TestClient, random_dnd_class: schemas.DndClassCreate) -> No
 
 
 def test_put_does_not_exist(
-    client: TestClient, random_dnd_class: schemas.DndClassCreate
+    client: TestClient, random_dnd_class: schemas.dnd_class.DndClassCreate
 ) -> None:
     """Test post: 404."""
-    random_dnd_class_copy = schemas.DndClassCreate(**random_dnd_class.dict())
+    random_dnd_class_copy = schemas.dnd_class.DndClassCreate(**random_dnd_class.dict())
     random_dnd_class_copy.id = -999999999
     response = client.put(
         f"{settings.API_V1_STR}/classes", json=random_dnd_class_copy.dict()
@@ -80,7 +84,9 @@ def test_put_does_not_exist(
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
-def test_delete(client: TestClient, random_dnd_class: schemas.DndClassCreate) -> None:
+def test_delete(
+    client: TestClient, random_dnd_class: schemas.dnd_class.DndClassCreate
+) -> None:
     """Test delete: happy path."""
     response = client.delete(f"{settings.API_V1_STR}/classes?id={random_dnd_class.id}")
     message = response.json()
@@ -89,10 +95,10 @@ def test_delete(client: TestClient, random_dnd_class: schemas.DndClassCreate) ->
 
 
 def test_delete_does_not_exist(
-    client: TestClient, random_dnd_class: schemas.DndClassCreate
+    client: TestClient, random_dnd_class: schemas.dnd_class.DndClassCreate
 ) -> None:
     """Test delete: 404."""
-    random_dnd_class_copy = schemas.DndClassCreate(**random_dnd_class.dict())
+    random_dnd_class_copy = schemas.dnd_class.DndClassCreate(**random_dnd_class.dict())
     random_dnd_class_copy.id = -999999999
     response = client.delete(
         f"{settings.API_V1_STR}/classes?id={random_dnd_class_copy.id}"
@@ -116,7 +122,7 @@ def test_post_bulk(client: TestClient, test_data_directory: str, count) -> None:
         files=files,
         headers={"accept": "application/json"},
     )
-    bulk_load_response = schemas.BulkLoadResponse(**response.json())
+    bulk_load_response = schemas.responses.BulkLoadResponse(**response.json())
     assert response.status_code == status.HTTP_200_OK
     assert bulk_load_response.totals.errored == 0
 
@@ -154,7 +160,7 @@ def test_post_bulk_bad_json_data(client: TestClient, test_data_directory: str) -
         files=files,
         headers={"accept": "application/json"},
     )
-    bulk_load_response = schemas.BulkLoadResponse(**response.json())
+    bulk_load_response = schemas.responses.BulkLoadResponse(**response.json())
     assert response.status_code == status.HTTP_200_OK
     assert bulk_load_response.totals.errored > 0
 

@@ -1,7 +1,7 @@
 """Repository: dnd_class (to avoid 'class' keword)."""
 from dnd.models.dnd_class import DndClass
 from dnd.repository.base import RepositoryBase
-from dnd.schemas import DndClassCreate, DndClassUpdate
+from dnd.schemas.dnd_class import DndClassCreate, DndClassUpdate
 
 
 class RepositoryDndClass(RepositoryBase[DndClass, DndClassCreate, DndClassUpdate]):

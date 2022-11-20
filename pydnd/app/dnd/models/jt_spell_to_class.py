@@ -11,11 +11,13 @@ class JtSpellToClass(Base):
     # keys
     id = Column(Integer, primary_key=True, index=True)
     source_id = Column(
-        Integer, ForeignKey(f"{schemas.DbSchemaEnum.DND.value}.source.id")
+        Integer, ForeignKey(f"{schemas.enums.DbSchemaEnum.DND.value}.source.id")
     )
-    spell_id = Column(Integer, ForeignKey(f"{schemas.DbSchemaEnum.DND.value}.spell.id"))
+    spell_id = Column(
+        Integer, ForeignKey(f"{schemas.enums.DbSchemaEnum.DND.value}.spell.id")
+    )
     dnd_class_id = Column(
-        Integer, ForeignKey(f"{schemas.DbSchemaEnum.DND.value}.dnd_class.id")
+        Integer, ForeignKey(f"{schemas.enums.DbSchemaEnum.DND.value}.dnd_class.id")
     )
     # relationships
     source = relationship("Source")

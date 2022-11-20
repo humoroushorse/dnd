@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from dnd import models
 from dnd.models.spell import Spell
 from dnd.repository.base import RepositoryBase
-from dnd.schemas import SpellCreate, SpellUpdate
+from dnd.schemas.spell import SpellCreate, SpellUpdate
 from sqlalchemy.orm import Session
 
 

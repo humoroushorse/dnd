@@ -1,7 +1,7 @@
 """Repository: source."""
 from dnd.models.source import Source
 from dnd.repository.base import RepositoryBase
-from dnd.schemas import SourceCreate, SourceUpdate
+from dnd.schemas.source import SourceCreate, SourceUpdate
 
 
 class RepositorySource(RepositoryBase[Source, SourceCreate, SourceUpdate]):

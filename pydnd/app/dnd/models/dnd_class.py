@@ -11,7 +11,7 @@ class DndClass(Base):
     # keys
     id = Column(Integer, primary_key=True, index=True)
     source_id = Column(
-        Integer, ForeignKey(f"{schemas.DbSchemaEnum.DND.value}.source.id")
+        Integer, ForeignKey(f"{schemas.enums.DbSchemaEnum.DND.value}.source.id")
     )
     # fields
     name = Column(String, nullable=False, unique=True)

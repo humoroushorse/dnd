@@ -25,7 +25,7 @@ class Spell(Base):
     # keys
     id = Column(Integer, primary_key=True, index=True)
     source_id = Column(
-        Integer, ForeignKey(f"{schemas.DbSchemaEnum.DND.value}.source.id")
+        Integer, ForeignKey(f"{schemas.enums.DbSchemaEnum.DND.value}.source.id")
     )
     # fields
     name = Column(String, nullable=False)
@@ -37,7 +37,7 @@ class Spell(Base):
     level = Column(Integer, nullable=False)
     range = Column(String, nullable=False)
     ritual = Column(Boolean, nullable=False)
-    school = Column(Enum(schemas.SpellSchoolEnum), nullable=False)
+    school = Column(Enum(schemas.enums.SpellSchoolEnum), nullable=False)
     created_at = Column(DateTime(timezone=True), default=func.now(), nullable=False)
     created_by = Column(String, nullable=False)
     updated_at = Column(

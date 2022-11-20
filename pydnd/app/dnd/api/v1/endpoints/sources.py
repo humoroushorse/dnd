@@ -10,13 +10,16 @@ from sqlalchemy.orm import Session
 router = APIRouter()
 
 
-@router.get("", response_model=schemas.GenericListResponse[schemas.SourceResponse])
+@router.get(
+    "",
+    response_model=schemas.responses.GenericListResponse[schemas.source.SourceResponse],
+)
 def read_sources(
     db: Session = Depends(get_db), offset: int = 0, limit: int = 100
 ) -> Any:
     """Retrieve all sources."""
     sources, total_count = repository.source.get_multi(db, offset=offset, limit=limit)
-    return schemas.GenericListResponse[schemas.SourceResponse](
+    return schemas.responses.GenericListResponse[schemas.source.SourceResponse](
         total_count=total_count,
         limit=limit,
         offset=offset,
@@ -25,18 +28,18 @@ def read_sources(
     )
 
 
-@router.post("", response_model=schemas.SourceResponse)
+@router.post("", response_model=schemas.source.SourceResponse)
 def create_source(
-    *, db: Session = Depends(get_db), source_in: schemas.SourceCreate
+    *, db: Session = Depends(get_db), source_in: schemas.source.SourceCreate
 ) -> Any:
     """Create new sources."""
     source = repository.source.create(db, obj_in=source_in)
     return source
 
 
-@router.put("", response_model=schemas.SourceResponse)
+@router.put("", response_model=schemas.source.SourceResponse)
 def update_source(
-    *, db: Session = Depends(get_db), source_in: schemas.SourceUpdate
+    *, db: Session = Depends(get_db), source_in: schemas.source.SourceUpdate
 ) -> Any:
     """Update existing sources."""
     source = repository.source.get(db, model_id=source_in.id)
@@ -49,7 +52,7 @@ def update_source(
     return source
 
 
-@router.delete("", response_model=schemas.Message)
+@router.delete("", response_model=schemas.responses.MessageResponse)
 def delete_source(
     *, db: Session = Depends(get_db), id: int  # pylint: disable=redefined-builtin
 ) -> Any:
@@ -64,7 +67,7 @@ def delete_source(
     return {"message": f"Source with ID = {id} deleted."}
 
 
-@router.post("/bulk", response_model=schemas.BulkLoadResponse)
+@router.post("/bulk", response_model=schemas.responses.BulkLoadResponse)
 def create_upload_file(
     *,
     db: Session = Depends(get_db),
@@ -80,11 +83,11 @@ def create_upload_file(
             400,
             detail=f"Invalid document type. Expected: {allowed_file_types}, Received: {upload_file.content_type}",
         )
-    response = schemas.BulkLoadResponse(filename=upload_file.filename)
+    response = schemas.responses.BulkLoadResponse(filename=upload_file.filename)
     json_data: List[dict] = json.load(upload_file.file)
     for jd in json_data:
         try:
-            source = schemas.SourceCreate(**jd)
+            source = schemas.source.SourceCreate(**jd)
             existing_source = repository.source.query(db, params={"name": source.name})
             if len(existing_source) > 0:
                 response.warnings.append(

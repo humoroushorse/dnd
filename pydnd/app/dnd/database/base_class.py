@@ -22,7 +22,7 @@ class Base:
     __name__: str
 
     __table_args__ = {
-        "schema": schemas.DbSchemaEnum.DND.value,
+        "schema": schemas.enums.DbSchemaEnum.DND.value,
     }
 
     # Generate __tablename__ automatically

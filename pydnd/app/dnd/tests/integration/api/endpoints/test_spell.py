@@ -15,10 +15,10 @@ BULK_SPELLS_SEEDS_FILE = "spells_tashas.json"
 
 # TODO: re-evaluate scope?
 @pytest.fixture(scope="module")
-def random_spell(integration_global_data) -> schemas.SpellCreate:
+def random_spell(integration_global_data) -> schemas.spell.SpellCreate:
     """Returns a random spell from global test data and keeps that reference for the module."""
     r_source = random.choice(integration_global_data.get("spell"))
-    random_spell = schemas.SpellCreate(**r_source)
+    random_spell = schemas.spell.SpellCreate(**r_source)
     random_spell.id = 0
     return random_spell
 
@@ -54,7 +54,7 @@ def test_set_up(client: TestClient, test_data_directory: str) -> None:
     assert response_json.get("totals", {}).get("errored") == 0
 
 
-def test_post(client: TestClient, random_spell: schemas.SpellCreate) -> None:
+def test_post(client: TestClient, random_spell: schemas.spell.SpellCreate) -> None:
     """Test post: happy path."""
     response = client.post(
         f"{settings.API_V1_STR}/spells", json=jsonable_encoder(random_spell.dict())
@@ -72,9 +72,9 @@ def test_get(client: TestClient) -> None:
     assert len(response_json.get("data")) > 0
 
 
-def test_put(client: TestClient, random_spell: schemas.SpellCreate) -> None:
+def test_put(client: TestClient, random_spell: schemas.spell.SpellCreate) -> None:
     """Test put: happy path."""
-    random_spell_copy = schemas.SpellCreate(**random_spell.dict())
+    random_spell_copy = schemas.spell.SpellCreate(**random_spell.dict())
     random_spell_copy.description = "testing_update"
     response = client.put(
         f"{settings.API_V1_STR}/spells", json=jsonable_encoder(random_spell_copy.dict())
@@ -85,10 +85,10 @@ def test_put(client: TestClient, random_spell: schemas.SpellCreate) -> None:
 
 
 def test_put_does_not_exist(
-    client: TestClient, random_spell: schemas.SpellCreate
+    client: TestClient, random_spell: schemas.spell.SpellCreate
 ) -> None:
     """Test put: 404."""
-    random_spell_copy = schemas.SpellCreate(**random_spell.dict())
+    random_spell_copy = schemas.spell.SpellCreate(**random_spell.dict())
     random_spell_copy.id = -999999999
     response = client.put(
         f"{settings.API_V1_STR}/spells", json=jsonable_encoder(random_spell_copy.dict())
@@ -96,7 +96,7 @@ def test_put_does_not_exist(
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
-def test_delete(client: TestClient, random_spell: schemas.SpellCreate) -> None:
+def test_delete(client: TestClient, random_spell: schemas.spell.SpellCreate) -> None:
     """Test delete: happy path."""
     response = client.delete(f"{settings.API_V1_STR}/spells?id={random_spell.id}")
     message = response.json()
@@ -105,10 +105,10 @@ def test_delete(client: TestClient, random_spell: schemas.SpellCreate) -> None:
 
 
 def test_delete_does_not_exist(
-    client: TestClient, random_spell: schemas.SpellCreate
+    client: TestClient, random_spell: schemas.spell.SpellCreate
 ) -> None:
     """Test delete: 404."""
-    random_spell_copy = schemas.SpellCreate(**random_spell.dict())
+    random_spell_copy = schemas.spell.SpellCreate(**random_spell.dict())
     random_spell_copy.id = -999999999
     response = client.delete(f"{settings.API_V1_STR}/spells?id={random_spell_copy.id}")
     assert response.status_code == status.HTTP_404_NOT_FOUND
@@ -130,7 +130,7 @@ def test_post_bulk(client: TestClient, test_data_directory: str, count) -> None:
         files=files,
         headers={"accept": "application/json"},
     )
-    bulk_load_response = schemas.BulkLoadResponse(**response.json())
+    bulk_load_response = schemas.responses.BulkLoadResponse(**response.json())
     assert response.status_code == status.HTTP_200_OK
     assert bulk_load_response.totals.errored == 0
 
@@ -168,7 +168,7 @@ def test_post_bulk_bad_json_data(client: TestClient, test_data_directory: str) -
         files=files,
         headers={"accept": "application/json"},
     )
-    bulk_load_response = schemas.BulkLoadResponse(**response.json())
+    bulk_load_response = schemas.responses.BulkLoadResponse(**response.json())
     assert response.status_code == status.HTTP_200_OK
     assert bulk_load_response.totals.errored > 0
 
