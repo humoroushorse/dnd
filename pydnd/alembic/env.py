@@ -2,6 +2,7 @@
 from logging.config import fileConfig
 
 from alembic import context
+from dnd import schemas
 from dnd.core import settings
 from dnd.database.base import Base
 from sqlalchemy import engine_from_config, pool
@@ -63,12 +64,11 @@ def run_migrations_offline() -> None:
         url=url,
         target_metadata=target_metadata,
         version_table="alembic_version",
-        version_table_schema="dnd",  # <-- MATCH THE SCHEMA
+        version_table_schema=schemas.enums.DbSchemaEnum.DND.value,  # <-- MATCH THE SCHEMA
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
         compare_type=True,
     )
-
     with context.begin_transaction():
         context.run_migrations()
 
@@ -86,9 +86,17 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
+        schema_name = schemas.enums.DbSchemaEnum.DND.value
         context.configure(
-            connection=connection, target_metadata=target_metadata, compare_type=True
+            connection=connection,
+            target_metadata=target_metadata,
+            compare_type=True,
+            version_table="alembic_version",
+            version_table_schema=schema_name,  # <-- MATCH THE SCHEMA
         )
+
+        # Make sure our schema exists
+        connection.execute(f"CREATE SCHEMA IF NOT EXISTS {schema_name}")
 
         with context.begin_transaction():
             context.run_migrations()

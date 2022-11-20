@@ -37,7 +37,9 @@ class Spell(Base):
     level = Column(Integer, nullable=False)
     range = Column(String, nullable=False)
     ritual = Column(Boolean, nullable=False)
-    school = Column(Enum(schemas.enums.SpellSchoolEnum), nullable=False)
+    school = Column(
+        Enum(schemas.enums.SpellSchoolEnum, inherit_schema=True), nullable=False
+    )
     created_at = Column(DateTime(timezone=True), default=func.now(), nullable=False)
     created_by = Column(String, nullable=False)
     updated_at = Column(
