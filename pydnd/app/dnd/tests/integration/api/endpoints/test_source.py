@@ -4,6 +4,7 @@ import random
 import pytest
 from dnd import models, schemas
 from dnd.core import settings
+from dnd.tests.integration import helpers
 from fastapi import status
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
@@ -29,9 +30,11 @@ def test_post(client: TestClient, random_source: schemas.source.SourceCreate) ->
 def test_get(client: TestClient) -> None:
     """Tests get: happy path."""
     response = client.get(f"{settings.API_V1_STR}/sources")
-    response_json = response.json()
+    response_schema = schemas.responses.GenericListResponse[schemas.source.SourceBase](
+        **response.json()
+    )
     assert response.status_code == status.HTTP_200_OK
-    assert len(response_json.get("data")) > 0
+    assert len(response_schema.data) > 0
 
 
 def test_put(client: TestClient, random_source: schemas.source.SourceCreate) -> None:
@@ -138,10 +141,5 @@ def test_post_bulk_bad_json_data(client: TestClient, test_data_directory: str) -
 
 
 def test_clean_up(client: TestClient, db: Session) -> None:
-    """Remove anything added from this test file: [sources]."""
-    db.query(models.Source).delete()
-    db.commit()
-    response = client.get(f"{settings.API_V1_STR}/sources")
-    response_json = response.json()
-    assert response.status_code == status.HTTP_200_OK
-    assert len(response_json.get("data")) == 0
+    """Remove anything added from this test file."""
+    helpers.purge_table(client, db, models.Source, "sources")

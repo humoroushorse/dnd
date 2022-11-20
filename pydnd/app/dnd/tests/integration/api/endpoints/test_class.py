@@ -4,6 +4,7 @@ import random
 import pytest
 from dnd import models, schemas
 from dnd.core import settings
+from dnd.tests.integration import helpers
 from fastapi import status
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
@@ -21,21 +22,9 @@ def random_dnd_class(integration_global_data) -> schemas.dnd_class.DndClassCreat
 def test_set_up(client: TestClient, test_data_directory: str) -> None:
     """Set up required foreign key data: [source]."""
     # load in sources
-    files = {
-        "upload_file": (
-            "source.json",
-            open(f"{test_data_directory}/json/seeds/source.json", "rb"),
-            "application/json",
-        )
-    }
-    response = client.post(
-        f"{settings.API_V1_STR}/sources/bulk",
-        files=files,
-        headers={"accept": "application/json"},
+    helpers.bulk_load_file(
+        client, f"{test_data_directory}/json/seeds/source.json", "sources"
     )
-    response_json: dict = response.json()
-    assert response.status_code == status.HTTP_200_OK
-    assert response_json.get("totals", {}).get("errored") == 0
 
 
 def test_post(
@@ -53,9 +42,11 @@ def test_post(
 def test_get(client: TestClient) -> None:
     """Test get: happy path."""
     response = client.get(f"{settings.API_V1_STR}/classes")
-    response_json = response.json()
+    response_schema = schemas.responses.GenericListResponse[
+        schemas.dnd_class.DndClassBase
+    ](**response.json())
     assert response.status_code == status.HTTP_200_OK
-    assert len(response_json.get("data")) > 0
+    assert len(response_schema.data) > 0
 
 
 def test_put(
@@ -166,18 +157,6 @@ def test_post_bulk_bad_json_data(client: TestClient, test_data_directory: str) -
 
 
 def test_clean_up(client: TestClient, db: Session) -> None:
-    """Remove anything added from this test file: [classes, sources]."""
-    # clean up classes
-    db.query(models.DndClass).delete()
-    db.commit()
-    response = client.get(f"{settings.API_V1_STR}/classes")
-    response_json = response.json()
-    assert response.status_code == status.HTTP_200_OK
-    assert len(response_json.get("data")) == 0
-    # clean up sources
-    db.query(models.Source).delete()
-    db.commit()
-    response = client.get(f"{settings.API_V1_STR}/sources")
-    response_json = response.json()
-    assert response.status_code == status.HTTP_200_OK
-    assert len(response_json.get("data")) == 0
+    """Remove anything added from this test file."""
+    helpers.purge_table(client, db, models.DndClass, "classes")
+    helpers.purge_table(client, db, models.Source, "sources")
