@@ -10,7 +10,12 @@ from sqlalchemy.orm import Session
 router = APIRouter()
 
 
-@router.get("", response_model=schemas.GenericListResponse[schemas.DndClassResponse])
+@router.get(
+    "",
+    response_model=schemas.responses.GenericListResponse[
+        schemas.dnd_class.DndClassResponse
+    ],
+)
 def read_dnd_classes(
     db: Session = Depends(get_db), offset: int = 0, limit: int = 100
 ) -> Any:
@@ -18,7 +23,7 @@ def read_dnd_classes(
     dnd_classes, total_count = repository.dnd_class.get_multi(
         db, offset=offset, limit=limit
     )
-    return schemas.GenericListResponse[schemas.DndClassResponse](
+    return schemas.responses.GenericListResponse[schemas.dnd_class.DndClassResponse](
         total_count=total_count,
         limit=limit,
         offset=offset,
@@ -27,18 +32,18 @@ def read_dnd_classes(
     )
 
 
-@router.post("", response_model=schemas.DndClassResponse)
+@router.post("", response_model=schemas.dnd_class.DndClassResponse)
 def create_dnd_class(
-    *, db: Session = Depends(get_db), dnd_class_in: schemas.DndClassCreate
+    *, db: Session = Depends(get_db), dnd_class_in: schemas.dnd_class.DndClassCreate
 ) -> Any:
     """Create new dnd_classes."""
     dnd_class = repository.dnd_class.create(db, obj_in=dnd_class_in)
     return dnd_class
 
 
-@router.put("", response_model=schemas.DndClassResponse)
+@router.put("", response_model=schemas.dnd_class.DndClassResponse)
 def update_dnd_class(
-    *, db: Session = Depends(get_db), dnd_class_in: schemas.DndClassUpdate
+    *, db: Session = Depends(get_db), dnd_class_in: schemas.dnd_class.DndClassUpdate
 ) -> Any:
     """Update existing dnd_classes."""
     dnd_class = repository.dnd_class.get(db, model_id=dnd_class_in.id)
@@ -51,7 +56,7 @@ def update_dnd_class(
     return dnd_class
 
 
-@router.delete("", response_model=schemas.Message)
+@router.delete("", response_model=schemas.responses.MessageResponse)
 def delete_dnd_class(
     *, db: Session = Depends(get_db), id: int  # pylint: disable=redefined-builtin
 ) -> Any:
@@ -66,7 +71,7 @@ def delete_dnd_class(
     return {"message": f"Item with ID = {id} deleted."}
 
 
-@router.post("/bulk", response_model=schemas.BulkLoadResponse)
+@router.post("/bulk", response_model=schemas.responses.BulkLoadResponse)
 def create_upload_file(
     *,
     db: Session = Depends(get_db),
@@ -82,11 +87,11 @@ def create_upload_file(
             400,
             detail=f"Invalid document type. Expected: {allowed_file_types}, Received: {upload_file.content_type}",
         )
-    response = schemas.BulkLoadResponse(filename=upload_file.filename)
+    response = schemas.responses.BulkLoadResponse(filename=upload_file.filename)
     json_data: List[dict] = json.load(upload_file.file)
     for jd in json_data:
         try:
-            dnd_class = schemas.DndClassCreate(**jd)
+            dnd_class = schemas.dnd_class.DndClassCreate(**jd)
             existing_dnd_class = repository.dnd_class.query(
                 db, params={"name": dnd_class.name}
             )

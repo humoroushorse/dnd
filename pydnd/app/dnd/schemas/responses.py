@@ -38,3 +38,9 @@ class BulkLoadResponse(BaseModel):
         self.totals.created = len(self.created if self.created else [])
         self.totals.errored = len(self.errors if self.errors else [])
         self.totals.warning = len(self.warnings if self.warnings else [])
+
+
+class MessageResponse(BaseModel):
+    """Response message."""
+
+    message: str

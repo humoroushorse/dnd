@@ -58,8 +58,8 @@ app.add_middleware(
 # Root of API (health check)
 
 
-@app.get("/", response_model=schemas.HealthCheck, tags=["status"])
-async def health_check() -> schemas.HealthCheck:
+@app.get("/", response_model=schemas.health_check.HealthCheck, tags=["status"])
+async def health_check() -> schemas.health_check.HealthCheck:
     """Root API endpoint used for health check."""
     return {
         "name": settings.PROJECT_NAME,

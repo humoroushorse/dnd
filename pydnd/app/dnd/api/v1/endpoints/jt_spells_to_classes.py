@@ -11,7 +11,10 @@ router = APIRouter()
 
 
 @router.get(
-    "", response_model=schemas.GenericListResponse[schemas.JtSpellToClassResponse]
+    "",
+    response_model=schemas.responses.GenericListResponse[
+        schemas.jt_spell_to_class.JtSpellToClassResponse
+    ],
 )
 def read_jt_spells_to_classes(
     db: Session = Depends(get_db), offset: int = 0, limit: int = 100
@@ -20,7 +23,9 @@ def read_jt_spells_to_classes(
     jt_spells_to_classes, total_count = repository.jt_spell_to_class.get_multi(
         db, offset=offset, limit=limit
     )
-    return schemas.GenericListResponse[schemas.JtSpellToClassResponse](
+    return schemas.responses.GenericListResponse[
+        schemas.jt_spell_to_class.JtSpellToClassResponse
+    ](
         total_count=total_count,
         limit=limit,
         offset=offset,
@@ -29,9 +34,11 @@ def read_jt_spells_to_classes(
     )
 
 
-@router.post("", response_model=schemas.JtSpellToClassResponse)
+@router.post("", response_model=schemas.jt_spell_to_class.JtSpellToClassResponse)
 def create_jt_spell_to_class(
-    *, db: Session = Depends(get_db), jt_spell_to_class_in: schemas.JtSpellToClassCreate
+    *,
+    db: Session = Depends(get_db),
+    jt_spell_to_class_in: schemas.jt_spell_to_class.JtSpellToClassCreate,
 ) -> Any:
     """Create new jt_spells_to_classes."""
     if jt_spell_to_class_in.source_name:
@@ -64,14 +71,19 @@ def create_jt_spell_to_class(
         jt_spell_to_class_in.spell_id = spell[0].id
 
     jt_spell_to_class = repository.jt_spell_to_class.create(
-        db, obj_in=schemas.JtSpellToClassBase(**jt_spell_to_class_in.dict())
+        db,
+        obj_in=schemas.jt_spell_to_class.JtSpellToClassBase(
+            **jt_spell_to_class_in.dict()
+        ),
     )
     return jt_spell_to_class
 
 
-@router.put("", response_model=schemas.JtSpellToClassResponse)
+@router.put("", response_model=schemas.jt_spell_to_class.JtSpellToClassResponse)
 def update_jt_spell_to_class(
-    *, db: Session = Depends(get_db), jt_spell_to_class_in: schemas.JtSpellToClassUpdate
+    *,
+    db: Session = Depends(get_db),
+    jt_spell_to_class_in: schemas.jt_spell_to_class.JtSpellToClassUpdate,
 ) -> Any:
     """Update existing jt_spells_to_classes."""
     jt_spell_to_class = repository.jt_spell_to_class.get(
@@ -88,7 +100,7 @@ def update_jt_spell_to_class(
     return jt_spell_to_class
 
 
-@router.delete("", response_model=schemas.Message)
+@router.delete("", response_model=schemas.responses.MessageResponse)
 def delete_jt_spell_to_class(
     *, db: Session = Depends(get_db), id: int  # pylint: disable=redefined-builtin
 ) -> Any:
@@ -103,7 +115,7 @@ def delete_jt_spell_to_class(
     return {"message": f"JtSpellToClass with ID = {id} deleted."}
 
 
-@router.post("/bulk", response_model=schemas.BulkLoadResponse)
+@router.post("/bulk", response_model=schemas.responses.BulkLoadResponse)
 def create_upload_file(  # noqa: C901 <- ignore code complexity (12 > 9)
     *,
     db: Session = Depends(get_db),
@@ -119,7 +131,7 @@ def create_upload_file(  # noqa: C901 <- ignore code complexity (12 > 9)
             400,
             detail=f"Invalid document type. Expected: {allowed_file_types}, Received: {upload_file.content_type}",
         )
-    response = schemas.BulkLoadResponse(filename=upload_file.filename)
+    response = schemas.responses.BulkLoadResponse(filename=upload_file.filename)
     json_data: List[dict] = json.load(upload_file.file)
     for jd in json_data:
 
@@ -176,10 +188,12 @@ def create_upload_file(  # noqa: C901 <- ignore code complexity (12 > 9)
                                     + "already exists, skipping."
                                 )
                             else:
-                                spell_to_class = schemas.JtSpellToClassBase(
-                                    dnd_class_id=dnd_class.id,
-                                    source_id=source.id,
-                                    spell_id=spell.id,
+                                spell_to_class = (
+                                    schemas.jt_spell_to_class.JtSpellToClassBase(
+                                        dnd_class_id=dnd_class.id,
+                                        source_id=source.id,
+                                        spell_id=spell.id,
+                                    )
                                 )
                                 repository.jt_spell_to_class.create(
                                     db, obj_in=spell_to_class

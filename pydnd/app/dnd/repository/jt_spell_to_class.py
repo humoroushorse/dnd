@@ -1,7 +1,7 @@
 """Repository: jt_spell_to_class."""
 from dnd.models.jt_spell_to_class import JtSpellToClass
 from dnd.repository.base import RepositoryBase
-from dnd.schemas import JtSpellToClassCreate, JtSpellToClassUpdate
+from dnd.schemas.jt_spell_to_class import JtSpellToClassCreate, JtSpellToClassUpdate
 
 
 class RepositoryJtSpellToClass(

@@ -50,7 +50,10 @@ acid_splash = {
 }
 
 
-@router.get("", response_model=schemas.GenericListResponse[schemas.SpellResponse])
+@router.get(
+    "",
+    response_model=schemas.responses.GenericListResponse[schemas.spell.SpellResponse],
+)
 def read_spells(
     db: Session = Depends(get_db),
     offset: int = 0,
@@ -59,7 +62,7 @@ def read_spells(
     level: Optional[List[int]] = Query(
         [], title="Levels", description="list of spell levels"
     ),
-    school: Optional[List[schemas.SpellSchoolEnum]] = Query(
+    school: Optional[List[schemas.enums.SpellSchoolEnum]] = Query(
         [], title="Schools", description="list of spell schools"
     ),
     class_names: Optional[List[str]] = Query(
@@ -80,7 +83,7 @@ def read_spells(
         class_names=class_names,
         source_names=source_names,
     )
-    return schemas.GenericListResponse[schemas.SpellResponse](
+    return schemas.responses.GenericListResponse[schemas.spell.SpellResponse](
         total_count=total_count,
         limit=limit,
         offset=offset,
@@ -89,20 +92,20 @@ def read_spells(
     )
 
 
-@router.post("", response_model=schemas.SpellResponse)
+@router.post("", response_model=schemas.spell.SpellResponse)
 def create_spell(
-    *, db: Session = Depends(get_db), spell_in: schemas.SpellCreate
+    *, db: Session = Depends(get_db), spell_in: schemas.spell.SpellCreate
 ) -> Any:
     """Create new spells."""
     spell = repository.spell.create(db, obj_in=spell_in)
     return spell
 
 
-@router.put("", response_model=schemas.SpellResponse)
+@router.put("", response_model=schemas.spell.SpellResponse)
 def update_spell(
     *,
     db: Session = Depends(get_db),
-    spell_in: schemas.SpellUpdate = Body(example={**acid_splash, "id": 0}),  # type: ignore[arg-type]
+    spell_in: schemas.spell.SpellUpdate = Body(example={**acid_splash, "id": 0}),  # type: ignore[arg-type]
 ) -> Any:
     """Update existing spells."""
     spell = repository.spell.get(db, model_id=spell_in.id)
@@ -115,7 +118,7 @@ def update_spell(
     return spell
 
 
-@router.delete("", response_model=schemas.Message)
+@router.delete("", response_model=schemas.responses.MessageResponse)
 def delete_spell(
     *, db: Session = Depends(get_db), id: int  # pylint: disable=redefined-builtin
 ) -> Any:
@@ -146,11 +149,11 @@ def create_upload_file(
             400,
             detail=f"Invalid document type. Expected: {allowed_file_types}, Received: {upload_file.content_type}",
         )
-    response = schemas.BulkLoadResponse(filename=upload_file.filename)
+    response = schemas.responses.BulkLoadResponse(filename=upload_file.filename)
     json_data: List[dict] = json.load(upload_file.file)
     for jd in json_data:
         try:
-            spell = schemas.SpellCreate(**jd)
+            spell = schemas.spell.SpellCreate(**jd)
             existing_spell = repository.spell.query(db, params={"name": spell.name})
             if len(existing_spell) > 0:
                 response.warnings.append(
