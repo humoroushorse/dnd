@@ -4,6 +4,7 @@ import random
 import pytest
 from dnd import models, schemas
 from dnd.core import settings
+from dnd.tests.integration import helpers
 from fastapi import status
 from fastapi.encoders import jsonable_encoder
 from fastapi.testclient import TestClient
@@ -67,9 +68,11 @@ def test_post(client: TestClient, random_spell: schemas.spell.SpellCreate) -> No
 def test_get(client: TestClient) -> None:
     """Test get: happy path."""
     response = client.get(f"{settings.API_V1_STR}/spells")
-    response_json = response.json()
+    response_schema = schemas.responses.GenericListResponse[schemas.spell.SpellBase](
+        **response.json()
+    )
     assert response.status_code == status.HTTP_200_OK
-    assert len(response_json.get("data")) > 0
+    assert len(response_schema.data) > 0
 
 
 def test_put(client: TestClient, random_spell: schemas.spell.SpellCreate) -> None:
@@ -174,18 +177,6 @@ def test_post_bulk_bad_json_data(client: TestClient, test_data_directory: str) -
 
 
 def test_clean_up(client: TestClient, db: Session) -> None:
-    """Remove anything added from this test file: [spells, sources]."""
-    # clean up spells
-    db.query(models.Spell).delete()
-    db.commit()
-    response = client.get(f"{settings.API_V1_STR}/spells")
-    response_json = response.json()
-    assert response.status_code == status.HTTP_200_OK
-    assert len(response_json.get("data")) == 0
-    # clean up sources
-    db.query(models.Source).delete()
-    db.commit()
-    response = client.get(f"{settings.API_V1_STR}/sources")
-    response_json = response.json()
-    assert response.status_code == status.HTTP_200_OK
-    assert len(response_json.get("data")) == 0
+    """Remove anything added from this test file."""
+    helpers.purge_table(client, db, models.Spell, "spells")
+    helpers.purge_table(client, db, models.Source, "sources")

@@ -77,7 +77,7 @@ pydnd-unit-html:
 pydnd-integration:
 	make docker-db-tests-up
 	# run the tests and even if they fail, destroy the docker container
-	cd pydnd && poetry run pytest ${PYDND_INTEGRATION_TEST_PATH} --seed="${SEED}" --skip-d20="${SKIP_D20}" -v --cov=app || echo "continuing even if error"
+	cd pydnd && poetry run pytest ${PYDND_INTEGRATION_TEST_PATH} --seed="${SEED}" --skip-d20="${SKIP_D20}" --maxfail=1 -v --cov=app || echo "continuing even if error"
 	docker kill dnd-pg-tests
 	docker rm dnd-pg-tests
 
