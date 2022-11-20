@@ -23,9 +23,11 @@ DROP TYPE IF EXISTS spellschoolenum;
 ### 3. replace env.py
 
 ```python
+"""Alembic env file for connecting to and manipilating database schemas."""
 from logging.config import fileConfig
 
 from alembic import context
+from dnd import schemas
 from dnd.core import settings
 from dnd.database.base import Base
 from sqlalchemy import engine_from_config, pool
@@ -55,12 +57,22 @@ target_metadata.naming_convention = {
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
+
 def get_db_uri() -> str:
-    db_override = context.get_x_argument(as_dictionary=True).get('db_override')
+    """Gets database connection string from app settings unless overridden.
+
+    This string is pulled from the app settings unless you pass in a `-x db_override` argument.
+    Example: `alembic -x db_override="foobar://connection.string"` upgrade head
+
+    Returns:
+        str: The database connection string.
+    """
+    db_override = context.get_x_argument(as_dictionary=True).get("db_override")
     if db_override:
-        print('Alembic overriding db::', db_override)
+        print("Alembic overriding db::", db_override)  # noqa: T001
         return db_override
     return settings.SQLALCHEMY_DATABASE_URI
+
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
@@ -76,13 +88,12 @@ def run_migrations_offline() -> None:
     context.configure(
         url=url,
         target_metadata=target_metadata,
-        version_table='alembic_version',
-        version_table_schema="dnd",  # <-- MATCH THE SCHEMA
+        version_table="alembic_version",
+        version_table_schema=schemas.enums.DbSchemaEnum.DND.value,  # <-- MATCH THE SCHEMA
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
         compare_type=True,
     )
-
     with context.begin_transaction():
         context.run_migrations()
 
@@ -100,9 +111,17 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
+        schema_name = schemas.enums.DbSchemaEnum.DND.value
         context.configure(
-            connection=connection, target_metadata=target_metadata, compare_type=True
+            connection=connection,
+            target_metadata=target_metadata,
+            compare_type=True,
+            version_table="alembic_version",
+            version_table_schema=schema_name,  # <-- MATCH THE SCHEMA
         )
+
+        # Make sure our schema exists
+        connection.execute(f"CREATE SCHEMA IF NOT EXISTS {schema_name}")
 
         with context.begin_transaction():
             context.run_migrations()
@@ -115,11 +134,5 @@ else:
 ```
 
 ### 4. `poetry run alembic revision --autogenerate -m "init"` generate first revision
-### 5. add the following to the generated version's upgrade() function
-```python
-from dnd.schemas import DbSchemaEnum
 
-for schema in DbSchemaEnum:
-    op.execute(f"CREATE SCHEMA {schema.value}")
-```
-### 6. `poetry run alembic upgrade head`
+### 5. `poetry run alembic upgrade head`
