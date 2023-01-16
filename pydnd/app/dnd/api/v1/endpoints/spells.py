@@ -4,6 +4,7 @@ from typing import Any, List, Optional
 
 from dnd import repository, schemas
 from dnd.api.deps import get_db
+from dnd.utils.logging import debug_input
 from fastapi import (
     APIRouter,
     Body,
@@ -54,6 +55,7 @@ acid_splash = {
     "",
     response_model=schemas.responses.GenericListResponse[schemas.spell.SpellResponse],
 )
+@debug_input
 def read_spells(
     db: Session = Depends(get_db),
     offset: int = 0,
@@ -93,6 +95,7 @@ def read_spells(
 
 
 @router.post("", response_model=schemas.spell.SpellResponse)
+@debug_input
 def create_spell(
     *, db: Session = Depends(get_db), spell_in: schemas.spell.SpellCreate
 ) -> Any:
@@ -102,6 +105,7 @@ def create_spell(
 
 
 @router.put("", response_model=schemas.spell.SpellResponse)
+@debug_input
 def update_spell(
     *,
     db: Session = Depends(get_db),
@@ -119,6 +123,7 @@ def update_spell(
 
 
 @router.delete("", response_model=schemas.responses.MessageResponse)
+@debug_input
 def delete_spell(
     *, db: Session = Depends(get_db), id: int  # pylint: disable=redefined-builtin
 ) -> Any:
@@ -134,6 +139,7 @@ def delete_spell(
 
 
 @router.post("/bulk")
+@debug_input
 def create_upload_file(
     *,
     db: Session = Depends(get_db),

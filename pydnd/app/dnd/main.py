@@ -5,8 +5,28 @@ from dnd.api.v1.api import api_router
 from dnd.core import settings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from loguru import logger
 
 app = FastAPI(title=settings.PROJECT_NAME)
+
+
+@app.on_event("startup")
+def startup() -> None:
+    """Application startup routines."""
+    logger.add(
+        "logs/{time}.log",
+        format="{time:YYYY-MM-DD at HH:mm:ss} | {level} | {message}",
+        rotation="1 day",
+        retention="10 days",
+    )
+    logger.debug("This is a debug log!")
+    logger.info("This is a info log!")
+    logger.success("This is a success log!")
+    logger.warning("This is a warning log!")
+    logger.error("This is a error log!")
+    logger.critical("This is a critical log!")
+    logger.exception("This is a exception log!")
+
 
 origins = [
     "http://localhost:4200",  # local UI
