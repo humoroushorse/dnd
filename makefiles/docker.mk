@@ -22,7 +22,7 @@ CONTAINER_ID ?= $(shell docker ps | grep '$(REGISTRY_IMAGE_TAG)')
 docker-build: # build and tag container
   # TODO: $(DOCKER_BUILD_FLAGS)
 	# docker build $(DOCKER_BUILD_FLAGS) -f image/Dockerfile -t $(REGISTRY_IMAGE_TAG)
-	docker build --network=host -f image/Dockerfile -t $(REGISTRY_IMAGE_TAG) --target development .
+	docker build --network=host -f image/Dockerfile -t $(REGISTRY_IMAGE_TAG) --target production .
 
 .PHONY: docker-build-clean
 docker-build-clean: # build and tag container
@@ -31,4 +31,4 @@ docker-build-clean: # build and tag container
 
 .PHONY: docker-run
 docker-run: # run container
-	docker run -it --rm $(DOCKER_RUN_ARGS) $(REGISTRY_IMAGE_TAG)
+	docker run -it $(DOCKER_RUN_ARGS) $(REGISTRY_IMAGE_TAG)

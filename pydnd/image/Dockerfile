@@ -106,4 +106,4 @@ WORKDIR /app
 
 ENTRYPOINT /docker-entrypoint.sh $0 $@
 # TODO: install unicorn in poetry
-CMD [ "gunicorn", "--worker-class uvicorn.workers.UvicornWorker", "--config /gunicorn_conf.py", "dnd.main:app"]
+CMD [ "gunicorn", "--worker-class uvicorn.workers.UvicornWorker", "--config /gunicorn_conf.py", "--pythonpath '/app'", "dnd.main:app"]
