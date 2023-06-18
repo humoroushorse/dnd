@@ -6,7 +6,7 @@ site_name: Dungeons & Dragons API
 site_description: Documentation for the DnD API
 # site_url: N/A
 
-repo_url: https://github.com/humoroushorse/dnd-api
+repo_url: https://github.com/humoroushorse/ttrpg-api
 edit_uri: edit/main/pydnd/docs
 
 ################################################################################

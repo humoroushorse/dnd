@@ -6,5 +6,6 @@ class HealthCheck(BaseModel):
     """Model for /health."""
 
     name: str
-    version: str
     description: str
+    version: str
+    docs: str

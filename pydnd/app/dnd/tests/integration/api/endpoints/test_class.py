@@ -3,7 +3,7 @@ import random
 
 import pytest
 from dnd import models, schemas
-from dnd.core import settings
+from dnd.core import uncached_settings
 from dnd.tests.integration import helpers
 from fastapi import status
 from fastapi.testclient import TestClient
@@ -32,7 +32,7 @@ def test_post(
 ) -> None:
     """Test post: happy path."""
     response = client.post(
-        f"{settings.API_V1_STR}/classes", json=random_dnd_class.dict()
+        f"{uncached_settings.API_V1_STR}/classes", json=random_dnd_class.dict()
     )
     response_json = response.json()
     assert response.status_code == status.HTTP_200_OK
@@ -41,7 +41,7 @@ def test_post(
 
 def test_get(client: TestClient) -> None:
     """Test get: happy path."""
-    response = client.get(f"{settings.API_V1_STR}/classes")
+    response = client.get(f"{uncached_settings.API_V1_STR}/classes")
     response_schema = schemas.responses.GenericListResponse[
         schemas.dnd_class.DndClassBase
     ](**response.json())
@@ -56,7 +56,7 @@ def test_put(
     random_dnd_class_copy = schemas.dnd_class.DndClassCreate(**random_dnd_class.dict())
     random_dnd_class_copy.description = "testing_update"
     response = client.put(
-        f"{settings.API_V1_STR}/classes", json=random_dnd_class_copy.dict()
+        f"{uncached_settings.API_V1_STR}/classes", json=random_dnd_class_copy.dict()
     )
     product = response.json()
     assert response.status_code == status.HTTP_200_OK
@@ -70,7 +70,7 @@ def test_put_does_not_exist(
     random_dnd_class_copy = schemas.dnd_class.DndClassCreate(**random_dnd_class.dict())
     random_dnd_class_copy.id = -999999999
     response = client.put(
-        f"{settings.API_V1_STR}/classes", json=random_dnd_class_copy.dict()
+        f"{uncached_settings.API_V1_STR}/classes", json=random_dnd_class_copy.dict()
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -79,7 +79,9 @@ def test_delete(
     client: TestClient, random_dnd_class: schemas.dnd_class.DndClassCreate
 ) -> None:
     """Test delete: happy path."""
-    response = client.delete(f"{settings.API_V1_STR}/classes?id={random_dnd_class.id}")
+    response = client.delete(
+        f"{uncached_settings.API_V1_STR}/classes?id={random_dnd_class.id}"
+    )
     message = response.json()
     assert response.status_code == status.HTTP_200_OK
     assert "message" in message
@@ -92,7 +94,7 @@ def test_delete_does_not_exist(
     random_dnd_class_copy = schemas.dnd_class.DndClassCreate(**random_dnd_class.dict())
     random_dnd_class_copy.id = -999999999
     response = client.delete(
-        f"{settings.API_V1_STR}/classes?id={random_dnd_class_copy.id}"
+        f"{uncached_settings.API_V1_STR}/classes?id={random_dnd_class_copy.id}"
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -109,7 +111,7 @@ def test_post_bulk(client: TestClient, test_data_directory: str, count) -> None:
         )
     }
     response = client.post(
-        f"{settings.API_V1_STR}/classes/bulk",
+        f"{uncached_settings.API_V1_STR}/classes/bulk",
         files=files,
         headers={"accept": "application/json"},
     )
@@ -128,7 +130,7 @@ def test_post_bulk_bad_filetype(client: TestClient, test_data_directory: str) ->
         )
     }
     response = client.post(
-        f"{settings.API_V1_STR}/classes/bulk",
+        f"{uncached_settings.API_V1_STR}/classes/bulk",
         files=files,
         headers={"accept": "application/json"},
     )
@@ -147,7 +149,7 @@ def test_post_bulk_bad_json_data(client: TestClient, test_data_directory: str) -
         )
     }
     response = client.post(
-        f"{settings.API_V1_STR}/classes/bulk",
+        f"{uncached_settings.API_V1_STR}/classes/bulk",
         files=files,
         headers={"accept": "application/json"},
     )

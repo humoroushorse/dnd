@@ -1,13 +1,15 @@
 """Main file for the pydnd API."""
+from functools import lru_cache
+
 import uvicorn
 from dnd import schemas
 from dnd.api.v1.api import api_router
-from dnd.core import settings
-from fastapi import FastAPI
+from dnd.core import Settings, uncached_settings
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 
-app = FastAPI(title=settings.PROJECT_NAME)
+app = FastAPI(title=uncached_settings.PROJECT_NAME)
 
 
 @app.on_event("startup")
@@ -30,8 +32,8 @@ def startup() -> None:
 
 origins = [
     "http://localhost:4200",  # local UI
-    "http://localhost:8000",  # this API
-    "http://127.0.0.1:8000",  # also this API
+    "http://localhost:8001",  # this API
+    "http://127.0.0.1:8001",  # also this API
 ]
 
 app.add_middleware(
@@ -78,17 +80,26 @@ app.add_middleware(
 # Root of API (health check)
 
 
+@lru_cache
+def get_settings() -> Settings:
+    """Cached settings to prevent reads."""
+    return Settings()
+
+
 @app.get("/", response_model=schemas.health_check.HealthCheck, tags=["status"])
-async def health_check() -> schemas.health_check.HealthCheck:
+async def health_check(
+    settings: Settings = Depends(get_settings),
+) -> schemas.health_check.HealthCheck:
     """Root API endpoint used for health check."""
     return {
         "name": settings.PROJECT_NAME,
-        "version": settings.VERSION,
         "description": settings.DESCRIPTION,
+        "version": settings.VERSION,
+        "docs": "/docs",
     }
 
 
-app.include_router(api_router, prefix=settings.API_V1_STR)
+app.include_router(api_router, prefix=uncached_settings.API_V1_STR)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8001)

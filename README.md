@@ -1,4 +1,18 @@
-# dnd
+# TTRPG API
+Welcome to the TTRPG API!
+
+## Localhost
+Localhost changes based on where you run it from
+* CLI: 127.0.0.1
+* Docker: 0.0.0.0
+
+## Port Ledger
+| Project Name    | Description | Ports |
+|-----------------|-------------|-------|
+| postgres        | DB          | 5432  |
+| postgres (test) | Test DB     | 5433  |
+| pydnd           | FastAPI DnD | 8001  |
+| todo            | todo        | 8002  |
 
 ## Projects
 

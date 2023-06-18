@@ -8,7 +8,7 @@ For testing we will do the following
 
 ## Running the tests
 
-First: `cd ~/dnd/dnd-api`
+First: `cd ~/ttrpg/ttrpg-api`
 
 ___
 ### Unit

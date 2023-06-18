@@ -3,7 +3,7 @@ import random
 
 import pytest
 from dnd import models, schemas
-from dnd.core import settings
+from dnd.core import uncached_settings
 from dnd.tests.integration import helpers
 from fastapi import status
 from fastapi.encoders import jsonable_encoder
@@ -46,7 +46,7 @@ def test_set_up(client: TestClient, test_data_directory: str) -> None:
         )
     }
     response = client.post(
-        f"{settings.API_V1_STR}/sources/bulk",
+        f"{uncached_settings.API_V1_STR}/sources/bulk",
         files=files,
         headers={"accept": "application/json"},
     )
@@ -58,7 +58,8 @@ def test_set_up(client: TestClient, test_data_directory: str) -> None:
 def test_post(client: TestClient, random_spell: schemas.spell.SpellCreate) -> None:
     """Test post: happy path."""
     response = client.post(
-        f"{settings.API_V1_STR}/spells", json=jsonable_encoder(random_spell.dict())
+        f"{uncached_settings.API_V1_STR}/spells",
+        json=jsonable_encoder(random_spell.dict()),
     )
     response_json = response.json()
     assert response.status_code == status.HTTP_200_OK
@@ -67,7 +68,7 @@ def test_post(client: TestClient, random_spell: schemas.spell.SpellCreate) -> No
 
 def test_get(client: TestClient) -> None:
     """Test get: happy path."""
-    response = client.get(f"{settings.API_V1_STR}/spells")
+    response = client.get(f"{uncached_settings.API_V1_STR}/spells")
     response_schema = schemas.responses.GenericListResponse[schemas.spell.SpellBase](
         **response.json()
     )
@@ -80,7 +81,8 @@ def test_put(client: TestClient, random_spell: schemas.spell.SpellCreate) -> Non
     random_spell_copy = schemas.spell.SpellCreate(**random_spell.dict())
     random_spell_copy.description = "testing_update"
     response = client.put(
-        f"{settings.API_V1_STR}/spells", json=jsonable_encoder(random_spell_copy.dict())
+        f"{uncached_settings.API_V1_STR}/spells",
+        json=jsonable_encoder(random_spell_copy.dict()),
     )
     response_json: dict = response.json()
     assert response.status_code == status.HTTP_200_OK
@@ -94,14 +96,17 @@ def test_put_does_not_exist(
     random_spell_copy = schemas.spell.SpellCreate(**random_spell.dict())
     random_spell_copy.id = -999999999
     response = client.put(
-        f"{settings.API_V1_STR}/spells", json=jsonable_encoder(random_spell_copy.dict())
+        f"{uncached_settings.API_V1_STR}/spells",
+        json=jsonable_encoder(random_spell_copy.dict()),
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 def test_delete(client: TestClient, random_spell: schemas.spell.SpellCreate) -> None:
     """Test delete: happy path."""
-    response = client.delete(f"{settings.API_V1_STR}/spells?id={random_spell.id}")
+    response = client.delete(
+        f"{uncached_settings.API_V1_STR}/spells?id={random_spell.id}"
+    )
     message = response.json()
     assert response.status_code == status.HTTP_200_OK
     assert "message" in message
@@ -113,7 +118,9 @@ def test_delete_does_not_exist(
     """Test delete: 404."""
     random_spell_copy = schemas.spell.SpellCreate(**random_spell.dict())
     random_spell_copy.id = -999999999
-    response = client.delete(f"{settings.API_V1_STR}/spells?id={random_spell_copy.id}")
+    response = client.delete(
+        f"{uncached_settings.API_V1_STR}/spells?id={random_spell_copy.id}"
+    )
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
@@ -129,7 +136,7 @@ def test_post_bulk(client: TestClient, test_data_directory: str, count) -> None:
         )
     }
     response = client.post(
-        f"{settings.API_V1_STR}/spells/bulk",
+        f"{uncached_settings.API_V1_STR}/spells/bulk",
         files=files,
         headers={"accept": "application/json"},
     )
@@ -148,7 +155,7 @@ def test_post_bulk_bad_filetype(client: TestClient, test_data_directory: str) ->
         )
     }
     response = client.post(
-        f"{settings.API_V1_STR}/spells/bulk",
+        f"{uncached_settings.API_V1_STR}/spells/bulk",
         files=files,
         headers={"accept": "application/json"},
     )
@@ -167,7 +174,7 @@ def test_post_bulk_bad_json_data(client: TestClient, test_data_directory: str) -
         )
     }
     response = client.post(
-        f"{settings.API_V1_STR}/spells/bulk",
+        f"{uncached_settings.API_V1_STR}/spells/bulk",
         files=files,
         headers={"accept": "application/json"},
     )
