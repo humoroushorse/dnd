@@ -2,7 +2,7 @@
 from typing import Type, TypeVar
 
 from dnd import schemas
-from dnd.core import settings
+from dnd.core import uncached_settings
 from dnd.database.base_class import Base
 from fastapi import status
 from fastapi.testclient import TestClient
@@ -17,7 +17,7 @@ def purge_table(
     """Completely purge a table and then check that nothing exists at the endpoint."""
     db.query(model).delete()
     db.commit()
-    response = client.get(f"{settings.API_V1_STR}/{endpoint}")
+    response = client.get(f"{uncached_settings.API_V1_STR}/{endpoint}")
     assert (
         response.status_code == status.HTTP_200_OK
     ), f"expected clean deletions for /{endpoint}"
@@ -36,7 +36,7 @@ def bulk_load_file(client: TestClient, test_data_path: str, endpoint: str) -> No
         )
     }
     response = client.post(
-        f"{settings.API_V1_STR}/{endpoint}/bulk",
+        f"{uncached_settings.API_V1_STR}/{endpoint}/bulk",
         files=files,
         headers={"accept": "application/json"},
     )

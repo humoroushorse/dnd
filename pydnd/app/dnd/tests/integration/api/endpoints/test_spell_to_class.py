@@ -3,7 +3,7 @@ import random
 
 import pytest
 from dnd import models, schemas
-from dnd.core import settings
+from dnd.core import uncached_settings
 from dnd.tests.integration import helpers
 from fastapi import status
 from fastapi.encoders import jsonable_encoder
@@ -79,7 +79,8 @@ def test_set_up(
     )
     # load in random spell
     response = client.post(
-        f"{settings.API_V1_STR}/spells", json=jsonable_encoder(random_spell.dict())
+        f"{uncached_settings.API_V1_STR}/spells",
+        json=jsonable_encoder(random_spell.dict()),
     )
     assert response.status_code == status.HTTP_200_OK
     # load in all xanathars spells
@@ -110,7 +111,8 @@ def test_post(
         spell_id=random_spell_to_class.spell_id,
     )
     response = client.post(
-        f"{settings.API_V1_STR}/spell-to-class", json=random_spell_to_class_copy.dict()
+        f"{uncached_settings.API_V1_STR}/spell-to-class",
+        json=random_spell_to_class_copy.dict(),
     )
     response_json = response.json()
     assert response.status_code == status.HTTP_200_OK
@@ -129,7 +131,8 @@ def test_post_invalid_source_name(
         spell_name=random_spell_to_class.spell_name,
     )
     response = client.post(
-        f"{settings.API_V1_STR}/spell-to-class", json=random_spell_to_class_copy.dict()
+        f"{uncached_settings.API_V1_STR}/spell-to-class",
+        json=random_spell_to_class_copy.dict(),
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -146,7 +149,8 @@ def test_post_invalid_dnd_class_name(
         spell_name=random_spell_to_class.spell_name,
     )
     response = client.post(
-        f"{settings.API_V1_STR}/spell-to-class", json=random_spell_to_class_copy.dict()
+        f"{uncached_settings.API_V1_STR}/spell-to-class",
+        json=random_spell_to_class_copy.dict(),
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -163,14 +167,15 @@ def test_post_invalid_spell_name(
         spell_name="SOME INVALID SPELL NAME",
     )
     response = client.post(
-        f"{settings.API_V1_STR}/spell-to-class", json=random_spell_to_class_copy.dict()
+        f"{uncached_settings.API_V1_STR}/spell-to-class",
+        json=random_spell_to_class_copy.dict(),
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 def test_get(client: TestClient) -> None:
     """Test get: happy path."""
-    response = client.get(f"{settings.API_V1_STR}/spell-to-class")
+    response = client.get(f"{uncached_settings.API_V1_STR}/spell-to-class")
     response_schema = schemas.responses.GenericListResponse[
         schemas.jt_spell_to_class.JtSpellToClassBase
     ](**response.json())
@@ -197,7 +202,7 @@ def test_put(
     random_id = random.choice(filtered_ids)
     random_spell_to_class_copy.source_id = random_id
     response = client.put(
-        url=f"{settings.API_V1_STR}/spell-to-class",
+        url=f"{uncached_settings.API_V1_STR}/spell-to-class",
         json=random_spell_to_class_copy.dict(),
     )
     response_schema = schemas.jt_spell_to_class.JtSpellToClassBase(**response.json())
@@ -215,7 +220,7 @@ def test_put_does_not_exist(
     )
     random_spell_to_class_copy.id = -999999999
     response = client.put(
-        url=f"{settings.API_V1_STR}/spell-to-class",
+        url=f"{uncached_settings.API_V1_STR}/spell-to-class",
         json=random_spell_to_class_copy.dict(),
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
@@ -227,7 +232,7 @@ def test_delete(
 ) -> None:
     """Test delete: happy path."""
     response = client.delete(
-        f"{settings.API_V1_STR}/spell-to-class?id={random_spell_to_class.id}"
+        f"{uncached_settings.API_V1_STR}/spell-to-class?id={random_spell_to_class.id}"
     )
     message = response.json()
     assert response.status_code == status.HTTP_200_OK
@@ -244,7 +249,7 @@ def test_delete_does_not_exist(
     )
     random_spell_to_class_copy.id = -999999999
     response = client.delete(
-        f"{settings.API_V1_STR}/spell-to-class?id={random_spell_to_class_copy.id}"
+        f"{uncached_settings.API_V1_STR}/spell-to-class?id={random_spell_to_class_copy.id}"
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -263,7 +268,7 @@ def test_post_bulk(client: TestClient, test_data_directory: str, count) -> None:
         )
     }
     response = client.post(
-        f"{settings.API_V1_STR}/spell-to-class/bulk",
+        f"{uncached_settings.API_V1_STR}/spell-to-class/bulk",
         files=files,
         headers={"accept": "application/json"},
     )
@@ -284,7 +289,7 @@ def test_post_bulk_bad_filetype(client: TestClient, test_data_directory: str) ->
         )
     }
     response = client.post(
-        f"{settings.API_V1_STR}/spell-to-class/bulk",
+        f"{uncached_settings.API_V1_STR}/spell-to-class/bulk",
         files=files,
         headers={"accept": "application/json"},
     )

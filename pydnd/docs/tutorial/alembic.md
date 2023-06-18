@@ -1,7 +1,7 @@
 # Alembic
 
 ## TEMP: init and init and init
-### 0. `cd ~/dnd/dnd-api/pydnd`
+### 0. `cd ~/ttrpg/ttrpg-api/pydnd`
 ### 1. cleanup
 * delete `alembic` folder
 * delete revision in postgres `public/tables/alembic_version` table

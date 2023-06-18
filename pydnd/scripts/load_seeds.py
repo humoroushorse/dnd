@@ -34,11 +34,11 @@ def update_report(report: TempReport, response: requests.Response, filename="") 
         "errored": format_int(errored),
         "warning": format_int(warning),
     }
-    print(f"\t{summary} -> {filename}")  # noqa: T001
+    print(f"\t{summary} -> {filename}")  # noqa: T201
 
 
 data_root = "app/dnd/test_data/json/seeds"
-api_root = "http://127.0.0.1:8000/api/v1"
+api_root = "http://127.0.0.1:8001/api/v1"
 headers = {
     "accept": "application/json",
     # requests won't add a boundary if this header is set when you pass files=
@@ -156,4 +156,4 @@ update_report(report, spell_to_class_tashas_response, files.get("upload_file")[0
 ################################################################################
 # 5. REPORT
 ################################################################################
-print("REPORT: ", report)  # noqa: T001
+print("REPORT: ", report)  # noqa: T201

@@ -7,13 +7,15 @@ from typing import Generator
 
 import pytest
 from dnd.api.deps import get_db
-from dnd.core import settings
+from dnd.core import uncached_settings
 from dnd.main import app
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine(settings.SQLALCHEMY_TESTING_DATABASE_URI, pool_pre_ping=True)
+engine = create_engine(
+    uncached_settings.SQLALCHEMY_TESTING_DATABASE_URI, pool_pre_ping=True
+)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
@@ -51,7 +53,7 @@ def random_seed(request) -> any:
     else:
         seed = random.randrange(sys.maxsize)
     random.seed(seed)
-    print(f"Running tests with seed: {seed}")  # noqa: T001
+    print(f"Running tests with seed: {seed}")  # noqa: T201
 
 
 @pytest.fixture(scope="session")
