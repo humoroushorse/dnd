@@ -2935,7 +2935,7 @@
     "homebrew": false
   },
   {
-    "name": "False life",
+    "name": "false life",
     "source_name": "player's handbook",
     "source_id": 0,
     "casting_time": "1 action",
@@ -7879,7 +7879,7 @@
     "homebrew": false
   },
   {
-    "name": "True polymorph",
+    "name": "true polymorph",
     "source_name": "player's handbook",
     "source_id": 0,
     "casting_time": "1 action",
@@ -7902,7 +7902,7 @@
     "homebrew": false
   },
   {
-    "name": "True resurrection",
+    "name": "true resurrection",
     "source_name": "player's handbook",
     "source_id": 0,
     "casting_time": "1 hour",
@@ -7924,7 +7924,7 @@
     "homebrew": false
   },
   {
-    "name": "True seeing",
+    "name": "true seeing",
     "source_name": "player's handbook",
     "source_id": 0,
     "casting_time": "1 action",
@@ -7949,7 +7949,7 @@
     "homebrew": false
   },
   {
-    "name": "True strike",
+    "name": "true strike",
     "source_name": "player's handbook",
     "source_id": 0,
     "casting_time": "1 action",

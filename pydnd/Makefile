@@ -5,6 +5,7 @@ include ../makefiles/postgres.mk
 ENV_FILE = .env
 
 DOCKER_IMAGE = ttrpg-api/pydnd
+DOCKER_IMAGE_NAME = dnd-api
 define DOCKER_RUN_ARGS
 --env-file $(ENV_FILE) -dit -p 8001:8001
 endef
@@ -24,14 +25,14 @@ db-up:
 	make alembic-upgrade
 	make load-seed-data
 
-.PHONY: start
-start:
+.PHONY: run
+run:
 	# poetry env use python3 && poetry run uvicorn app.dnd.main:app
-	poetry run uvicorn app.dnd.main:app
+	poetry run uvicorn --host=127.0.0.1 --port=8001 app.dnd.main:app
 
-.PHONY: mkdocs
-mkdocs:
-	poetry run mkdocs serve --dev-addr=0.0.0.0:8001
+.PHONY: mkdocs-run
+mkdocs-run:
+	poetry run mkdocs serve --dev-addr=127.0.0.1:8101
 
 ################################################################################
 # Testing
@@ -46,6 +47,7 @@ UNIT_COVERAGE_PATH=${COVERAGE_PATH}/unit
 # passing in override variable `db_override` to be read in `alembic/env.py`
 .PHONY: alembic-upgrade-testing
 alembic-upgrade-testing:
+	pwd
 	poetry run alembic -x db_override=${DOCKER_PG_TEST_CONN} upgrade head
 
 .PHONY: test-unit

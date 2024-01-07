@@ -1,14 +1,15 @@
-DOCKER_PG_IMAGE=bitnami/postgresql:15.0.0
+DOCKER_PG_IMAGE=bitnami/postgresql:15.3.0
 
 ################################################################################
 # App
 ################################################################################
 DOCKER_PG_PORT=5432
-PG_DB_NAME=dnd-pg
+PG_DB_NAME=ttrpg-pg
 
 .PHONY: postgres-up
 postgres-up:
-	docker run --name ${PG_DB_NAME} -d\
+	# start docker container if not already running
+	docker start ${PG_DB_NAME} || docker run --name ${PG_DB_NAME} -d\
 		-e POSTGRESQL_USERNAME=postgres\
 		-e POSTGRESQL_PASSWORD=admin\
 		-e POSTGRESQL_PORT_NUMBER=${DOCKER_PG_PORT}\
@@ -24,11 +25,12 @@ postgres-down:
 ################################################################################
 DOCKER_PG_TEST_PORT=5433
 DOCKER_PG_TEST_CONN=postgresql://postgres:admin@localhost:${DOCKER_PG_TEST_PORT}
-PG_DB_TEST_NAME=dnd-pg-testing
+PG_DB_TEST_NAME=ttrpg-pg-testing
 
 .PHONY: postgres-up-testing
 postgres-up-testing:
-	docker run --name ${PG_DB_TEST_NAME} -d\
+	# start docker container if not already running
+	docker start ${PG_DB_TEST_NAME} || docker run --name ${PG_DB_TEST_NAME} -d\
 		-e POSTGRESQL_USERNAME=postgres\
 		-e POSTGRESQL_PASSWORD=admin\
 		-e POSTGRESQL_PORT_NUMBER=${DOCKER_PG_TEST_PORT}\

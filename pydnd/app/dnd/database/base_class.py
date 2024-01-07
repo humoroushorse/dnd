@@ -3,11 +3,11 @@ import re
 from typing import Any
 
 from dnd import schemas
-from sqlalchemy.ext.declarative import as_declarative, declared_attr
+from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy.orm import DeclarativeBase
 
 
-@as_declarative()
-class Base:
+class DbBase(DeclarativeBase):
     """SQLAlchemy model base that sets the schema and tablename.
 
     Table name is the model name but in snake case.

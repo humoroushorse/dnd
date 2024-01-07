@@ -1,7 +1,7 @@
 """Shared models for API responses."""
 from typing import Generic, List, Optional, TypeVar
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from pydantic.generics import GenericModel
 
 T = TypeVar("T", int, str)
@@ -29,9 +29,9 @@ class BulkLoadResponse(BaseModel):
 
     filename: str
     totals: BulkLoadResponseTotals = BulkLoadResponseTotals()
-    created: Optional[list[str]] = []
-    errors: Optional[list[str]] = []
-    warnings: Optional[list[str]] = []
+    created: List[str] = Field(default_factory=list)
+    errors: List[str] = Field(default_factory=list)
+    warnings: List[str] = Field(default_factory=list)
 
     def update_totals(self) -> None:
         """Updates totals based on current array lengths."""

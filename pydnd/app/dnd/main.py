@@ -15,11 +15,13 @@ app = FastAPI(title=uncached_settings.PROJECT_NAME)
 @app.on_event("startup")
 def startup() -> None:
     """Application startup routines."""
+    log_level = uncached_settings.LOG_LEVEL
     logger.add(
         "logs/{time}.log",
         format="{time:YYYY-MM-DD at HH:mm:ss} | {level} | {message}",
         rotation="1 day",
         retention="10 days",
+        level=log_level,
     )
     logger.debug("This is a debug log!")
     logger.info("This is a info log!")
@@ -34,6 +36,7 @@ origins = [
     "http://localhost:4200",  # local UI
     "http://localhost:8001",  # this API
     "http://127.0.0.1:8001",  # also this API
+    "http://0.0.0.0:8001",  # also this API
 ]
 
 app.add_middleware(
@@ -91,15 +94,15 @@ async def health_check(
     settings: Settings = Depends(get_settings),
 ) -> schemas.health_check.HealthCheck:
     """Root API endpoint used for health check."""
-    return {
-        "name": settings.PROJECT_NAME,
-        "description": settings.DESCRIPTION,
-        "version": settings.VERSION,
-        "docs": "/docs",
-    }
+    return schemas.health_check.HealthCheck(
+        name=settings.PROJECT_NAME,
+        description=settings.DESCRIPTION,
+        version=settings.VERSION,
+        docs_url=app.docs_url,
+    )
 
 
 app.include_router(api_router, prefix=uncached_settings.API_V1_STR)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    uvicorn.run(app, host=uncached_settings.HOST, port=uncached_settings.PORT)

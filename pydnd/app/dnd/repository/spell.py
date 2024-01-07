@@ -15,7 +15,7 @@ class RepositorySpell(RepositoryBase[Spell, SpellCreate, SpellUpdate]):
     def query_special(
         self,
         db: Session,
-        params: Dict[str, Union[List[Any], str]],
+        params: Dict[str, Union[List[Any], str, bool, None]],
         *,
         order_by: Optional[Any] = None,
         limit: Optional[int] = 100,

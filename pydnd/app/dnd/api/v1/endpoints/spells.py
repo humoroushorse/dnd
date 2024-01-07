@@ -76,7 +76,13 @@ def read_spells(
     ),
 ) -> Any:
     """Retrieve all spells."""
-    params = {"name": name, "level": level, "school": school, "ritual": ritual}
+    params = {
+        "name": name,
+        "level": level,
+        "school": school,
+        "ritual": ritual,
+    }
+
     spells, total_count = repository.spell.query_special(
         db,
         params=params,

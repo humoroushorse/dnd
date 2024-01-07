@@ -8,4 +8,4 @@ class HealthCheck(BaseModel):
     name: str
     description: str
     version: str
-    docs: str
+    docs_url: str

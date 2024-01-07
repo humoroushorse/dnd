@@ -3,7 +3,7 @@
 from datetime import datetime
 
 from dnd import schemas
-from dnd.database.base_class import Base
+from dnd.database.base_class import DbBase
 from sqlalchemy import (
     ARRAY,
     Boolean,
@@ -19,7 +19,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 
 
-class Spell(Base):
+class Spell(DbBase):
     """SQLAlchemy spell model."""
 
     # keys

@@ -6,13 +6,22 @@ Localhost changes based on where you run it from
 * CLI: 127.0.0.1
 * Docker: 0.0.0.0
 
+## Port Space Allocation
+| Project Name    | Description   | Ports       |
+|-----------------|---------------|-------------|
+| UI              | ui ports      | 4xxx        |
+| API             | api ports     | 8xxx - 8100 |
+| API DOCS        | api doc ports | 81xx - 8200 |
+| OPA             | opa ports     | 82xx - 8300 |
+
 ## Port Ledger
-| Project Name    | Description | Ports |
-|-----------------|-------------|-------|
-| postgres        | DB          | 5432  |
-| postgres (test) | Test DB     | 5433  |
-| pydnd           | FastAPI DnD | 8001  |
-| todo            | todo        | 8002  |
+| Project Name    | Description | Ports       |
+|-----------------|-------------|-------------|
+| postgres        | DB          | 5432        |
+| postgres (test) | Test DB     | 5433        |
+| pydnd           | FastAPI DnD | 8001        |
+| pydnd: mkdocs   | docs        | 8201        |
+| pydnd: opa      | opa         | 8301        |  TODO - reserved, implement
 
 ## Projects
 

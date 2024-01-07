@@ -16,11 +16,8 @@ ___
 ## JtSpellToClass (Table)
 ::: dnd.schemas.jt_spell_to_class
 ___
-## Message
-::: dnd.schemas.message
-___
-## SharedResponses
-::: dnd.schemas.shared_responses
+## Responses
+::: dnd.schemas.responses
 ___
 ## Source (Table)
 ::: dnd.schemas.dnd_class

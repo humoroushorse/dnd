@@ -30,7 +30,7 @@ from alembic import context
 from dnd import schemas
 from dnd.core import settings
 from dnd.database.base import Base
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import engine_from_config, pool, text
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -121,7 +121,8 @@ def run_migrations_online() -> None:
         )
 
         # Make sure our schema exists
-        connection.execute(f"CREATE SCHEMA IF NOT EXISTS {schema_name}")
+        create_schema = f"CREATE SCHEMA IF NOT EXISTS {schema_name}"
+        connection.execute(text(create_schema))
 
         with context.begin_transaction():
             context.run_migrations()
