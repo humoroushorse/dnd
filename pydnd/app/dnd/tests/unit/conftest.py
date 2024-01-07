@@ -4,7 +4,7 @@ from typing import Generator
 
 import pytest
 from dnd.api.deps import get_db
-from dnd.database.base import Base
+from dnd.database.base import DbBase
 from dnd.database.session import SessionLocal
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -27,7 +27,7 @@ engine = create_engine(
 
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-Base.metadata.create_all(bind=engine)
+DbBase.metadata.create_all(bind=engine)
 
 
 def override_get_db() -> Session:

@@ -2,13 +2,13 @@
 from enum import Enum
 from typing import Any, Dict, Generic, List, Optional, Tuple, Type, TypeVar, Union
 
-from dnd.database.base_class import Base
+from dnd.database.base_class import DbBase
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 
-ModelType = TypeVar("ModelType", bound=Base)
+ModelType = TypeVar("ModelType", bound=DbBase)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
 UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
@@ -29,7 +29,7 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def query(
         self,
         db: Session,
-        params: Dict[str, Union[List[Any], str]],
+        params: Dict[str, Union[List[Any], str, None]],
         *,
         order_by: Optional[Any] = None,
         limit: Optional[int] = 100,

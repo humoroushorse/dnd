@@ -1,11 +1,11 @@
 """SQLAlchemy Table: jt_spell_to_class definition."""
 from dnd import schemas
-from dnd.database.base_class import Base
+from dnd.database.base_class import DbBase
 from sqlalchemy import Column, ForeignKey, Integer, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 
-class JtSpellToClass(Base):
+class JtSpellToClass(DbBase):
     """SQLAlchemy jt_spell_to_class model."""
 
     # keys

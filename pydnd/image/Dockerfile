@@ -69,7 +69,6 @@ EXPOSE 8001
 ENTRYPOINT /docker-entrypoint.sh $0 $@
 
 # ENV PYTHONPATH /app
-# poetry run uvicorn app.dnd.main:app
 CMD ["uvicorn", "--reload", "--host=0.0.0.0", "--port=8001", "--app-dir=app", "dnd.main:app"]
 
 # 'lint' stage runs black and isort

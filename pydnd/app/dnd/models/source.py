@@ -1,9 +1,9 @@
 """SQLAlchemy Table: source definition."""
-from dnd.database.base_class import Base
+from dnd.database.base_class import DbBase
 from sqlalchemy import Column, Integer, String
 
 
-class Source(Base):
+class Source(DbBase):
     """SQLAlchemy source model."""
 
     # keys

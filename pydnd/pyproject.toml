@@ -2,20 +2,20 @@
 name = "dnd"
 version = "0.1.0"
 description = ""
-authors = ["Ian Kirkpatrick <sir.ian.kirkpatrick@gmail.com>"]
+authors = ["Ian Kirkpatrick <https://github.com/humoroushorse>"]
 readme = "README.md"
 packages = [{include = "dnd", from = "app"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-fastapi = "^0.82.0"
-uvicorn = "^0.18.3"
+fastapi = "^0.97.0"
+uvicorn = "^0.22.0"
 alembic = "^1.8.1"
 aiosqlite = "^0.17.0"
-SQLAlchemy = "^1.4.41"
+SQLAlchemy = "^2.0.25"
 pydantic = "^1.10.2"
 python-multipart = "^0.0.5"
-requests = "^2.28.1"
+requests = "^2.31.0"
 python-dotenv = "^0.21.0"
 loguru = "^0.7.0"
 psycopg2-binary = "^2.9.6"
@@ -29,6 +29,7 @@ pytest-cov = "^4.0.0"
 mkdocs = "^1.4.2"
 mkdocstrings = {extras = ["python"], version = "^0.19.0"}
 mkdocs-material = "^8.5.10"
+httpx = "^0.24.1"
 
 [build-system]
 requires = ["poetry-core"]
