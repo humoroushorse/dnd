@@ -1,9 +1,10 @@
 """API /sources endpoint."""
+
 import json
 from typing import Any, List
 
-from dnd import repository, schemas
-from dnd.api.deps import get_db
+from app.dnd import repository, schemas
+from app.dnd.api.deps import get_db
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 
@@ -14,9 +15,7 @@ router = APIRouter()
     "",
     response_model=schemas.responses.GenericListResponse[schemas.source.SourceResponse],
 )
-def read_sources(
-    db: Session = Depends(get_db), offset: int = 0, limit: int = 100
-) -> Any:
+def read_sources(db: Session = Depends(get_db), offset: int = 0, limit: int = 100) -> Any:
     """Retrieve all sources."""
     sources, total_count = repository.source.get_multi(db, offset=offset, limit=limit)
     return schemas.responses.GenericListResponse[schemas.source.SourceResponse](
@@ -29,18 +28,14 @@ def read_sources(
 
 
 @router.post("", response_model=schemas.source.SourceResponse)
-def create_source(
-    *, db: Session = Depends(get_db), source_in: schemas.source.SourceCreate
-) -> Any:
+def create_source(*, db: Session = Depends(get_db), source_in: schemas.source.SourceCreate) -> Any:
     """Create new sources."""
     source = repository.source.create(db, obj_in=source_in)
     return source
 
 
 @router.put("", response_model=schemas.source.SourceResponse)
-def update_source(
-    *, db: Session = Depends(get_db), source_in: schemas.source.SourceUpdate
-) -> Any:
+def update_source(*, db: Session = Depends(get_db), source_in: schemas.source.SourceUpdate) -> Any:
     """Update existing sources."""
     source = repository.source.get(db, model_id=source_in.id)
     if not source:
@@ -53,9 +48,7 @@ def update_source(
 
 
 @router.delete("", response_model=schemas.responses.MessageResponse)
-def delete_source(
-    *, db: Session = Depends(get_db), id: int  # pylint: disable=redefined-builtin
-) -> Any:
+def delete_source(*, db: Session = Depends(get_db), id: int) -> Any:  # pylint: disable=redefined-builtin
     """Delete existing source."""
     source = repository.source.get(db, model_id=id)
     if not source:
@@ -90,9 +83,7 @@ def create_upload_file(
             source = schemas.source.SourceCreate(**jd)
             existing_source = repository.source.query(db, params={"name": source.name})
             if len(existing_source) > 0:
-                response.warnings.append(
-                    f"Source with name '{source.name}' already exists, skipping."
-                )
+                response.warnings.append(f"Source with name '{source.name}' already exists, skipping.")
             else:
                 repository.source.create(db, obj_in=source)
                 response.created.append(source.name)

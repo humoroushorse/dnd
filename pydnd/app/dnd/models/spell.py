@@ -2,8 +2,8 @@
 
 from datetime import datetime
 
-from dnd import schemas
-from dnd.database.base_class import DbBase
+from app.dnd import schemas
+from app.dnd.database.base_class import DbBase
 from sqlalchemy import (
     ARRAY,
     Boolean,
@@ -24,9 +24,7 @@ class Spell(DbBase):
 
     # keys
     id = Column(Integer, primary_key=True, index=True)
-    source_id = Column(
-        Integer, ForeignKey(f"{schemas.enums.DbSchemaEnum.DND.value}.source.id")
-    )
+    source_id = Column(Integer, ForeignKey(f"{schemas.enums.DbSchemaEnum.DND.value}.source.id"))
     # fields
     name = Column(String, nullable=False)
     casting_time = Column(String, nullable=False)
@@ -37,9 +35,7 @@ class Spell(DbBase):
     level = Column(Integer, nullable=False)
     range = Column(String, nullable=False)
     ritual = Column(Boolean, nullable=False)
-    school = Column(
-        Enum(schemas.enums.SpellSchoolEnum, inherit_schema=True), nullable=False
-    )
+    school = Column(Enum(schemas.enums.SpellSchoolEnum, inherit_schema=True), nullable=False)
     created_at = Column(DateTime(timezone=True), default=func.now(), nullable=False)
     created_by = Column(String, nullable=False)
     updated_at = Column(

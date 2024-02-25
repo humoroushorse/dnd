@@ -1,5 +1,6 @@
 """SQLAlchemy Table: source definition."""
-from dnd.database.base_class import DbBase
+
+from app.dnd.database.base_class import DbBase
 from sqlalchemy import Column, Integer, String
 
 

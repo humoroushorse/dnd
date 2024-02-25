@@ -1,10 +1,11 @@
 """Integration Testing Endpoint: /spell-to-class."""
+
 import random
 
 import pytest
-from dnd import models, schemas
-from dnd.core import uncached_settings
-from dnd.tests.integration import helpers
+from app.dnd import models, schemas
+from app.dnd.core import uncached_settings
+from app.dnd.tests.integration import helpers
 from fastapi import status
 from fastapi.encoders import jsonable_encoder
 from fastapi.testclient import TestClient
@@ -74,9 +75,7 @@ def test_set_up(
 ) -> None:
     """Set up required foreign key data: [source]."""
     # load in all sources
-    helpers.bulk_load_file(
-        client, f"{test_data_directory}/json/seeds/source.json", "sources"
-    )
+    helpers.bulk_load_file(client, f"{test_data_directory}/json/seeds/source.json", "sources")
     # load in random spell
     response = client.post(
         f"{uncached_settings.API_V1_STR}/spells",
@@ -84,13 +83,9 @@ def test_set_up(
     )
     assert response.status_code == status.HTTP_200_OK
     # load in all xanathars spells
-    helpers.bulk_load_file(
-        client, f"{test_data_directory}/json/seeds/spells_xanathars.json", "spells"
-    )
+    helpers.bulk_load_file(client, f"{test_data_directory}/json/seeds/spells_xanathars.json", "spells")
     # load in all classes
-    helpers.bulk_load_file(
-        client, f"{test_data_directory}/json/seeds/class.json", "classes"
-    )
+    helpers.bulk_load_file(client, f"{test_data_directory}/json/seeds/class.json", "classes")
 
 
 def test_post(
@@ -176,9 +171,9 @@ def test_post_invalid_spell_name(
 def test_get(client: TestClient) -> None:
     """Test get: happy path."""
     response = client.get(f"{uncached_settings.API_V1_STR}/spell-to-class")
-    response_schema = schemas.responses.GenericListResponse[
-        schemas.jt_spell_to_class.JtSpellToClassBase
-    ](**response.json())
+    response_schema = schemas.responses.GenericListResponse[schemas.jt_spell_to_class.JtSpellToClassBase](
+        **response.json()
+    )
     assert response.status_code == status.HTTP_200_OK
     assert len(response_schema.data) > 0
 
@@ -190,14 +185,10 @@ def test_put(
     integration_global_data: dict,
 ) -> None:
     """Test put: happy path."""
-    random_spell_to_class_copy = schemas.jt_spell_to_class.JtSpellToClassBase(
-        **random_spell_to_class.dict()
-    )
+    random_spell_to_class_copy = schemas.jt_spell_to_class.JtSpellToClassBase(**random_spell_to_class.dict())
     # since we loaded in all sources, get all source ids and chose one that doesnt match our random_source id
     filtered_ids = [
-        source.get("id")
-        for source in integration_global_data.get("source")
-        if source.get("id") != random_source.id
+        source.get("id") for source in integration_global_data.get("source") if source.get("id") != random_source.id
     ]
     random_id = random.choice(filtered_ids)
     random_spell_to_class_copy.source_id = random_id
@@ -215,9 +206,7 @@ def test_put_does_not_exist(
     random_spell_to_class: schemas.jt_spell_to_class.JtSpellToClassCreate,
 ) -> None:
     """Test put: 404."""
-    random_spell_to_class_copy = schemas.jt_spell_to_class.JtSpellToClassBase(
-        **random_spell_to_class.dict()
-    )
+    random_spell_to_class_copy = schemas.jt_spell_to_class.JtSpellToClassBase(**random_spell_to_class.dict())
     random_spell_to_class_copy.id = -999999999
     response = client.put(
         url=f"{uncached_settings.API_V1_STR}/spell-to-class",
@@ -231,9 +220,7 @@ def test_delete(
     random_spell_to_class: schemas.jt_spell_to_class.JtSpellToClassCreate,
 ) -> None:
     """Test delete: happy path."""
-    response = client.delete(
-        f"{uncached_settings.API_V1_STR}/spell-to-class?id={random_spell_to_class.id}"
-    )
+    response = client.delete(f"{uncached_settings.API_V1_STR}/spell-to-class?id={random_spell_to_class.id}")
     message = response.json()
     assert response.status_code == status.HTTP_200_OK
     assert "message" in message
@@ -244,13 +231,9 @@ def test_delete_does_not_exist(
     random_spell_to_class: schemas.jt_spell_to_class.JtSpellToClassCreate,
 ) -> None:
     """Test delete: 404."""
-    random_spell_to_class_copy = schemas.jt_spell_to_class.JtSpellToClassBase(
-        **random_spell_to_class.dict()
-    )
+    random_spell_to_class_copy = schemas.jt_spell_to_class.JtSpellToClassBase(**random_spell_to_class.dict())
     random_spell_to_class_copy.id = -999999999
-    response = client.delete(
-        f"{uncached_settings.API_V1_STR}/spell-to-class?id={random_spell_to_class_copy.id}"
-    )
+    response = client.delete(f"{uncached_settings.API_V1_STR}/spell-to-class?id={random_spell_to_class_copy.id}")
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
@@ -261,9 +244,7 @@ def test_post_bulk(client: TestClient, test_data_directory: str, count) -> None:
     files = {
         "upload_file": (
             "spell_to_class_xanathars.json",
-            open(
-                f"{test_data_directory}/json/seeds/spell_to_class_xanathars.json", "rb"
-            ),
+            open(f"{test_data_directory}/json/seeds/spell_to_class_xanathars.json", "rb"),
             "application/json",
         )
     }
@@ -282,9 +263,7 @@ def test_post_bulk_bad_filetype(client: TestClient, test_data_directory: str) ->
     files = {
         "upload_file": (
             "spell_to_class_xanathars.json",
-            open(
-                f"{test_data_directory}/json/seeds/spell_to_class_xanathars.json", "rb"
-            ),
+            open(f"{test_data_directory}/json/seeds/spell_to_class_xanathars.json", "rb"),
             "foo/bar",
         )
     }

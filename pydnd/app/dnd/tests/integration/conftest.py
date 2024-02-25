@@ -1,4 +1,5 @@
 """Integration testing setup and pytest fixtures."""
+
 import json
 import random
 import sys
@@ -6,16 +7,14 @@ from os import path
 from typing import Generator
 
 import pytest
-from dnd.api.deps import get_db
-from dnd.core import uncached_settings
-from dnd.main import app
+from app.dnd.api.deps import get_db
+from app.dnd.core import uncached_settings
+from app.dnd.main import app
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine(
-    uncached_settings.SQLALCHEMY_TESTING_DATABASE_URI, pool_pre_ping=True
-)
+engine = create_engine(uncached_settings.SQLALCHEMY_TESTING_DATABASE_URI, pool_pre_ping=True)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
@@ -70,9 +69,7 @@ def integration_global_data(test_data_directory: str):
 
     def load_json_from_file(file: str) -> any:
         """Gets a json object from a file."""
-        with open(  # pylint: disable=unspecified-encoding
-            f"{test_data_directory}/json/seeds/{file}"
-        ) as file_input:
+        with open(f"{test_data_directory}/json/seeds/{file}") as file_input:  # pylint: disable=unspecified-encoding
             as_json = json.load(file_input)
             return as_json
 

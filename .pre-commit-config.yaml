@@ -1,5 +1,5 @@
 default_language_version:
-  python: python3.10
+  python: python3.12
 
 default_stages: [commit, push]
 
@@ -8,7 +8,7 @@ default_stages: [commit, push]
 repos:
   # BUILT INTS
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v4.4.0"
+    rev: "v4.5.0"
     hooks:
       - id: check-added-large-files
         exclude: "test_data/json/seeds"
@@ -30,27 +30,27 @@ repos:
 
   # PYUPGRADE
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.6.0
+    rev: v3.15.1
     hooks:
       - id: pyupgrade
         args: ["--py38-plus"]
 
   # BLACK
   - repo: https://github.com/psf/black
-    rev: 23.3.0
+    rev: 24.2.0
     hooks:
       - id: black
 
   # ISORT
   - repo: https://github.com/pycqa/isort
-    rev: 5.12.0
+    rev: 5.13.2
     hooks:
       - id: isort
         args: ["--profile", "black"]
 
   # AUTOFLAKE
   - repo: https://github.com/PyCQA/autoflake
-    rev: v2.1.1
+    rev: v2.3.0
     hooks:
       - id: autoflake
         name: autoflake
@@ -90,7 +90,7 @@ repos:
 
   # FLAKE8
   - repo: https://github.com/pycqa/flake8.git
-    rev: "6.0.0"
+    rev: "7.0.0"
     hooks:
       - id: flake8
         additional_dependencies:
@@ -112,7 +112,7 @@ repos:
 
   # PYLINT [TODO: fix errors]
   - repo: https://github.com/pycqa/pylint
-    rev: v3.0.0a6
+    rev: v3.0.4
     hooks:
       - id: pylint
         args:
@@ -132,7 +132,7 @@ repos:
 
   # MYPY
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.3.0
+    rev: v1.8.0
     hooks:
       - id: mypy
         exclude: tests/|alembic/|scripts/

@@ -3,9 +3,9 @@
 from typing import Generator
 
 import pytest
-from dnd.api.deps import get_db
-from dnd.database.base import DbBase
-from dnd.database.session import SessionLocal
+from app.dnd.api.deps import get_db
+from app.dnd.database.base import DbBase
+from app.dnd.database.session import SessionLocal
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
@@ -14,9 +14,7 @@ from ...main import app
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 
 
 # @event.listens_for(engine, "first_connect")

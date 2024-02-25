@@ -1,10 +1,11 @@
 """Repository: spell."""
+
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-from dnd import models
-from dnd.models.spell import Spell
-from dnd.repository.base import RepositoryBase
-from dnd.schemas.spell import SpellCreate, SpellUpdate
+from app.dnd import models
+from app.dnd.models.spell import Spell
+from app.dnd.repository.base import RepositoryBase
+from app.dnd.schemas.spell import SpellCreate, SpellUpdate
 from sqlalchemy.orm import Session
 
 
@@ -21,7 +22,7 @@ class RepositorySpell(RepositoryBase[Spell, SpellCreate, SpellUpdate]):
         limit: Optional[int] = 100,
         offset: Optional[int] = 0,
         class_names: Optional[List[str]] = None,
-        source_names: Optional[List[str]] = None
+        source_names: Optional[List[str]] = None,
     ) -> Tuple[List[models.spell.Spell], int]:
         """Query spells with foreign key information.
 
