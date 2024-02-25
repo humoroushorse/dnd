@@ -1,8 +1,9 @@
 """Base for CRUD repositories."""
+
 from enum import Enum
 from typing import Any, Dict, Generic, List, Optional, Tuple, Type, TypeVar, Union
 
-from dnd.database.base_class import DbBase
+from app.dnd.database.base_class import DbBase
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -33,7 +34,7 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         *,
         order_by: Optional[Any] = None,
         limit: Optional[int] = 100,
-        offset: Optional[int] = 0
+        offset: Optional[int] = 0,
     ) -> List[ModelType]:
         """Query a list of Type[ModelType] with filters.
 
@@ -71,9 +72,7 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """
         return db.query(self.model).filter(self.model.id == model_id).one_or_none()
 
-    def get_multi(
-        self, db: Session, *, offset: int = 0, limit: int = 100
-    ) -> Tuple[List[ModelType], int]:
+    def get_multi(self, db: Session, *, offset: int = 0, limit: int = 100) -> Tuple[List[ModelType], int]:
         """Get a list of Type[ModelType] without filters.
 
         Args:
@@ -106,13 +105,7 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         db.refresh(db_obj)
         return db_obj
 
-    def update(
-        self,
-        db: Session,
-        *,
-        db_obj: ModelType,
-        obj_in: Union[UpdateSchemaType, Dict[str, Any]]
-    ) -> ModelType:
+    def update(self, db: Session, *, db_obj: ModelType, obj_in: Union[UpdateSchemaType, Dict[str, Any]]) -> ModelType:
         """Update an existing Type[CreateSchemaType].
 
         Args:
@@ -146,7 +139,7 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         Returns:
             ModelType: The deleted Type[ModelType] from the inheriting class.
         """
-        obj = db.query(self.model).get(model_id)
+        obj = db.get(self.model, model_id)
         db.delete(obj)
         db.commit()
         return obj
@@ -174,9 +167,7 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         model = model.filter(*filters)
         return model
 
-    def _get_filter_list(
-        self, key: str, value: Union[List[Any], Any, None], model: Optional[Any] = None
-    ) -> List[Any]:
+    def _get_filter_list(self, key: str, value: Union[List[Any], Any, None], model: Optional[Any] = None) -> List[Any]:
         """Gets filters based on the param's value type.
 
         Args:

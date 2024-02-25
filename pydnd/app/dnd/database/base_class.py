@@ -1,8 +1,9 @@
 """SQLAlchemy base for all the table creation models."""
+
 import re
 from typing import Any
 
-from dnd import schemas
+from app.dnd import schemas
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import DeclarativeBase
 

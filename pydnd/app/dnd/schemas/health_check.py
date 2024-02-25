@@ -1,4 +1,5 @@
 """Schemas for /health."""
+
 from pydantic import BaseModel
 
 
@@ -9,3 +10,4 @@ class HealthCheck(BaseModel):
     description: str
     version: str
     docs_url: str
+    python_version: str

@@ -1,6 +1,7 @@
 """API initalization steps."""
-from dnd.database.initialise import initialise
-from dnd.database.session import SessionLocal
+
+from app.dnd.database.initialise import initialise
+from app.dnd.database.session import SessionLocal
 
 
 def init() -> None:

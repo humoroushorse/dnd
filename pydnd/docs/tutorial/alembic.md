@@ -27,9 +27,9 @@ DROP TYPE IF EXISTS spellschoolenum;
 from logging.config import fileConfig
 
 from alembic import context
-from dnd import schemas
-from dnd.core import settings
-from dnd.database.base import Base
+from app.dnd import schemas
+from app.dnd.core import settings
+from app.dnd.database.base import Base
 from sqlalchemy import engine_from_config, pool, text
 
 # this is the Alembic Config object, which provides

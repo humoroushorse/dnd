@@ -1,10 +1,11 @@
 """Alembic env file for connecting to and manipilating database schemas."""
+
 from logging.config import fileConfig
 
 from alembic import context
-from dnd import schemas
-from dnd.core import uncached_settings
-from dnd.database.base import DbBase
+from app.dnd import schemas
+from app.dnd.core import uncached_settings
+from app.dnd.database.base import DbBase
 from sqlalchemy import engine_from_config, pool, text
 
 # this is the Alembic Config object, which provides
@@ -81,9 +82,7 @@ def run_migrations_online() -> None:
     """
     configuration = config.get_section(config.config_ini_section)
     configuration["sqlalchemy.url"] = get_db_uri()
-    connectable = engine_from_config(
-        configuration, prefix="sqlalchemy.", poolclass=pool.NullPool
-    )
+    connectable = engine_from_config(configuration, prefix="sqlalchemy.", poolclass=pool.NullPool)
 
     with connectable.connect() as connection:
         schema_name = schemas.enums.DbSchemaEnum.DND.value

@@ -1,6 +1,7 @@
 """SQLAlchemy Table: dnd_class definition."""
-from dnd import schemas
-from dnd.database.base_class import DbBase
+
+from app.dnd import schemas
+from app.dnd.database.base_class import DbBase
 from sqlalchemy import ARRAY, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
@@ -10,9 +11,7 @@ class DndClass(DbBase):
 
     # keys
     id = Column(Integer, primary_key=True, index=True)
-    source_id = Column(
-        Integer, ForeignKey(f"{schemas.enums.DbSchemaEnum.DND.value}.source.id")
-    )
+    source_id = Column(Integer, ForeignKey(f"{schemas.enums.DbSchemaEnum.DND.value}.source.id"))
     # fields
     name = Column(String, nullable=False, unique=True)
     description = Column(String, nullable=False)

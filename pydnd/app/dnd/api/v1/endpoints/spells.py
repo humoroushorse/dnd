@@ -1,10 +1,11 @@
 """API /spells endpoint."""
+
 import json
 from typing import Any, List, Optional
 
-from dnd import repository, schemas
-from dnd.api.deps import get_db
-from dnd.utils.logging import debug_input
+from app.dnd import repository, schemas
+from app.dnd.api.deps import get_db
+from app.dnd.utils.logging import debug_input
 from fastapi import (
     APIRouter,
     Body,
@@ -61,19 +62,13 @@ def read_spells(
     offset: int = 0,
     limit: int = 100,
     name: Optional[str] = None,
-    level: Optional[List[int]] = Query(
-        [], title="Levels", description="list of spell levels"
-    ),
+    level: Optional[List[int]] = Query([], title="Levels", description="list of spell levels"),
     school: Optional[List[schemas.enums.SpellSchoolEnum]] = Query(
         [], title="Schools", description="list of spell schools"
     ),
-    class_names: Optional[List[str]] = Query(
-        [], title="Class Names", description="list of class names"
-    ),
+    class_names: Optional[List[str]] = Query([], title="Class Names", description="list of class names"),
     ritual: Optional[bool] = None,
-    source_names: Optional[List[str]] = Query(
-        [], title="Source Names", description="list of source names"
-    ),
+    source_names: Optional[List[str]] = Query([], title="Source Names", description="list of source names"),
 ) -> Any:
     """Retrieve all spells."""
     params = {
@@ -102,9 +97,7 @@ def read_spells(
 
 @router.post("", response_model=schemas.spell.SpellResponse)
 @debug_input
-def create_spell(
-    *, db: Session = Depends(get_db), spell_in: schemas.spell.SpellCreate
-) -> Any:
+def create_spell(*, db: Session = Depends(get_db), spell_in: schemas.spell.SpellCreate) -> Any:
     """Create new spells."""
     spell = repository.spell.create(db, obj_in=spell_in)
     return spell
@@ -130,9 +123,7 @@ def update_spell(
 
 @router.delete("", response_model=schemas.responses.MessageResponse)
 @debug_input
-def delete_spell(
-    *, db: Session = Depends(get_db), id: int  # pylint: disable=redefined-builtin
-) -> Any:
+def delete_spell(*, db: Session = Depends(get_db), id: int) -> Any:  # pylint: disable=redefined-builtin
     """Delete existing spell."""
     spell = repository.spell.get(db, model_id=id)
     if not spell:
@@ -168,9 +159,7 @@ def create_upload_file(
             spell = schemas.spell.SpellCreate(**jd)
             existing_spell = repository.spell.query(db, params={"name": spell.name})
             if len(existing_spell) > 0:
-                response.warnings.append(
-                    f"Spell with name '{spell.name}' already exists, skipping."
-                )
+                response.warnings.append(f"Spell with name '{spell.name}' already exists, skipping.")
             else:
                 repository.spell.create(db, obj_in=spell)
                 response.created.append(spell.name)

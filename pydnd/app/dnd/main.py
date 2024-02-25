@@ -1,10 +1,12 @@
 """Main file for the pydnd API."""
+
+import sys
 from functools import lru_cache
 
 import uvicorn
-from dnd import schemas
-from dnd.api.v1.api import api_router
-from dnd.core import Settings, uncached_settings
+from app.dnd import schemas
+from app.dnd.api.v1.api import api_router
+from app.dnd.core import Settings, uncached_settings
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
@@ -98,7 +100,8 @@ async def health_check(
         name=settings.PROJECT_NAME,
         description=settings.DESCRIPTION,
         version=settings.VERSION,
-        docs_url=app.docs_url,
+        docs_url=f"{app.root_path}{app.docs_url}",
+        python_version=sys.version,
     )
 
 
