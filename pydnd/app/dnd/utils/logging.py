@@ -1,4 +1,5 @@
 """Logging utils."""
+
 import functools
 from typing import Callable
 

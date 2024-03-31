@@ -1,12 +1,14 @@
 include ../makefiles/common.mk
-include ../makefiles/docker.mk
+include ../makefiles/container.mk
 include ../makefiles/postgres.mk
+
+CONTAINER_RUNNER=podman
 
 ENV_FILE = .env
 
-DOCKER_IMAGE = ttrpg-api/pydnd
-DOCKER_IMAGE_NAME = dnd-api
-define DOCKER_RUN_ARGS
+CONTAINER_IMAGE = ttrpg-api/pydnd
+CONTAINER_IMAGE_NAME = dnd-api
+define CONTAINER_RUN_ARGS
 --env-file $(ENV_FILE) -dit -p 8001:8001
 endef
 
@@ -27,8 +29,12 @@ db-up:
 
 .PHONY: run
 run:
-	# poetry env use python3 && poetry run uvicorn app.dnd.main:app
-	poetry run uvicorn --host=127.0.0.1 --port=8001 app.dnd.main:app
+	# poetry env use python3 && poetry run uvicorn dnd.main:app
+	poetry run uvicorn --host=127.0.0.1 --port=8001 dnd.main:app
+
+.PHONY: compose
+compose:
+	${CONTAINER_RUNNER} compose -f image/docker-compose.yml -p ttrrpg-api up --build
 
 .PHONY: mkdocs-run
 mkdocs-run:
@@ -48,7 +54,7 @@ UNIT_COVERAGE_PATH=${COVERAGE_PATH}/unit
 .PHONY: alembic-upgrade-testing
 alembic-upgrade-testing:
 	pwd
-	poetry run alembic -x db_override=${DOCKER_PG_TEST_CONN} upgrade head
+	poetry run alembic -x db_override=${CONTAINER_PG_TEST_CONN} upgrade head
 
 .PHONY: test-unit
 test-unit:
@@ -64,7 +70,7 @@ test-integration:
 	make postgres-up-testing
 	sleep 2
 	make alembic-upgrade-testing
-	# run the tests and even if they fail, destroy the docker container
+	# run the tests and even if they fail, destroy the container
 	poetry run pytest ${INTEGRATION_TEST_PATH} --seed="${SEED}" --skip-d20="${SKIP_D20}" --maxfail=1 -v --cov=app || echo "continuing even if error"
 	make postgres-down-testing
 
@@ -83,3 +89,10 @@ load-seed-data:
 
 # CREATE REVISION
 # poetry run alembic revision --autogenerate -m "init"
+
+
+# TODO: remove
+# temporary
+.PHONY: podman-init
+podman-init:
+	rm -rf ~/.local/share/containers/podman && rm -rf ~/.config/containers && podman machine init

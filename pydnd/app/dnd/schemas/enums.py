@@ -1,4 +1,5 @@
 """API enum values."""
+
 from enum import Enum
 
 

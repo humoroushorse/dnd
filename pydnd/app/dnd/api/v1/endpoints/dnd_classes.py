@@ -3,8 +3,8 @@
 import json
 from typing import Any, List
 
-from app.dnd import repository, schemas
-from app.dnd.api.deps import get_db
+from dnd import repository, schemas
+from dnd.api.deps import get_db
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 

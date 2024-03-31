@@ -2,9 +2,9 @@
 
 from typing import Type, TypeVar
 
-from app.dnd import schemas
-from app.dnd.core import uncached_settings
-from app.dnd.database.base_class import DbBase
+from dnd import schemas
+from dnd.core import uncached_settings
+from dnd.database.base_class import DbBase
 from fastapi import status
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session

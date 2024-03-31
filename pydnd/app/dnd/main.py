@@ -4,9 +4,9 @@ import sys
 from functools import lru_cache
 
 import uvicorn
-from app.dnd import schemas
-from app.dnd.api.v1.api import api_router
-from app.dnd.core import Settings, uncached_settings
+from dnd import schemas
+from dnd.api.v1.api import api_router
+from dnd.core import Settings, uncached_settings
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger

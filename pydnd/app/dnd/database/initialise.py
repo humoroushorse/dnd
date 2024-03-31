@@ -1,7 +1,7 @@
 """Database initialization queries."""
 
+from sqlalchemy.orm import Session
 
-# from sqlalchemy.orm import Session
-# def initialise(db: Session) -> None:
-def initialise() -> None:
+
+def initialise(_db: Session) -> None:
     """Database initialisation queries."""

@@ -3,9 +3,9 @@
 import random
 
 import pytest
-from app.dnd import models, schemas
-from app.dnd.core import uncached_settings
-from app.dnd.tests.integration import helpers
+from dnd import models, schemas
+from dnd.core import uncached_settings
+from dnd.tests.integration import helpers
 from fastapi import status
 from fastapi.encoders import jsonable_encoder
 from fastapi.testclient import TestClient

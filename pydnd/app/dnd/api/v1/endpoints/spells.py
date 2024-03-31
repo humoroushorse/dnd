@@ -3,9 +3,9 @@
 import json
 from typing import Any, List, Optional
 
-from app.dnd import repository, schemas
-from app.dnd.api.deps import get_db
-from app.dnd.utils.logging import debug_input
+from dnd import repository, schemas
+from dnd.api.deps import get_db
+from dnd.utils.logging import debug_input
 from fastapi import (
     APIRouter,
     Body,

@@ -3,9 +3,9 @@
 from typing import Generator
 
 import pytest
-from app.dnd.api.deps import get_db
-from app.dnd.database.base import DbBase
-from app.dnd.database.session import SessionLocal
+from dnd.api.deps import get_db
+from dnd.database.base import DbBase
+from dnd.database.session import SessionLocal
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker

@@ -12,7 +12,7 @@ For this we will call our table "MyTable"
   * add the following to `base.py`
 
 ```python
-from app.dnd.models.my_table import MyTable  # noqa: W0611
+from dnd.models.my_table import MyTable  # noqa: W0611
 ```
 
 ## 2. generate a new alembic revision

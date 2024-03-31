@@ -1,7 +1,7 @@
 """SQLAlchemy Table: dnd_class definition."""
 
-from app.dnd import schemas
-from app.dnd.database.base_class import DbBase
+from dnd import schemas
+from dnd.database.base_class import DbBase
 from sqlalchemy import ARRAY, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 

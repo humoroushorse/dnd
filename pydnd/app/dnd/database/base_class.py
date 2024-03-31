@@ -3,7 +3,7 @@
 import re
 from typing import Any
 
-from app.dnd import schemas
+from dnd import schemas
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import DeclarativeBase
 

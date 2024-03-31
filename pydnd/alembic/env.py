@@ -3,9 +3,9 @@
 from logging.config import fileConfig
 
 from alembic import context
-from app.dnd import schemas
-from app.dnd.core import uncached_settings
-from app.dnd.database.base import DbBase
+from dnd import schemas
+from dnd.core import uncached_settings
+from dnd.database.base import DbBase
 from sqlalchemy import engine_from_config, pool, text
 
 # this is the Alembic Config object, which provides

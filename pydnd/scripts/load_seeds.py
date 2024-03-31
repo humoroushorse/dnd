@@ -1,4 +1,5 @@
 """Python script for populating seed data in a fresh database."""
+
 import requests
 from pydantic import BaseModel
 
@@ -38,7 +39,8 @@ def update_report(report: TempReport, response: requests.Response, filename="") 
 
 
 data_root = "app/dnd/test_data/json/seeds"
-api_root = "http://127.0.0.1:8001/api/v1"
+# api_root = "http://127.0.0.1:8001/api/v1"
+api_root = "http://localhost:8001/api/v1"
 headers = {
     "accept": "application/json",
     # requests won't add a boundary if this header is set when you pass files=
@@ -55,9 +57,7 @@ files = {
         "application/json",
     )
 }
-sources_response = requests.post(
-    url=f"{api_root}/sources/bulk", files=files, headers=headers
-)
+sources_response = requests.post(url=f"{api_root}/sources/bulk", files=files, headers=headers)
 update_report(report, sources_response, files.get("upload_file")[0])
 
 ################################################################################
@@ -70,9 +70,7 @@ files = {
         "application/json",
     )
 }
-class_response = requests.post(
-    url=f"{api_root}/classes/bulk", files=files, headers=headers
-)
+class_response = requests.post(url=f"{api_root}/classes/bulk", files=files, headers=headers)
 update_report(report, class_response, files.get("upload_file")[0])
 
 ################################################################################
@@ -85,9 +83,7 @@ files = {
         "application/json",
     )
 }
-spells_phb_response = requests.post(
-    url=f"{api_root}/spells/bulk", files=files, headers=headers
-)
+spells_phb_response = requests.post(url=f"{api_root}/spells/bulk", files=files, headers=headers)
 update_report(report, spells_phb_response, files.get("upload_file")[0])
 
 files = {
@@ -97,9 +93,7 @@ files = {
         "application/json",
     )
 }
-spells_xanathars_response = requests.post(
-    url=f"{api_root}/spells/bulk", files=files, headers=headers
-)
+spells_xanathars_response = requests.post(url=f"{api_root}/spells/bulk", files=files, headers=headers)
 update_report(report, spells_xanathars_response, files.get("upload_file")[0])
 
 files = {
@@ -109,9 +103,7 @@ files = {
         "application/json",
     )
 }
-spells_tashas_response = requests.post(
-    url=f"{api_root}/spells/bulk", files=files, headers=headers
-)
+spells_tashas_response = requests.post(url=f"{api_root}/spells/bulk", files=files, headers=headers)
 update_report(report, spells_tashas_response, files.get("upload_file")[0])
 
 ################################################################################
@@ -124,9 +116,7 @@ files = {
         "application/json",
     )
 }
-spell_to_class_phb_response = requests.post(
-    url=f"{api_root}/spell-to-class/bulk", files=files, headers=headers
-)
+spell_to_class_phb_response = requests.post(url=f"{api_root}/spell-to-class/bulk", files=files, headers=headers)
 update_report(report, spell_to_class_phb_response, files.get("upload_file")[0])
 
 files = {
@@ -136,9 +126,7 @@ files = {
         "application/json",
     )
 }
-spell_to_class_xanathars_response = requests.post(
-    url=f"{api_root}/spell-to-class/bulk", files=files, headers=headers
-)
+spell_to_class_xanathars_response = requests.post(url=f"{api_root}/spell-to-class/bulk", files=files, headers=headers)
 update_report(report, spell_to_class_xanathars_response, files.get("upload_file")[0])
 
 files = {
@@ -148,9 +136,7 @@ files = {
         "application/json",
     )
 }
-spell_to_class_tashas_response = requests.post(
-    url=f"{api_root}/spell-to-class/bulk", files=files, headers=headers
-)
+spell_to_class_tashas_response = requests.post(url=f"{api_root}/spell-to-class/bulk", files=files, headers=headers)
 update_report(report, spell_to_class_tashas_response, files.get("upload_file")[0])
 
 ################################################################################

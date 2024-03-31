@@ -2,10 +2,10 @@
 
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-from app.dnd import models
-from app.dnd.models.spell import Spell
-from app.dnd.repository.base import RepositoryBase
-from app.dnd.schemas.spell import SpellCreate, SpellUpdate
+from dnd import models
+from dnd.models.spell import Spell
+from dnd.repository.base import RepositoryBase
+from dnd.schemas.spell import SpellCreate, SpellUpdate
 from sqlalchemy.orm import Session
 
 

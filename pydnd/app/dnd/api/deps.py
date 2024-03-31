@@ -2,7 +2,7 @@
 
 from typing import Generator
 
-from app.dnd.database.session import SessionLocal
+from dnd.database.session import SessionLocal
 
 
 def get_db() -> Generator:

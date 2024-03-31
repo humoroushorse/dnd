@@ -1,8 +1,8 @@
 """Repository: source."""
 
-from app.dnd.models.source import Source
-from app.dnd.repository.base import RepositoryBase
-from app.dnd.schemas.source import SourceCreate, SourceUpdate
+from dnd.models.source import Source
+from dnd.repository.base import RepositoryBase
+from dnd.schemas.source import SourceCreate, SourceUpdate
 
 
 class RepositorySource(RepositoryBase[Source, SourceCreate, SourceUpdate]):
