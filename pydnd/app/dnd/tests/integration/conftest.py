@@ -7,9 +7,9 @@ from os import path
 from typing import Generator
 
 import pytest
-from app.dnd.api.deps import get_db
-from app.dnd.core import uncached_settings
-from app.dnd.main import app
+from dnd.api.deps import get_db
+from dnd.core import uncached_settings
+from dnd.main import app
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

@@ -1,4 +1,5 @@
 """Schemas for the jt_spell_to_class table and its CRUD operations."""
+
 from typing import Optional
 
 from pydantic import BaseModel, Field
@@ -16,12 +17,8 @@ class JtSpellToClassBase(BaseModel):
 class JtSpellToClassCreate(JtSpellToClassBase):
     """Schema for creation with required overrides and aditonal fields."""
 
-    source_name: Optional[str] = Field(
-        title="Source Name", description="FK - Source Name"
-    )
-    dnd_class_name: Optional[str] = Field(
-        title="Class Name", description="FK - Class Name"
-    )
+    source_name: Optional[str] = Field(title="Source Name", description="FK - Source Name")
+    dnd_class_name: Optional[str] = Field(title="Class Name", description="FK - Class Name")
     spell_name: Optional[str] = Field(title="Spell Name", description="FK - Spell Name")
 
 
@@ -29,12 +26,8 @@ class JtSpellToClassUpdate(JtSpellToClassBase):
     """Schema for updating model with required overrides and aditonal fields."""
 
     id: int = Field(title="ID", description="JtSpellToClass ID (generated)")
-    source_name: Optional[str] = Field(
-        title="Source Name", description="FK - Source Name"
-    )
-    dnd_class_name: Optional[str] = Field(
-        title="Class Name", description="FK - Class Name"
-    )
+    source_name: Optional[str] = Field(title="Source Name", description="FK - Source Name")
+    dnd_class_name: Optional[str] = Field(title="Class Name", description="FK - Class Name")
     spell_name: Optional[str] = Field(title="Spell Name", description="FK - Spell Name")
 
 

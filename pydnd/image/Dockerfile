@@ -3,7 +3,7 @@
 # See https://docs.docker.com/develop/develop-images/multistage-build/
 
 # Creating a python base with shared environment variables
-FROM python:3.11.4-slim AS python-base
+FROM python:3.12.2-slim AS python-base
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -33,7 +33,7 @@ RUN buildDeps="build-essential" \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Poetry - respects $POETRY_VERSION & $POETRY_HOME
-ENV POETRY_VERSION=1.5.1
+ENV POETRY_VERSION=1.7.1
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=${POETRY_HOME} python3 - --version ${POETRY_VERSION} && \
     chmod a+x /opt/poetry/bin/poetry
@@ -69,6 +69,7 @@ EXPOSE 8001
 ENTRYPOINT /docker-entrypoint.sh $0 $@
 
 # ENV PYTHONPATH /app
+# poetry run uvicorn --host=127.0.0.1 --port=8001 dnd.main:app
 CMD ["uvicorn", "--reload", "--host=0.0.0.0", "--port=8001", "--app-dir=app", "dnd.main:app"]
 
 # 'lint' stage runs black and isort
@@ -105,4 +106,4 @@ WORKDIR /app
 
 ENTRYPOINT /docker-entrypoint.sh $0 $@
 # TODO: install unicorn in poetry
-CMD [ "gunicorn", "--worker-class uvicorn.workers.UvicornWorker", "--config /gunicorn_conf.py", "--pythonpath '/app'", "dnd.main:app"]
+CMD ["gunicorn", "--worker-class uvicorn.workers.UvicornWorker", "--config /gunicorn_conf.py", "--pythonpath '/app'", "dnd.main:app"]

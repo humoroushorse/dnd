@@ -2,9 +2,9 @@
 # from sqlalchemy import create_engine
 # from sqlalchemy.orm import sessionmaker
 
-# from app.dnd.database.base import Base
+# from dnd.database.base import Base
 # from ..main import app
-# from app.dnd.api.deps import get_db
+# from dnd.api.deps import get_db
 
 # SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 

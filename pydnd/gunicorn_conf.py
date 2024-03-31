@@ -1,4 +1,5 @@
 """Production Gunicorn setup."""
+
 # From: https://github.com/
 #   tiangolo/uvicorn-gunicorn-docker/blob/315f04413114e938ff37a410b5979126facc90af/python3.7/gunicorn_conf.py
 
@@ -23,7 +24,7 @@ default_web_concurrency = workers_per_core * cores
 if web_concurrency_str:
     web_concurrency = int(web_concurrency_str)
     if web_concurrency < 1:
-        raise Exception("Expected web_concurrency greater than 0!")
+        raise ValueError("Expected web_concurrency greater than 0!")
     # assert web_concurrency > 0
 else:
     web_concurrency = max(int(default_web_concurrency), 2)

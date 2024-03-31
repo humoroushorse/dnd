@@ -5,6 +5,7 @@ Revises:
 Create Date: 2022-11-20 11:32:21.517182
 
 """
+
 import sqlalchemy as sa
 from alembic import op
 
@@ -28,9 +29,7 @@ def upgrade() -> None:
         sa.UniqueConstraint("short_name"),
         schema="dnd",
     )
-    op.create_index(
-        op.f("ix_dnd_source_id"), "source", ["id"], unique=False, schema="dnd"
-    )
+    op.create_index(op.f("ix_dnd_source_id"), "source", ["id"], unique=False, schema="dnd")
     op.create_table(
         "dnd_class",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -51,9 +50,7 @@ def upgrade() -> None:
         sa.UniqueConstraint("name"),
         schema="dnd",
     )
-    op.create_index(
-        op.f("ix_dnd_dnd_class_id"), "dnd_class", ["id"], unique=False, schema="dnd"
-    )
+    op.create_index(op.f("ix_dnd_dnd_class_id"), "dnd_class", ["id"], unique=False, schema="dnd")
     op.create_table(
         "spell",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -96,9 +93,7 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
         schema="dnd",
     )
-    op.create_index(
-        op.f("ix_dnd_spell_id"), "spell", ["id"], unique=False, schema="dnd"
-    )
+    op.create_index(op.f("ix_dnd_spell_id"), "spell", ["id"], unique=False, schema="dnd")
     op.create_index(
         op.f("ix_dnd_spell_updated_at"),
         "spell",

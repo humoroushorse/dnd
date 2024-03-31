@@ -1,4 +1,5 @@
 """Shared models for API responses."""
+
 from typing import Generic, List, Optional, TypeVar
 
 from pydantic import BaseModel, Field

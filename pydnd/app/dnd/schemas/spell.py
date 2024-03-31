@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import List, Optional
 
-from app.dnd import schemas
+from dnd import schemas
 from pydantic import BaseModel, Field
 
 

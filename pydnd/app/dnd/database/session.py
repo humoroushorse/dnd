@@ -1,6 +1,6 @@
 """A sqlalchemy.orm Session."""
 
-from app.dnd.core import uncached_settings
+from dnd.core import uncached_settings
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 

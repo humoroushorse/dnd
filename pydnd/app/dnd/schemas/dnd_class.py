@@ -1,4 +1,5 @@
 """Schemas for the dnd_class table and its CRUD operations."""
+
 from typing import List, Optional
 
 from pydantic import BaseModel, Field
@@ -9,16 +10,10 @@ class DndClassBase(BaseModel):
 
     id: Optional[int] = Field(title="ID", description="Class ID (generated)")
     source_id: Optional[int] = Field(title="Source ID", description="FK - Source ID")
-    name: Optional[str] = Field(
-        title="Name", description="Name of the class (will be set to lowercase)"
-    )
-    description: Optional[str] = Field(
-        title="Description", description="Class description"
-    )
+    name: Optional[str] = Field(title="Name", description="Name of the class (will be set to lowercase)")
+    description: Optional[str] = Field(title="Description", description="Class description")
     hit_die: Optional[str] = Field(title="Hit Die", description="In 1d8 format")
-    primary_ability: Optional[str] = Field(
-        title="Primary Ability", description="Primary ability for the class."
-    )
+    primary_ability: Optional[str] = Field(title="Primary Ability", description="Primary ability for the class.")
     saving_throw_proficiencies: Optional[str] = Field(
         title="Saving Throw Proficiencies",
         description="Saving threows the class is proficient in.",
@@ -45,14 +40,10 @@ class DndClassCreate(DndClassBase):
 
     id: int = Field(title="ID", description="Class ID (generated)")
     source_id: int = Field(title="Source ID", description="FK - Source ID")
-    name: str = Field(
-        title="Name", description="Name of the class (will be set to lowercase)"
-    )
+    name: str = Field(title="Name", description="Name of the class (will be set to lowercase)")
     description: str = Field(title="Description", description="Class description")
     hit_die: str = Field(title="Hit Die", description="In 1d8 format")
-    primary_ability: str = Field(
-        title="Primary Ability", description="Primary ability for the class."
-    )
+    primary_ability: str = Field(title="Primary Ability", description="Primary ability for the class.")
     saving_throw_proficiencies: str = Field(
         title="Saving Throw Proficiencies",
         description="Saving threows the class is proficient in.",

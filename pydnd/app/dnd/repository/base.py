@@ -3,7 +3,7 @@
 from enum import Enum
 from typing import Any, Dict, Generic, List, Optional, Tuple, Type, TypeVar, Union
 
-from app.dnd.database.base_class import DbBase
+from dnd.database.base_class import DbBase
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
