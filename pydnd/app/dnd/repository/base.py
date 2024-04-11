@@ -1,7 +1,7 @@
 """Base for CRUD repositories."""
 
 from enum import Enum
-from typing import Any, Dict, Generic, List, Optional, Tuple, Type, TypeVar, Union
+from typing import Any, Dict, Generic, List, Tuple, Type, TypeVar
 
 from dnd.database.base_class import DbBase
 from fastapi.encoders import jsonable_encoder
@@ -30,20 +30,20 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def query(
         self,
         db: Session,
-        params: Dict[str, Union[List[Any], str, None]],
+        params: Dict[str, List[Any] | str | None],
         *,
-        order_by: Optional[Any] = None,
-        limit: Optional[int] = 100,
-        offset: Optional[int] = 0,
+        order_by: Any | None = None,
+        limit: int | None = 100,
+        offset: int | None = 0,
     ) -> List[ModelType]:
         """Query a list of Type[ModelType] with filters.
 
         Args:
             db (Session): A SQLAlchemy Session.
-            params (Dict[str, Union[List[Any], str]]): A dict of fields from Type[ModelType] to query.
-            order_by (Optional[Any], optional): SQL 'ORDER BY' input. Defaults to None.
-            limit (Optional[int], optional): SQL 'LIMIT'. Defaults to 100.
-            offset (Optional[int], optional): SQL 'OFFSET'. Defaults to 0.
+            params (Dict[str, List[Any] | str | None]): A dict of fields from Type[ModelType] to query.
+            order_by (Any, None, optional): SQL 'ORDER BY' input. Defaults to None.
+            limit (int | None, optional): SQL 'LIMIT'. Defaults to 100.
+            offset (int | None, optional): SQL 'OFFSET'. Defaults to 0.
 
         Returns:
             List[ModelType]: A list of the inheriting classes' Type[ModelType].
@@ -60,7 +60,7 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         models = models.all()
         return models
 
-    def get(self, db: Session, model_id: Any) -> Optional[ModelType]:
+    def get(self, db: Session, model_id: Any) -> ModelType | None:
         """Get a single Type[ModelType].
 
         Args:
@@ -68,7 +68,7 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             model_id (Any): the id of the Type[ModelType] to get by
 
         Returns:
-            Optional[ModelType]: A single Type[ModelType] from the inheriting class.
+            ModelType | None: A single Type[ModelType] from the inheriting class.
         """
         return db.query(self.model).filter(self.model.id == model_id).one_or_none()
 
@@ -77,8 +77,8 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
         Args:
             db (Session): A SQLAlchemy Session.
-            limit (Optional[int], optional): SQL 'LIMIT'. Defaults to 0.
-            offset (Optional[int], optional): SQL 'OFFSET'. Defaults to 100.
+            limit (int | None, optional): SQL 'LIMIT'. Defaults to 0.
+            offset (int | None, optional): SQL 'OFFSET'. Defaults to 100.
 
         Returns:
             Tuple[List[ModelType], int]: A list of the inheriting classes' Type[ModelType].
@@ -105,7 +105,7 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         db.refresh(db_obj)
         return db_obj
 
-    def update(self, db: Session, *, db_obj: ModelType, obj_in: Union[UpdateSchemaType, Dict[str, Any]]) -> ModelType:
+    def update(self, db: Session, *, db_obj: ModelType, obj_in: UpdateSchemaType | Dict[str, Any]) -> ModelType:
         """Update an existing Type[CreateSchemaType].
 
         Args:
@@ -147,13 +147,13 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def apply_param_filters_to_model(
         self,
         model: ModelType,
-        params: Optional[Dict[str, Union[Any, List[Any]]]] = None,
+        params: Dict[str, Any | List[Any]] | None = None,
     ) -> ModelType:
         """Takes a param dict and turns it into SQLAlchemy filters.
 
         Args:
             model (ModelType): The model to apply filters to.
-            params (Optional[Dict[str, Union[Any, List[Any]]]], optional):
+            params (Dict[str, Any | List[Any]] | None, optional):
                 A dict of filters based on the ModelType's fields. Defaults to None.
 
         Returns:
@@ -167,13 +167,13 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         model = model.filter(*filters)
         return model
 
-    def _get_filter_list(self, key: str, value: Union[List[Any], Any, None], model: Optional[Any] = None) -> List[Any]:
+    def _get_filter_list(self, key: str, value: List[Any] | Any | None, model: Any | None = None) -> List[Any]:
         """Gets filters based on the param's value type.
 
         Args:
             key (str): The param dict key.
-            value (Union[List[Any], Any, None]): The param dict value.
-            model (Optional[Any], optional): The model that will be filtered. Defaults to None.
+            value (List[Any] | Any | None, optional): The param dict value.
+            model (Any | None, optional): The model that will be filtered. Defaults to None.
 
         Returns:
             List[Any]: A list of filters.

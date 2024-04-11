@@ -1,7 +1,7 @@
 """API /spells endpoint."""
 
 import json
-from typing import Any, List, Optional
+from typing import Any, List
 
 from dnd import repository, schemas
 from dnd.api.deps import get_db
@@ -61,14 +61,14 @@ def read_spells(
     db: Session = Depends(get_db),
     offset: int = 0,
     limit: int = 100,
-    name: Optional[str] = None,
-    level: Optional[List[int]] = Query([], title="Levels", description="list of spell levels"),
-    school: Optional[List[schemas.enums.SpellSchoolEnum]] = Query(
+    name: str | None = None,
+    level: List[int] | None = Query([], title="Levels", description="list of spell levels"),
+    school: List[schemas.enums.SpellSchoolEnum] | None = Query(
         [], title="Schools", description="list of spell schools"
     ),
-    class_names: Optional[List[str]] = Query([], title="Class Names", description="list of class names"),
-    ritual: Optional[bool] = None,
-    source_names: Optional[List[str]] = Query([], title="Source Names", description="list of source names"),
+    class_names: List[str] | None = Query([], title="Class Names", description="list of class names"),
+    ritual: bool | None = None,
+    source_names: List[str] | None = Query([], title="Source Names", description="list of source names"),
 ) -> Any:
     """Retrieve all spells."""
     params = {

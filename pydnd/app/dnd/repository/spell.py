@@ -1,6 +1,6 @@
 """Repository: spell."""
 
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Tuple
 
 from dnd import models
 from dnd.models.spell import Spell
@@ -16,24 +16,24 @@ class RepositorySpell(RepositoryBase[Spell, SpellCreate, SpellUpdate]):
     def query_special(
         self,
         db: Session,
-        params: Dict[str, Union[List[Any], str, bool, None]],
+        params: Dict[str, List[Any] | str | bool | None],
         *,
-        order_by: Optional[Any] = None,
-        limit: Optional[int] = 100,
-        offset: Optional[int] = 0,
-        class_names: Optional[List[str]] = None,
-        source_names: Optional[List[str]] = None,
+        order_by: Any | None = None,
+        limit: int | None = 100,
+        offset: int | None = 0,
+        class_names: List[str] | None = None,
+        source_names: List[str] | None = None,
     ) -> Tuple[List[models.spell.Spell], int]:
         """Query spells with foreign key information.
 
         Args:
             db (Session): A SQLAlchemy Session.
-            params (Dict[str, Union[List[Any], str]]): A dictionary of params for Spell.
-            order_by (Optional[Any], optional): SQL 'ORDER BY' input. Defaults to None.
-            limit (Optional[int], optional): SQL 'LIMIT'. Defaults to 100.
-            offset (Optional[int], optional): SQL 'OFFSET'. Defaults to 0.
-            class_names (Optional[List[str]], optional): A list of names from the class table. Defaults to None.
-            source_names (Optional[List[str]], optional): A list of names from the source table. Defaults to None.
+            params (Dict[str, List[Any] | str | bool | None]): A dictionary of params for Spell.
+            order_by (Any | None, optional): SQL 'ORDER BY' input. Defaults to None.
+            limit (int | None, optional): SQL 'LIMIT'. Defaults to 100.
+            offset (int | None, optional): SQL 'OFFSET'. Defaults to 0.
+            class_names (List[str] | None, optional): A list of names from the class table. Defaults to None.
+            source_names (List[str] | None, optional): A list of names from the source table. Defaults to None.
 
         Returns:
             Tuple[List[models.spell.Spell], int]: A list of spells and the total count.

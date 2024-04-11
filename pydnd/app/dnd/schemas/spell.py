@@ -1,7 +1,7 @@
 """Schemas for the spell table and its CRUD operations."""
 
 from datetime import datetime
-from typing import List, Optional
+from typing import List
 
 from dnd import schemas
 from pydantic import BaseModel, Field
@@ -10,40 +10,38 @@ from pydantic import BaseModel, Field
 class SpellBase(BaseModel):
     """Schema base fields where everything is optional."""
 
-    id: Optional[int] = Field(title="ID", description="Spell ID (generated)")
-    source_id: Optional[int] = Field(title="Source ID", description="FK - Source ID")
-    name: Optional[str] = Field(title="Name", description="Name of the spell (will be set to lowercase)")
-    casting_time: Optional[str] = Field(title="Casting Time", description="How long it takes to cast the spell")
-    classes: Optional[List[str]] = Field(
+    id: int | None = Field(title="ID", description="Spell ID (generated)")
+    source_id: int | None = Field(title="Source ID", description="FK - Source ID")
+    name: str | None = Field(title="Name", description="Name of the spell (will be set to lowercase)")
+    casting_time: str | None = Field(title="Casting Time", description="How long it takes to cast the spell")
+    classes: List[str] | None = Field(
         default=[],
         title="Classes",
         description="List of classes that can cast the spell",
     )
-    components: Optional[str] = Field(
+    components: str | None = Field(
         # TODO: ? default="v, s, m (some materials)",
         title="Components",
         description="v, s, m (materials to cast the spell)",
     )
-    description: Optional[str] = Field(title="Description", description="Spell description in HTML format (sanatized)")
-    duration: Optional[str] = Field(title="Duration", description="How long the spell lasts")
-    level: Optional[int] = Field(
+    description: str | None = Field(title="Description", description="Spell description in HTML format (sanatized)")
+    duration: str | None = Field(title="Duration", description="How long the spell lasts")
+    level: int | None = Field(
         title="Level",
         description="Spell level as an integer (0-9)",
         ge=0,  # >= 0
         le=9,  # <= 9
     )
-    range: Optional[str] = Field(title="Range", description="The range of the spell")
-    ritual: Optional[bool] = Field(title="Ritual", description="Can you cast the spell as a ritual")
-    school: Optional[schemas.enums.SpellSchoolEnum] = Field(
+    range: str | None = Field(title="Range", description="The range of the spell")
+    ritual: bool | None = Field(title="Ritual", description="Can you cast the spell as a ritual")
+    school: schemas.enums.SpellSchoolEnum | None = Field(
         title="School", description="The school of magic of the spell"
     )
-    created_at: Optional[datetime] = Field(
-        title="School", description="[db] Timestamp of initial creation (generated)"
-    )
-    created_by: Optional[str] = Field(title="Created By", description="[db] Who created the spell")
-    updated_at: Optional[datetime] = Field(title="Created At", description="[db] Timestamp of last update (generated)")
-    updated_by: Optional[str] = Field(title="Updated By", description="[db] Who updated the spell")
-    homebrew: Optional[bool] = Field(title="Homebrew", description="Is the spell official content (generated)")
+    created_at: datetime | None = Field(title="School", description="[db] Timestamp of initial creation (generated)")
+    created_by: str | None = Field(title="Created By", description="[db] Who created the spell")
+    updated_at: datetime | None = Field(title="Created At", description="[db] Timestamp of last update (generated)")
+    updated_by: str | None = Field(title="Updated By", description="[db] Who updated the spell")
+    homebrew: bool | None = Field(title="Homebrew", description="Is the spell official content (generated)")
 
 
 class SpellCreate(SpellBase):

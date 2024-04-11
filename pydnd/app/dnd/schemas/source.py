@@ -1,16 +1,14 @@
 """Schemas for the source table and its CRUD operations."""
 
-from typing import Optional
-
 from pydantic import BaseModel, Field
 
 
 class SourceBase(BaseModel):
     """Schema base fields where everything is optional."""
 
-    id: Optional[int] = Field(title="ID", description="Source ID (generated)")
-    name: Optional[str] = Field(title="Name", description="Name of the source material")
-    short_name: Optional[str] = Field(title="Casting Time", description="Shorthand name of the source material")
+    id: int | None = Field(title="ID", description="Source ID (generated)")
+    name: str | None = Field(title="Name", description="Name of the source material")
+    short_name: str | None = Field(title="Casting Time", description="Shorthand name of the source material")
 
 
 class SourceCreate(SourceBase):

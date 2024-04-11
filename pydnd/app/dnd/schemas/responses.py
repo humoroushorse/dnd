@@ -1,6 +1,6 @@
 """Shared models for API responses."""
 
-from typing import Generic, List, Optional, TypeVar
+from typing import Generic, List, TypeVar
 
 from pydantic import BaseModel, Field
 from pydantic.generics import GenericModel
@@ -24,9 +24,9 @@ class BulkLoadResponse(BaseModel):
     class BulkLoadResponseTotals(BaseModel):
         """Summary report for bulk loading."""
 
-        created: Optional[int] = 0
-        errored: Optional[int] = 0
-        warning: Optional[int] = 0
+        created: int | None = 0
+        errored: int | None = 0
+        warning: int | None = 0
 
     filename: str
     totals: BulkLoadResponseTotals = BulkLoadResponseTotals()
