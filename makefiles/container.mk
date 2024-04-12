@@ -22,8 +22,8 @@ CONTAINER_ID ?= $(shell ${CONTAINER_RUNNER} ps | grep '$(REGISTRY_IMAGE_TAG)')
 
 .PHONY: container-clean
 container-clean: # build and tag container
-	${CONTAINER_RUNNER} system prune --force
-	${CONTAINER_RUNNER} volume prune --force
+	${CONTAINER_RUNNER} kill $$(${CONTAINER_RUNNER} ps -a -q)
+	${CONTAINER_RUNNER} system prune --volumes --force
 
 .PHONY: container-build
 container-build: # build and tag container
