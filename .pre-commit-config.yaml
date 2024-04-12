@@ -169,3 +169,12 @@ repos:
     - id: old-style-annotations
       name: Check old-style annotations
       language: python
+
+  # CUSTOM HOOKS
+  - repo: local
+    hooks:
+    - id: prepare-commit-msg
+      name: prepare-commit-msg
+      entry: scripts/hooks/prepare-commit-msg.sh
+      language: system
+      pass_filenames: false
