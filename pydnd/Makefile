@@ -2,7 +2,7 @@ include ../makefiles/common.mk
 include ../makefiles/container.mk
 include ../makefiles/postgres.mk
 
-CONTAINER_RUNNER=podman
+CONTAINER_RUNNER=docker # e.g. podman or docker
 
 ENV_FILE = .env
 
@@ -32,9 +32,21 @@ run:
 	# poetry env use python3 && poetry run uvicorn dnd.main:app
 	poetry run uvicorn --host=127.0.0.1 --port=8001 dnd.main:app
 
-.PHONY: compose
-compose:
-	${CONTAINER_RUNNER} compose -f image/docker-compose.yml -p ttrrpg-api up --build
+.PHONY: compose-up
+compose-up:
+	${CONTAINER_RUNNER} compose \
+		-f image/docker-compose.yml \
+		-f ../image/postgres.docker-compose.yml \
+		-p ${CONTAINER_PROJECT_NAME} \
+		up -d
+
+.PHONY: compose-down
+compose-down:
+	${CONTAINER_RUNNER} compose \
+		-f image/docker-compose.yml \
+		-f ../image/postgres.docker-compose.yml \
+		-p ${CONTAINER_PROJECT_NAME} \
+		down
 
 .PHONY: mkdocs-run
 mkdocs-run:

@@ -1,0 +1,17 @@
+# docker-compose.postgres.yml
+
+version: '3.9'
+
+services:
+  postgresql:
+    container_name: postgresql
+    image: postgres:15.6-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - ~/projects/ttrpg/volume-mounts/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}  # default postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-admin}  # default admin
+      - POSTGRES_DB=${POSTGRES_DB:-ttrpg-pg} # default ttrpg-pg

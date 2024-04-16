@@ -11,8 +11,8 @@ class Settings(BaseSettings):
     VERSION: str | None = "0.1.0"
     API_V1_STR: str | None = "/api/v1"
     # SECRET_KEY: str = secrets.token_urlsafe(32)
-    SQLALCHEMY_DATABASE_URI: str | None = "postgresql://postgres:admin@localhost:5432"
-    SQLALCHEMY_TESTING_DATABASE_URI: str | None = "postgresql://postgres:admin@localhost:5433"
+    SQLALCHEMY_DATABASE_URI: str | None = "postgresql://postgres:admin@localhost:5432/ttrpg-pg"
+    SQLALCHEMY_TESTING_DATABASE_URI: str | None = "postgresql://postgres:admin@localhost:5433/ttrpg-pg"
     LOG_LEVEL: str | None = "INFO"
     HOST: str | None = "0.0.0.0"
     PORT: int | None = 8001
