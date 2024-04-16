@@ -12,20 +12,12 @@ services:
       - ../.env
     environment:
       # override connection to localhost with host.docker.internal
-      - SQLALCHEMY_DATABASE_URI=postgresql://postgres:admin@host.docker.internal:5432
-      - SQLALCHEMY_TESTING_DATABASE_URI=postgresql://postgres:admin@host.docker.internal:5433
+      - SQLALCHEMY_DATABASE_URI=postgresql://postgres:admin@host.docker.internal:5432/ttrpg-pg
+      - SQLALCHEMY_TESTING_DATABASE_URI=postgresql://postgres:admin@host.docker.internal:5433/ttrpg-pg
     ports:
       - '8001:8001'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: "no"
-  postgres:
-    image: postgres:15.6-alpine
-    ports:
-      - 5432:5432
-    volumes:
-      - ~/apps/postgres:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=ttrpg-pg
+    depends_on:
+      - postgresql # see ROOT/image/postgres.docker-compose.yml

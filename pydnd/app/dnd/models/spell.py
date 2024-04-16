@@ -1,52 +1,41 @@
 """SQLAlchemy Table: spell definition."""
 
-from datetime import datetime
+import datetime
 
 from dnd import schemas
 from dnd.database.base_class import DbBase
-from sqlalchemy import (
-    ARRAY,
-    Boolean,
-    Column,
-    DateTime,
-    Enum,
-    ForeignKey,
-    Integer,
-    String,
-    UniqueConstraint,
-    func,
-)
-from sqlalchemy.orm import relationship
+from sqlalchemy import ARRAY, Column, ForeignKey, String, UniqueConstraint, func
+from sqlalchemy.ext.mutable import MutableList
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
 class Spell(DbBase):
     """SQLAlchemy spell model."""
 
     # keys
-    id = Column(Integer, primary_key=True, index=True)
-    source_id = Column(Integer, ForeignKey(f"{schemas.enums.DbSchemaEnum.DND.value}.source.id"))
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    source_id: Mapped[int] = mapped_column(ForeignKey(f"{schemas.enums.DbSchemaEnum.DND.value}.source.id"))
     # fields
-    name = Column(String, nullable=False)
-    casting_time = Column(String, nullable=False)
-    classes = Column(ARRAY(String), nullable=False)
-    components = Column(String, nullable=False)
-    description = Column(String, nullable=False)
-    duration = Column(String, nullable=False)
-    level = Column(Integer, nullable=False)
-    range = Column(String, nullable=False)
-    ritual = Column(Boolean, nullable=False)
-    school = Column(Enum(schemas.enums.SpellSchoolEnum, inherit_schema=True), nullable=False)
-    created_at = Column(DateTime(timezone=True), default=func.now(), nullable=False)
-    created_by = Column(String, nullable=False)
-    updated_at = Column(
-        DateTime(timezone=True),
+    name: Mapped[str] = mapped_column(nullable=False)
+    casting_time: Mapped[str] = mapped_column(nullable=False)
+    classes = Column(MutableList.as_mutable(ARRAY(String)), nullable=False)
+    components: Mapped[str] = mapped_column(nullable=False)
+    description: Mapped[str] = mapped_column(nullable=False)
+    duration: Mapped[str] = mapped_column(nullable=False)
+    level: Mapped[int] = mapped_column(nullable=False)
+    range: Mapped[str] = mapped_column(nullable=False)
+    ritual: Mapped[bool] = mapped_column(nullable=False)
+    school: Mapped[schemas.enums.SpellSchoolEnum] = mapped_column(nullable=False)
+    created_at: Mapped[datetime.datetime] = mapped_column(default=func.now(), nullable=False)
+    created_by: Mapped[str] = mapped_column(nullable=False)
+    updated_at: Mapped[datetime.datetime] = mapped_column(
         index=True,
         default=func.now(),
-        onupdate=datetime.utcnow,
+        onupdate=datetime.datetime.now(datetime.UTC),
         nullable=False,
     )
-    updated_by = Column(String, nullable=False)
-    homebrew = Column(Boolean, default=True, nullable=False)
+    updated_by: Mapped[str] = mapped_column(nullable=False)
+    homebrew: Mapped[bool] = mapped_column(default=True, nullable=False)
     # relationships
     source = relationship("Source")
     # constraints

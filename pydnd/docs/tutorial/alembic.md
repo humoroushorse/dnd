@@ -28,8 +28,8 @@ from logging.config import fileConfig
 
 from alembic import context
 from dnd import schemas
-from dnd.core import settings
-from dnd.database.base import Base
+from dnd.core import uncached_settings
+from dnd.database.base import DbBase
 from sqlalchemy import engine_from_config, pool, text
 
 # this is the Alembic Config object, which provides
@@ -42,7 +42,7 @@ fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-target_metadata = Base.metadata
+target_metadata = DbBase.metadata
 
 target_metadata.naming_convention = {
     "ix": "ix_%(column_0_label)s",
@@ -71,7 +71,7 @@ def get_db_uri() -> str:
     if db_override:
         print("Alembic overriding db::", db_override)  # noqa: T001
         return db_override
-    return settings.SQLALCHEMY_DATABASE_URI
+    return uncached_settings.SQLALCHEMY_DATABASE_URI
 
 
 def run_migrations_offline() -> None:

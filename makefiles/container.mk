@@ -1,5 +1,6 @@
 # CONTAINER_RUNNER=podman
 CONTAINER_RUNNER := $(if $(CONTAINER_RUNNER),$(CONTAINER_RUNNER),"docker")
+CONTAINER_PROJECT_NAME := $(if $(CONTAINER_PROJECT_NAME),$(CONTAINER_PROJECT_NAME),"ttrpg-api")
 # INDIVIDUAL TO EACH DIRECOTRY
 #    CONTAINER_IMAGE
 #    CONTAINER_IMAGE_NAME
@@ -22,13 +23,12 @@ CONTAINER_ID ?= $(shell ${CONTAINER_RUNNER} ps | grep '$(REGISTRY_IMAGE_TAG)')
 
 .PHONY: container-clean
 container-clean: # build and tag container
-	${CONTAINER_RUNNER} system prune --force
-	${CONTAINER_RUNNER} volume prune --force
+	${CONTAINER_RUNNER} kill $$(${CONTAINER_RUNNER} ps -a -q)
+	${CONTAINER_RUNNER} system prune --volumes --force
 
 .PHONY: container-build
 container-build: # build and tag container
-	# TODO: $(CONTAINER_BUILD_FLAGS)
-	# ${CONTAINER_RUNNER} build $(CONTAINER_BUILD_FLAGS) -f image/Dockerfile -t $(REGISTRY_IMAGE_TAG)
+	# todo: build $(CONTAINER_BUILD_FLAGS)
 	${CONTAINER_RUNNER} build --network=host -f image/Dockerfile -t $(REGISTRY_IMAGE_TAG) --target development .
 
 .PHONY: container-build-production
