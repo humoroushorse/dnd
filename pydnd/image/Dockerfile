@@ -2,7 +2,10 @@
 # Uses multi-stage builds requiring Docker 17.05 or higher
 # See https://docs.docker.com/develop/develop-images/multistage-build/
 
-# Creating a python base with shared environment variables
+################################################################################
+# python-base
+#    Creating a python base with shared environment variables
+################################################################################
 FROM python:3.12.2-slim AS python-base
 
 ENV PYTHONUNBUFFERED=1 \
@@ -18,8 +21,11 @@ ENV PYTHONUNBUFFERED=1 \
 
 ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
 
-# builder-base is used to build dependencies
-# python3-dev, libpq-dev -> required for psycopg2
+################################################################################
+# builder-base
+#    'builder-base' stage is used to build dependencies
+#    python3-dev, libpq-dev -> required for psycopg2
+################################################################################
 FROM python-base AS builder-base
 RUN buildDeps="build-essential" \
     && apt-get update \
@@ -38,15 +44,17 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=${POETRY_HOME} python3 - --version ${POETRY_VERSION} && \
     chmod a+x /opt/poetry/bin/poetry
 
-# We copy our Python requirements here to cache them
-# and install only runtime deps using poetry
-# --no-root in poetry install fixes the "/opt/pysetup/app/dnd does not contain any element" error
+# We copy our Python requirements here to cache them and install only runtime deps.
+# using poetry --no-root in poetry install fixes the "/opt/pysetup/app/dnd does not contain any element" error
 WORKDIR $PYSETUP_PATH
 COPY ./poetry.lock ./pyproject.toml ./
-RUN poetry install --only main  --no-root # respects
+RUN poetry install --only main --no-root # respects
 
-# 'development' stage installs all dev deps and can be used to develop code.
-# For example using docker-compose to mount local volume under /app
+################################################################################
+# development
+#    'development' stage installs all dev deps and can be used to develop code.
+#    For example using docker-compose to mount local volume under /app
+################################################################################
 FROM python-base as development
 ENV FASTAPI_ENV=production
 
@@ -72,23 +80,43 @@ ENTRYPOINT /docker-entrypoint.sh $0 $@
 # poetry run uvicorn --host=127.0.0.1 --port=8001 dnd.main:app
 CMD ["uvicorn", "--reload", "--host=0.0.0.0", "--port=8001", "--app-dir=app", "dnd.main:app"]
 
-# 'lint' stage runs black and isort
-# running in check mode means build will fail if any linting errors occur
+################################################################################
+# lint (development)
+#    'lint' stage runs black and isort
+#    running in check mode means build will fail if any linting errors occur
+################################################################################
 FROM development AS lint
 RUN black --config ./pyproject.toml --check app tests
 RUN isort --settings-path ./pyproject.toml --recursive --check-only
 CMD ["tail", "-f", "/dev/null"]
 
-# 'test' stage runs our unit tests with pytest and
-# coverage.  Build will fail if test coverage is under 95%
+################################################################################
+# test (development)
+#    'test' stage runs our unit tests with pytest and coverage.
+#    Build will fail if test coverage is under 95%
+################################################################################
 FROM development AS test
 RUN coverage run --rcfile ./pyproject.toml -m pytest ./tests
 RUN coverage report --fail-under 95
 
-# 'production' stage uses the clean 'python-base' stage and copyies
-# in only our runtime deps that were installed in the 'builder-base'
+################################################################################
+# production
+#    'production' stage uses the clean 'python-base' stage and copyies
+#    in only our runtime deps that were installed in the 'builder-base'
+# ! NOTICE: deprecated
+# !   this is currently gunicorn handling multiple processes in say one pod
+# !   with kubernetes we just essentially use uvicorn in one pod and let kubernetes scale it
+# !      by spawning more processes
+################################################################################
 FROM python-base AS production
 ENV FASTAPI_ENV=production
+
+# as this is deprecated, we just remove it from our poetry in our app
+#    so we have to reinstall here
+COPY --from=builder-base $POETRY_HOME $POETRY_HOME
+COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
+WORKDIR $PYSETUP_PATH
+RUN poetry add gunicorn
 
 COPY --from=builder-base $VENV_PATH $VENV_PATH
 COPY gunicorn_conf.py /gunicorn_conf.py

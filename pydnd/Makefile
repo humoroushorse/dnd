@@ -1,6 +1,8 @@
 include ../makefiles/common.mk
 include ../makefiles/container.mk
 include ../makefiles/postgres.mk
+include ../makefiles/prometheus.mk
+include ../makefiles/grafana.mk
 
 CONTAINER_RUNNER=docker # e.g. podman or docker
 
@@ -30,13 +32,16 @@ db-up:
 .PHONY: run
 run:
 	# poetry env use python3 && poetry run uvicorn dnd.main:app
-	poetry run uvicorn --host=127.0.0.1 --port=8001 dnd.main:app
+	poetry run uvicorn --host=127.0.0.1 --port=8001 dnd.main:app --reload --reload-dir=app
 
 .PHONY: compose-up
 compose-up:
+  # optional: grafana, prometheus
 	${CONTAINER_RUNNER} compose \
 		-f image/docker-compose.yml \
-		-f ../image/postgres.docker-compose.yml \
+		-f ../image/postgres/docker-compose.yml \
+		-f ../image/grafana/docker-compose.yml \
+		-f ../image/prometheus/docker-compose.yml \
 		-p ${CONTAINER_PROJECT_NAME} \
 		up -d
 
@@ -44,7 +49,9 @@ compose-up:
 compose-down:
 	${CONTAINER_RUNNER} compose \
 		-f image/docker-compose.yml \
-		-f ../image/postgres.docker-compose.yml \
+		-f ../image/postgres/docker-compose.yml \
+		-f ../image/grafana/docker-compose.yml \
+		-f ../image/prometheus/docker-compose.yml \
 		-p ${CONTAINER_PROJECT_NAME} \
 		down
 

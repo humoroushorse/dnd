@@ -166,4 +166,4 @@ def create_upload_file(
         except Exception as e:
             response.errors.append(f"[{jd.get('name')}]: {str(e)}")
     response.update_totals()
-    return response.dict()
+    return response.model_dump()

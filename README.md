@@ -7,21 +7,29 @@ Localhost changes based on where you run it from
 * Docker: 0.0.0.0
 
 ## Port Space Allocation
+As a source of truth please refer to this [confluence page](https://ian-kirkpatrick.atlassian.net/wiki/spaces/DND/pages/3211317/Local).
+
 | Project Name    | Description   | Ports       |
 |-----------------|---------------|-------------|
+| Grafana         | service       | 3000        |
 | UI              | ui ports      | 4xxx        |
+| registry        | containers    | 5001        |
 | API             | api ports     | 8xxx - 8100 |
 | API DOCS        | api doc ports | 81xx - 8200 |
 | OPA             | opa ports     | 82xx - 8300 |
+| Prometheus      | service       | 9090        |
 
 ## Port Ledger
-| Project Name    | Description | Ports       |
-|-----------------|-------------|-------------|
-| postgres        | DB          | 5432        |
-| postgres (test) | Test DB     | 5433        |
-| pydnd           | FastAPI DnD | 8001        |
-| pydnd: mkdocs   | docs        | 8201        |
-| pydnd: opa      | opa         | 8301        |  TODO - reserved, implement
+| Project Name    | Description   | Ports       |
+|-----------------|---------------|-------------|
+| Grafana         | service       | 3000        |
+| local registry  | containers    | 5001        |
+| postgres        | DB            | 5432        |
+| postgres (test) | Test DB       | 5433        |
+| pydnd           | FastAPI DnD   | 8001        |
+| pydnd: mkdocs   | docs          | 8201        |
+| pydnd: opa      | opa           | 8301        |  TODO - reserved, implement
+| Prometheus      | service       | 9090        |
 
 ## Projects
 

@@ -1,4 +1,4 @@
-
+COMMON_REPOSITORY_ROOT=~/projects/ttrpg/ttrpg-api
 
 .PHONY: common-poetry-reset
 common-poetry-reset:
