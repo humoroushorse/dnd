@@ -173,8 +173,8 @@ repos:
   # CUSTOM HOOKS
   - repo: local
     hooks:
-    - id: prepare-commit-msg
-      name: prepare-commit-msg
-      entry: scripts/hooks/prepare-commit-msg.sh
+    - id: validate-branch-name
+      name: validate-branch-name
+      entry: scripts/hooks/validate-branch-name.sh
       language: system
       pass_filenames: false

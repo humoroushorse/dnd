@@ -8,13 +8,16 @@ from pydantic import BaseModel, Field
 class DndClassBase(BaseModel):
     """Schema base for where everything is optional."""
 
-    id: int | None = Field(title="ID", description="Class ID (generated)")
-    source_id: int | None = Field(title="Source ID", description="FK - Source ID")
-    name: str | None = Field(title="Name", description="Name of the class (will be set to lowercase)")
-    description: str | None = Field(title="Description", description="Class description")
-    hit_die: str | None = Field(title="Hit Die", description="In 1d8 format")
-    primary_ability: str | None = Field(title="Primary Ability", description="Primary ability for the class.")
+    id: int | None = Field(default=None, title="ID", description="Class ID (generated)")
+    source_id: int | None = Field(default=None, title="Source ID", description="FK - Source ID")
+    name: str | None = Field(default=None, title="Name", description="Name of the class (will be set to lowercase)")
+    description: str | None = Field(default=None, title="Description", description="Class description")
+    hit_die: str | None = Field(default=None, title="Hit Die", description="In 1d8 format")
+    primary_ability: str | None = Field(
+        default=None, title="Primary Ability", description="Primary ability for the class."
+    )
     saving_throw_proficiencies: str | None = Field(
+        default=None,
         title="Saving Throw Proficiencies",
         description="Saving threows the class is proficient in.",
     )
@@ -62,4 +65,4 @@ class DndClassResponse(DndClassBase):
     class Config:
         """Pydantic model configuration."""
 
-        orm_mode = True
+        from_attributes = True

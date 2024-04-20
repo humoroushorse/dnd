@@ -60,11 +60,11 @@ def test_post(client: TestClient, random_spell: schemas.spell.SpellCreate) -> No
     """Test post: happy path."""
     response = client.post(
         f"{uncached_settings.API_V1_STR}/spells",
-        json=jsonable_encoder(random_spell.dict()),
+        json=jsonable_encoder(random_spell.model_dump()),
     )
     response_json = response.json()
     assert response.status_code == status.HTTP_200_OK
-    assert_dict_equals_spell(response_json, random_spell.dict())
+    assert_dict_equals_spell(response_json, random_spell.model_dump())
 
 
 def test_get(client: TestClient) -> None:
@@ -77,11 +77,11 @@ def test_get(client: TestClient) -> None:
 
 def test_put(client: TestClient, random_spell: schemas.spell.SpellCreate) -> None:
     """Test put: happy path."""
-    random_spell_copy = schemas.spell.SpellCreate(**random_spell.dict())
+    random_spell_copy = schemas.spell.SpellCreate(**random_spell.model_dump())
     random_spell_copy.description = "testing_update"
     response = client.put(
         f"{uncached_settings.API_V1_STR}/spells",
-        json=jsonable_encoder(random_spell_copy.dict()),
+        json=jsonable_encoder(random_spell_copy.model_dump()),
     )
     response_json: dict = response.json()
     assert response.status_code == status.HTTP_200_OK
@@ -90,11 +90,11 @@ def test_put(client: TestClient, random_spell: schemas.spell.SpellCreate) -> Non
 
 def test_put_does_not_exist(client: TestClient, random_spell: schemas.spell.SpellCreate) -> None:
     """Test put: 404."""
-    random_spell_copy = schemas.spell.SpellCreate(**random_spell.dict())
+    random_spell_copy = schemas.spell.SpellCreate(**random_spell.model_dump())
     random_spell_copy.id = -999999999
     response = client.put(
         f"{uncached_settings.API_V1_STR}/spells",
-        json=jsonable_encoder(random_spell_copy.dict()),
+        json=jsonable_encoder(random_spell_copy.model_dump()),
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -109,7 +109,7 @@ def test_delete(client: TestClient, random_spell: schemas.spell.SpellCreate) -> 
 
 def test_delete_does_not_exist(client: TestClient, random_spell: schemas.spell.SpellCreate) -> None:
     """Test delete: 404."""
-    random_spell_copy = schemas.spell.SpellCreate(**random_spell.dict())
+    random_spell_copy = schemas.spell.SpellCreate(**random_spell.model_dump())
     random_spell_copy.id = -999999999
     response = client.delete(f"{uncached_settings.API_V1_STR}/spells?id={random_spell_copy.id}")
     assert response.status_code == status.HTTP_404_NOT_FOUND

@@ -1,4 +1,12 @@
+# postgres.mk
+
+# this file is imported
+#    do not import other files
+COMMON_REPOSITORY_ROOT=~/projects/ttrpg/ttrpg-api
 CONTAINER_RUNNER := $(if $(CONTAINER_RUNNER),$(CONTAINER_RUNNER),"docker")
+CONTAINER_PROJECT_NAME := $(if $(CONTAINER_PROJECT_NAME),$(CONTAINER_PROJECT_NAME),"ttrpg-api")
+
+
 CONTAINER_PG_IMAGE=bitnami/postgresql:15.6.0
 
 ################################################################################
@@ -10,7 +18,7 @@ POSTGRES_DATABASE_NAME=ttrpg-pg
 
 .PHONY: postgres-clean
 postgres-clean: # removes local volume mount data
-	@echo "removing postgres local volume mount defined in ~/projects/ttrpg/ttrpg-api/image/postgres.docker-compose.yml"
+	@echo "removing postgres local volume mount defined in ~/projects/ttrpg/ttrpg-api/image/postgres/docker-compose.yml"
 	rm -rf ~/projects/ttrpg/volume-mounts/postgres
 
 .PHONY: postgres-up
@@ -26,14 +34,14 @@ postgres-up:
 .PHONY: postgres-compose-up
 postgres-compose-up:
 	${CONTAINER_RUNNER} compose \
-		-f ../image/postgres.docker-compose.yml \
+		-f ${COMMON_REPOSITORY_ROOT}/image/postgres/docker-compose.yml \
 		-p ${CONTAINER_PROJECT_NAME} \
 		up -d
 
 .PHONY: postgres-compose-down
 postgres-compose-down:
 	${CONTAINER_RUNNER} compose \
-		-f ../image/postgres.docker-compose.yml \
+		-f ${COMMON_REPOSITORY_ROOT}/image/postgres/docker-compose.yml \
 		-p ${CONTAINER_PROJECT_NAME} \
 		down
 

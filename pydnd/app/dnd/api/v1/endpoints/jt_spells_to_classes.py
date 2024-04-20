@@ -55,7 +55,7 @@ def create_jt_spell_to_class(
 
     jt_spell_to_class = repository.jt_spell_to_class.create(
         db,
-        obj_in=schemas.jt_spell_to_class.JtSpellToClassBase(**jt_spell_to_class_in.dict()),
+        obj_in=schemas.jt_spell_to_class.JtSpellToClassBase(**jt_spell_to_class_in.model_dump()),
     )
     return jt_spell_to_class
 
@@ -175,4 +175,4 @@ def create_upload_file(  # noqa: C901 <- ignore code complexity (12 > 9)
                             f"[source_id={jd_source_id}, class_id={jd_class_id}, spell_name={jd_spell_name}]: {str(e)}"
                         )
     response.update_totals()
-    return response.dict()
+    return response.model_dump()

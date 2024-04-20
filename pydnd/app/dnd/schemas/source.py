@@ -30,4 +30,4 @@ class SourceResponse(SourceBase):
     class Config:
         """Pydantic model configuration."""
 
-        orm_mode = True
+        from_attributes = True

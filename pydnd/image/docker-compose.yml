@@ -20,4 +20,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: "no"
     depends_on:
-      - postgresql # see ROOT/image/postgres.docker-compose.yml
+      - postgresql # see ROOT/image/postgres/docker-compose.yml
+      # optional: grafana
+      # optional: prometheus

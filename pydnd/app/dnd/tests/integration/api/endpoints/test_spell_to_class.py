@@ -79,7 +79,7 @@ def test_set_up(
     # load in random spell
     response = client.post(
         f"{uncached_settings.API_V1_STR}/spells",
-        json=jsonable_encoder(random_spell.dict()),
+        json=jsonable_encoder(random_spell.model_dump()),
     )
     assert response.status_code == status.HTTP_200_OK
     # load in all xanathars spells
@@ -107,11 +107,11 @@ def test_post(
     )
     response = client.post(
         f"{uncached_settings.API_V1_STR}/spell-to-class",
-        json=random_spell_to_class_copy.dict(),
+        json=random_spell_to_class_copy.model_dump(),
     )
     response_json = response.json()
     assert response.status_code == status.HTTP_200_OK
-    assert response_json == expected.dict()
+    assert response_json == expected.model_dump()
 
 
 def test_post_invalid_source_name(
@@ -127,7 +127,7 @@ def test_post_invalid_source_name(
     )
     response = client.post(
         f"{uncached_settings.API_V1_STR}/spell-to-class",
-        json=random_spell_to_class_copy.dict(),
+        json=random_spell_to_class_copy.model_dump(),
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -145,7 +145,7 @@ def test_post_invalid_dnd_class_name(
     )
     response = client.post(
         f"{uncached_settings.API_V1_STR}/spell-to-class",
-        json=random_spell_to_class_copy.dict(),
+        json=random_spell_to_class_copy.model_dump(),
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -163,7 +163,7 @@ def test_post_invalid_spell_name(
     )
     response = client.post(
         f"{uncached_settings.API_V1_STR}/spell-to-class",
-        json=random_spell_to_class_copy.dict(),
+        json=random_spell_to_class_copy.model_dump(),
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -185,7 +185,7 @@ def test_put(
     integration_global_data: dict,
 ) -> None:
     """Test put: happy path."""
-    random_spell_to_class_copy = schemas.jt_spell_to_class.JtSpellToClassBase(**random_spell_to_class.dict())
+    random_spell_to_class_copy = schemas.jt_spell_to_class.JtSpellToClassBase(**random_spell_to_class.model_dump())
     # since we loaded in all sources, get all source ids and chose one that doesnt match our random_source id
     filtered_ids = [
         source.get("id") for source in integration_global_data.get("source") if source.get("id") != random_source.id
@@ -194,7 +194,7 @@ def test_put(
     random_spell_to_class_copy.source_id = random_id
     response = client.put(
         url=f"{uncached_settings.API_V1_STR}/spell-to-class",
-        json=random_spell_to_class_copy.dict(),
+        json=random_spell_to_class_copy.model_dump(),
     )
     response_schema = schemas.jt_spell_to_class.JtSpellToClassBase(**response.json())
     assert response.status_code == status.HTTP_200_OK
@@ -206,11 +206,11 @@ def test_put_does_not_exist(
     random_spell_to_class: schemas.jt_spell_to_class.JtSpellToClassCreate,
 ) -> None:
     """Test put: 404."""
-    random_spell_to_class_copy = schemas.jt_spell_to_class.JtSpellToClassBase(**random_spell_to_class.dict())
+    random_spell_to_class_copy = schemas.jt_spell_to_class.JtSpellToClassBase(**random_spell_to_class.model_dump())
     random_spell_to_class_copy.id = -999999999
     response = client.put(
         url=f"{uncached_settings.API_V1_STR}/spell-to-class",
-        json=random_spell_to_class_copy.dict(),
+        json=random_spell_to_class_copy.model_dump(),
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -231,7 +231,7 @@ def test_delete_does_not_exist(
     random_spell_to_class: schemas.jt_spell_to_class.JtSpellToClassCreate,
 ) -> None:
     """Test delete: 404."""
-    random_spell_to_class_copy = schemas.jt_spell_to_class.JtSpellToClassBase(**random_spell_to_class.dict())
+    random_spell_to_class_copy = schemas.jt_spell_to_class.JtSpellToClassBase(**random_spell_to_class.model_dump())
     random_spell_to_class_copy.id = -999999999
     response = client.delete(f"{uncached_settings.API_V1_STR}/spell-to-class?id={random_spell_to_class_copy.id}")
     assert response.status_code == status.HTTP_404_NOT_FOUND

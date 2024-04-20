@@ -10,6 +10,7 @@ from dnd.core import Settings, uncached_settings
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
+from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI(title=uncached_settings.PROJECT_NAME)
 
@@ -106,6 +107,9 @@ async def health_check(
 
 
 app.include_router(api_router, prefix=uncached_settings.API_V1_STR)
+
+# put this after all of the app.include_routers / etc
+Instrumentator().instrument(app).expose(app)
 
 if __name__ == "__main__":
     uvicorn.run(app, host=uncached_settings.HOST, port=uncached_settings.PORT)

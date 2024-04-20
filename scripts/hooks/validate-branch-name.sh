@@ -8,7 +8,7 @@ LOCAL_BRANCH_NAME="$(git rev-parse --abbrev-ref HEAD)"
 BRANCH_TYPE="(feature|refactor|bugfix|hotfix|release|docs|wip)"
 BRANCH_TICKET="(DND)-[0-9]+"
 BRANCH_DESCRIPTION="[a-zA-Z0-9\/_-]*"
-VALID_BRANCH_REGEX=^$BRANCH_TYPE/$BRANCH_TICKET$BRANCH_DESCRIPTION$
+VALID_BRANCH_REGEX=^$BRANCH_TYPE/$BRANCH_TICKET/$BRANCH_DESCRIPTION$
 
 center() {
     termwidth="$(tput cols)"
@@ -22,7 +22,7 @@ fill_screen() {
 
 if [[ ! $LOCAL_BRANCH_NAME =~ $VALID_BRANCH_REGEX ]]
 then
-    center "scripts/hooks/prepare-commit-msg.sh" =
+    center "scripts/hooks/validate-branch-name.sh" =
     echo "Invalid Branch Name:"
     echo "\t$LOCAL_BRANCH_NAME"
     echo "Legal Branch Name Format:"
