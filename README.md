@@ -19,9 +19,13 @@ Localhost changes based on where you run it from
 |-----------------|-------------|-------------|
 | postgres        | DB          | 5432        |
 | postgres (test) | Test DB     | 5433        |
-| pydnd           | FastAPI DnD | 8001        |
+| keycloak        | auth        | 8080        |
+| pydnd           | FastAPI     | 8001        |
 | pydnd: mkdocs   | docs        | 8201        |
-| pydnd: opa      | opa         | 8301        |  TODO - reserved, implement
+| pydnd: opa      | opa         | 8301        |  TODO - reserved, implement (update, remove in favor of keycloak)
+| pydnd           | FastAPI     | 8002        |
+| pydnd: mkdocs   | docs        | 8202        |
+
 
 ## Projects
 

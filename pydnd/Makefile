@@ -36,7 +36,7 @@ run:
 compose-up:
 	${CONTAINER_RUNNER} compose \
 		-f image/docker-compose.yml \
-		-f ../image/postgres.docker-compose.yml \
+		-f ../image/postgres/postgres.docker-compose.yml \
 		-p ${CONTAINER_PROJECT_NAME} \
 		up -d
 
@@ -44,7 +44,7 @@ compose-up:
 compose-down:
 	${CONTAINER_RUNNER} compose \
 		-f image/docker-compose.yml \
-		-f ../image/postgres.docker-compose.yml \
+		-f ../image/postgres/postgres.docker-compose.yml \
 		-p ${CONTAINER_PROJECT_NAME} \
 		down
 

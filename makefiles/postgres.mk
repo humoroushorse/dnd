@@ -1,16 +1,16 @@
 CONTAINER_RUNNER := $(if $(CONTAINER_RUNNER),$(CONTAINER_RUNNER),"docker")
-CONTAINER_PG_IMAGE=bitnami/postgresql:15.6.0
+CONTAINER_POSTGRES_IMAGE=bitnami/postgresql:16.4.0
 
 ################################################################################
 # App
 ################################################################################
-CONTAINER_PG_PORT=5432
+CONTAINER_POSTGRES_PORT=5432
 POSTGRES_CONTAINER_NAME=ttrpg-pg
 POSTGRES_DATABASE_NAME=ttrpg-pg
 
 .PHONY: postgres-clean
 postgres-clean: # removes local volume mount data
-	@echo "removing postgres local volume mount defined in ~/projects/ttrpg/ttrpg-api/image/postgres.docker-compose.yml"
+	@echo "removing postgres local volume mount defined in ~/projects/ttrpg/ttrpg-api/image/postgres/postgres.compose.yml"
 	rm -rf ~/projects/ttrpg/volume-mounts/postgres
 
 .PHONY: postgres-up
@@ -20,20 +20,20 @@ postgres-up:
 		-e POSTGRESQL_USERNAME=postgres\
 		-e POSTGRESQL_PASSWORD=admin\
 		-e POSTGRES_DB=${POSTGRES_DATABASE_NAME}\
-		-e POSTGRESQL_PORT_NUMBER=${CONTAINER_PG_PORT}\
-		-p ${CONTAINER_PG_PORT}:${CONTAINER_PG_PORT} ${CONTAINER_PG_IMAGE}
+		-e POSTGRESQL_PORT_NUMBER=${CONTAINER_POSTGRES_PORT}\
+		-p ${CONTAINER_POSTGRES_PORT}:${CONTAINER_POSTGRES_PORT} ${CONTAINER_POSTGRES_IMAGE}
 
 .PHONY: postgres-compose-up
 postgres-compose-up:
 	${CONTAINER_RUNNER} compose \
-		-f ../image/postgres.docker-compose.yml \
+		-f ../image/postgres/postgres.compose.yml \
 		-p ${CONTAINER_PROJECT_NAME} \
 		up -d
 
 .PHONY: postgres-compose-down
 postgres-compose-down:
 	${CONTAINER_RUNNER} compose \
-		-f ../image/postgres.docker-compose.yml \
+		-f ../image/postgres.compose.yml \
 		-p ${CONTAINER_PROJECT_NAME} \
 		down
 
@@ -49,9 +49,9 @@ postgres-kube-up:
 ################################################################################
 # Testing
 ################################################################################
-CONTAINER_PG_TEST_PORT=5433
+CONTAINER_POSTGRES_TEST_PORT=5433
 POSTGRES_CONTAINER_NAME_TESTING=ttrpg-pg-testing
-CONTAINER_PG_TEST_CONN=postgresql://postgres:admin@localhost:${CONTAINER_PG_TEST_PORT}/${POSTGRES_DATABASE_NAME}
+CONTAINER_POSTGRES_TEST_CONN=postgresql://postgres:admin@localhost:${CONTAINER_POSTGRES_TEST_PORT}/${POSTGRES_DATABASE_NAME}
 
 .PHONY: postgres-up-testing
 postgres-up-testing:
@@ -60,8 +60,8 @@ postgres-up-testing:
 		-e POSTGRESQL_USERNAME=postgres\
 		-e POSTGRESQL_PASSWORD=admin\
 		-e POSTGRES_DB=${POSTGRES_DATABASE_NAME}\
-		-e POSTGRESQL_PORT_NUMBER=${CONTAINER_PG_TEST_PORT}\
-		-p ${CONTAINER_PG_TEST_PORT}:${CONTAINER_PG_TEST_PORT} ${CONTAINER_PG_IMAGE}
+		-e POSTGRESQL_PORT_NUMBER=${CONTAINER_POSTGRES_TEST_PORT}\
+		-p ${CONTAINER_POSTGRES_TEST_PORT}:${CONTAINER_POSTGRES_TEST_PORT} ${CONTAINER_POSTGRES_IMAGE}
 
 .PHONY: postgres-down-testing
 postgres-down-testing:

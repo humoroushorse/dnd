@@ -14,7 +14,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine(uncached_settings.SQLALCHEMY_TESTING_DATABASE_URI, pool_pre_ping=True)
+engine = create_engine(uncached_settings.POSTGRES_TESTING_DATABASE_URI, pool_pre_ping=True)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 

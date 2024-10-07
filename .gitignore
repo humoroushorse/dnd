@@ -131,3 +131,6 @@ dmypy.json
 # other
 .vscode/*
 .DS_Store
+
+# app specific
+logs
