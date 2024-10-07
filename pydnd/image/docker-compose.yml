@@ -12,8 +12,8 @@ services:
       - ../.env
     environment:
       # override connection to localhost with host.docker.internal
-      - SQLALCHEMY_DATABASE_URI=postgresql://postgres:admin@host.docker.internal:5432/ttrpg-pg
-      - SQLALCHEMY_TESTING_DATABASE_URI=postgresql://postgres:admin@host.docker.internal:5433/ttrpg-pg
+      - POSTGRES_DATABASE_URI=postgresql://postgres:admin@host.docker.internal:5432/ttrpg-pg
+      - POSTGRES_TESTING_DATABASE_URI=postgresql://postgres:admin@host.docker.internal:5433/ttrpg-pg
     ports:
       - '8001:8001'
     volumes:

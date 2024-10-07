@@ -1,0 +1,46 @@
+################################################################################
+# Site metadata ###
+################################################################################
+
+site_name: TTRPG Event Planning API (Python)
+site_description: Documentation for the DnD API
+# site_url: N/A
+
+repo_url: https://github.com/humoroushorse/ttrpg-api
+edit_uri: edit/main/py_event_planning/docs
+
+################################################################################
+# Build settings
+################################################################################
+
+# theme: readthedocs
+theme:
+  name: "material"
+
+plugins:
+  - search
+  - mkdocstrings
+
+nav:
+  - Home: index.md
+  - Project Creation: project_creation.md
+  - Tutorial:
+    # - TL;DR: tutorial/tldr.md
+    # - Installation: tutorial/installation.md
+    # - Set up project: tutorial/setup-project.md
+    # - Advanced: tutorial/advanced.md
+    # - Usage: tutorial/usage.md
+    # - Deploy: tutorial/deploy.md
+    - Adding a Table: tutorial/adding_a_table.md
+    - Alembic: tutorial/alembic.md
+    - Testing: tutorial/testing.md
+  - Code:
+    - Features:
+      - classes: code/features/classes.md
+      - sources: code/features/sources.md
+      - spells-to-classes: code/features/spells-to-classes.md
+      - spells: code/features/spells.md
+    - API Module: code/api-module.md
+    - Core Module: code/core-module.md
+    - Database Module: code/database-module.md
+    - Shared Module: code/shared.md

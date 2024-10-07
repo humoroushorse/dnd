@@ -47,7 +47,7 @@ def get_db_uri() -> str:
     if db_override:
         print("Alembic overriding db::", db_override)  # noqa: T201
         return db_override
-    return uncached_settings.SQLALCHEMY_DATABASE_URI
+    return uncached_settings.POSTGRES_DATABASE_URI
 
 
 def run_migrations_offline() -> None:

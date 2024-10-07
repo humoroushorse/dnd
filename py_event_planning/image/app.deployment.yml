@@ -1,0 +1,21 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dnd-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dnd-api
+  template:
+    metadata:
+      labels:
+        app: dnd-api
+    spec:
+      containers:
+      - name: dnd-api
+        image: localhost:5001/ttrpg-api/py_event_planning:latest
+        imagePullPolicy: IfNotPresent # this is a local image
+        ports:
+        - containerPort: 8002
