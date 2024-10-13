@@ -15,7 +15,7 @@ POSTGRES_DATABASE_NAME=ttrpg-pg
 
 .PHONY: postgres-clean
 postgres-clean: # removes local volume mount data
-	@echo "removing postgres local volume mount defined in ~/projects/ttrpg/ttrpg-api/image/postgres/postgres.compose.yml"
+	@echo "removing postgres local volume mount defined in ~/projects/ttrpg/ttrpg-api/deploy/postgres/postgres.compose.yml"
 	rm -rf ~/projects/ttrpg/volume-mounts/postgres
 
 .PHONY: postgres-up
@@ -31,14 +31,14 @@ postgres-up:
 .PHONY: postgres-compose-up
 postgres-compose-up:
 	${CONTAINER_RUNNER} compose \
-		-f ../image/postgres/postgres.compose.yml \
+		-f ../deploy/postgres/postgres.compose.yml \
 		-p ${CONTAINER_PROJECT_NAME} \
 		up -d
 
 .PHONY: postgres-compose-down
 postgres-compose-down:
 	${CONTAINER_RUNNER} compose \
-		-f ../image/postgres.compose.yml \
+		-f ../deploy/postgres/postgres.compose.yml \
 		-p ${CONTAINER_PROJECT_NAME} \
 		down
 

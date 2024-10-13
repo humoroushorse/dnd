@@ -34,15 +34,15 @@ run:
 
 compose-up:
 	${CONTAINER_RUNNER} compose \
-		-f image/docker-compose.yml \
-		-f ../image/postgres.compose.yml \
+		-f deploy/docker-compose.yml \
+		-f ../deploy/postgres/postgres.compose.yml \
 		-p ${CONTAINER_PROJECT_NAME} \
 		up -d
 
 compose-down:
 	${CONTAINER_RUNNER} compose \
-		-f image/docker-compose.yml \
-		-f ../image/postgres.compose.yml \
+		-f deploy/docker-compose.yml \
+		-f ../deploy/postgres/postgres.compose.yml \
 		-p ${CONTAINER_PROJECT_NAME} \
 		down
 

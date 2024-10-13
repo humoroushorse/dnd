@@ -8,7 +8,7 @@ CONTAINER_RUNNER=docker # e.g. podman or docker
 ENV_FILE = .env
 
 CONTAINER_IMAGE = ttrpg-api/py_event_planning
-CONTAINER_IMAGE_NAME = dnd-api
+CONTAINER_IMAGE_NAME = ttrpg-api-event-planning
 define CONTAINER_RUN_ARGS
 --env-file $(ENV_FILE) -dit -p 8002:8002
 endef
@@ -34,15 +34,16 @@ run:
 
 compose-up:
 	${CONTAINER_RUNNER} compose \
-		-f image/docker-compose.yml \
-		-f ../image/postgres.compose.yml \
+		-f deploy/docker-compose.yml \
+		-f ../deploy/postgres/postgres.compose.yml \
+		-f ../deploy/keycloak/keycloak.compose.yml \
 		-p ${CONTAINER_PROJECT_NAME} \
 		up -d
 
 compose-down:
 	${CONTAINER_RUNNER} compose \
-		-f image/docker-compose.yml \
-		-f ../image/postgres.compose.yml \
+		-f deploy/docker-compose.yml \
+		-f ../deploy/postgres/postgres.compose.yml \
 		-p ${CONTAINER_PROJECT_NAME} \
 		down
 

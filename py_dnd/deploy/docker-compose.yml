@@ -4,7 +4,7 @@ services:
   api:
     build:
       context: ..
-      dockerfile: image/Dockerfile
+      dockerfile: deploy/Dockerfile
       target: development
       # target: prodcution
     container_name: dnd-api
@@ -20,4 +20,4 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: "no"
     depends_on:
-      - postgresql # see ROOT/image/postgres/postgres.compose.yml
+      - postgresql # see ROOT/deploy/postgres/postgres.compose.yml

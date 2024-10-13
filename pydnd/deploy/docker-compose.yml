@@ -4,7 +4,7 @@ services:
   api:
     build:
       context: ..
-      dockerfile: image/Dockerfile
+      dockerfile: deploy/Dockerfile
       target: development
       # target: prodcution
     container_name: dnd-api
@@ -20,6 +20,10 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: "no"
     depends_on:
+<<<<<<< HEAD:pydnd/image/docker-compose.yml
       - postgresql # see ROOT/image/postgres/docker-compose.yml
       # optional: grafana
       # optional: prometheus
+=======
+      - postgresql # see ROOT/deploy/postgres.docker-compose.yml
+>>>>>>> fc70bdc (DND-46/47 feature(dnd,event-planning) Init D&D spells, Init event-planning):pydnd/deploy/docker-compose.yml
