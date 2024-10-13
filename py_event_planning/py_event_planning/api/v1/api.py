@@ -14,13 +14,11 @@ from py_event_planning.features.game_session.router import router as game_sessio
 api_router = APIRouter(default_response_class=JSONResponse)
 
 public_routes = APIRouter()
-authenticated_routes = APIRouter()
+public_routes.include_router(core_router, prefix="", tags=[])
+public_routes.include_router(auth_router, prefix="/auth", tags=["Auth"])
 
-api_router.include_router(core_router, prefix="", tags=[])
-api_router.include_router(auth_router, prefix="/auth", tags=["Auth"])
+authenticated_routes = APIRouter()
 authenticated_routes.include_router(game_session_router, prefix="/game-session", tags=["Game Session"])
 
-
 api_router.include_router(public_routes)
-
 api_router.include_router(authenticated_routes, dependencies=[Depends(get_auth)])

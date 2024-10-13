@@ -79,7 +79,7 @@ async def logout_user(
 
 
 @router.get("/user")
-async def get_user(current_user: AuthService.UserAuth) -> TokenResponse:
+async def get_user(current_user: AuthService.UserAuth) -> dict:
     """Fetch the user information.
 
     Args:
