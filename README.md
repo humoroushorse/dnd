@@ -20,16 +20,17 @@ As a source of truth please refer to this [confluence page](https://ian-kirkpatr
 | Prometheus      | service       | 9090        |
 
 ## Port Ledger
-| Project Name    | Description   | Ports       |
-|-----------------|---------------|-------------|
-| Grafana         | service       | 3000        |
-| local registry  | containers    | 5001        |
-| postgres        | DB            | 5432        |
-| postgres (test) | Test DB       | 5433        |
-| pydnd           | FastAPI DnD   | 8001        |
-| pydnd: mkdocs   | docs          | 8201        |
-| pydnd: opa      | opa           | 8301        |  TODO - reserved, implement
-| Prometheus      | service       | 9090        |
+| Project Name    | Description | Ports       |
+|-----------------|-------------|-------------|
+| postgres        | DB          | 5432        |
+| postgres (test) | Test DB     | 5433        |
+| keycloak        | auth        | 8080        |
+| pydnd           | FastAPI     | 8001        |
+| pydnd: mkdocs   | docs        | 8201        |
+| pydnd: opa      | opa         | 8301        |  TODO - reserved, implement (update, remove in favor of keycloak)
+| pydnd           | FastAPI     | 8002        |
+| pydnd: mkdocs   | docs        | 8202        |
+
 
 ## Projects
 

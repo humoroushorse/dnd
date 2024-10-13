@@ -1,0 +1,25 @@
+<<<<<<<< HEAD:image/postgres/docker-compose.yml
+# postgres.docker-compose.yml
+
+========
+>>>>>>>> 21b2ca0 (foo...):image/postgres.compose.yml
+version: '3.9'
+
+services:
+  postgresql:
+    # container_name: postgresql
+    image: postgres:15.6-alpine
+    restart: always
+    ports:
+      - 5432:${POSTGRES_PORT:-5432}
+    volumes:
+      - ~/projects/ttrpg/volume-mounts/postgres:/var/lib/postgresql/data
+      # Postgres will run scripts found in this directory
+      # - $PWD/postgres:/docker-entrypoint-initdb.d
+      - ~/projects/ttrpg/ttrpg-api/deploy/postgres/postgres:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}  # default postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-admin}  # default admin
+      - POSTGRES_DB=${POSTGRES_DB:-ttrpg-pg} # default ttrpg-pg
+# volumes:
+#   postgres_data:

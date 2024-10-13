@@ -131,7 +131,7 @@ def create_upload_file(  # noqa: C901 <- ignore code complexity (12 > 9)
         else:
             dnd_class = dnd_classes[0]
 
-        if still_legal:
+        if still_legal and source:  # pylint: disable=E0606 possibly-used-before-assignment
             for _, jd_spell_list in jd.get("spells", {}).items():
                 for jd_spell_name in jd_spell_list:
                     try:

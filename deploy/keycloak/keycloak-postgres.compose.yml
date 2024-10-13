@@ -1,0 +1,12 @@
+keycloak_postgres:
+    image: postgres
+    volumes:
+      # - keycloak_postgres_data:/var/lib/postgresql/data
+      - ~/projects/ttrpg/volume-mounts/keycloak-postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${KEYCLOAK_DB_DATABASE}
+      POSTGRES_USER: ${KEYCLOAK_DB_USER}
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+
+# volumes:
+#   keycloak_postgres_data:

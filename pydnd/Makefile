@@ -38,20 +38,16 @@ run:
 compose-up:
   # optional: grafana, prometheus
 	${CONTAINER_RUNNER} compose \
-		-f image/docker-compose.yml \
-		-f ../image/postgres/docker-compose.yml \
-		-f ../image/grafana/docker-compose.yml \
-		-f ../image/prometheus/docker-compose.yml \
+		-f deploy/docker-compose.yml \
+		-f ../deploy/postgres/postgres.docker-compose.yml \
 		-p ${CONTAINER_PROJECT_NAME} \
 		up -d
 
 .PHONY: compose-down
 compose-down:
 	${CONTAINER_RUNNER} compose \
-		-f image/docker-compose.yml \
-		-f ../image/postgres/docker-compose.yml \
-		-f ../image/grafana/docker-compose.yml \
-		-f ../image/prometheus/docker-compose.yml \
+		-f deploy/docker-compose.yml \
+		-f ../deploy/postgres/postgres.docker-compose.yml \
 		-p ${CONTAINER_PROJECT_NAME} \
 		down
 

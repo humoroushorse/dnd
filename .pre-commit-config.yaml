@@ -1,14 +1,14 @@
 default_language_version:
   python: python3.12
 
-default_stages: [commit, push]
+default_stages: [pre-commit, pre-push]
 
 # fail_fast: true
 
 repos:
   # BUILT INTS
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v4.5.0"
+    rev: "v4.6.0"
     hooks:
       - id: check-added-large-files
         exclude: "test_data/json/seeds"
@@ -30,14 +30,14 @@ repos:
 
   # PYUPGRADE
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.15.2
+    rev: v3.17.0
     hooks:
       - id: pyupgrade
         args: ["--py38-plus"]
 
   # BLACK
   - repo: https://github.com/psf/black
-    rev: 24.3.0
+    rev: 24.8.0
     hooks:
       - id: black
 
@@ -90,7 +90,7 @@ repos:
 
   # FLAKE8
   - repo: https://github.com/pycqa/flake8.git
-    rev: "7.0.0"
+    rev: "7.1.1"
     hooks:
       - id: flake8
         additional_dependencies:
@@ -112,7 +112,7 @@ repos:
 
   # PYLINT [TODO: fix errors]
   - repo: https://github.com/pycqa/pylint
-    rev: v3.1.0
+    rev: v3.2.7
     hooks:
       - id: pylint
         args:
@@ -132,7 +132,7 @@ repos:
 
   # MYPY
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.9.0
+    rev: v1.11.2
     hooks:
       - id: mypy
         exclude: tests/|alembic/|scripts/
@@ -145,13 +145,22 @@ repos:
             --strict-optional,
           ]
 
+  # - repo:  https://github.com/PyCQA/bandit
+  #   rev: 1.7.9
+  #   hooks:
+  #   - id: bandit
+  #     # args: ["-c pyproject.toml"]
+  #     args: ["-c .bandit"]
+  #     additional_dependencies: ["toml"]
+
   # Other commmit hooks (best-doctor)
   - repo: https://github.com/best-doctor/pre-commit-hooks
     rev: v1.0.11
     hooks:
-    - id: mccabe-complexity
-      name: Check functions complexity (mccabe)
-      language: python
+    # Complexity is checked with something else now (flake8 or mypy)
+    # - id: mccabe-complexity
+    #   name: Check functions complexity (mccabe)
+    #   language: python
     - id: expr-complexity
       name: Check expressions complexity
       exclude: /samples/
