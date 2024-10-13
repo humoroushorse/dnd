@@ -1,7 +1,7 @@
 default_language_version:
   python: python3.12
 
-default_stages: [commit, push]
+default_stages: [pre-commit, pre-push]
 
 # fail_fast: true
 
@@ -157,9 +157,10 @@ repos:
   - repo: https://github.com/best-doctor/pre-commit-hooks
     rev: v1.0.11
     hooks:
-    - id: mccabe-complexity
-      name: Check functions complexity (mccabe)
-      language: python
+    # Complexity is checked with something else now (flake8 or mypy)
+    # - id: mccabe-complexity
+    #   name: Check functions complexity (mccabe)
+    #   language: python
     - id: expr-complexity
       name: Check expressions complexity
       exclude: /samples/

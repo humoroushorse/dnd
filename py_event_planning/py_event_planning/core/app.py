@@ -56,6 +56,14 @@ def init_app(init_db: bool = True) -> fastapi.FastAPI:
             "identifier": "GPL-3.0-only",
             "url": "https://www.gnu.org/licenses/gpl-3.0.html",
         },
+        swagger_ui_init_oauth={
+            # If you are using pkce (which you should be)
+            "usePkceWithAuthorizationCodeGrant": True,
+            # Auth fill client ID for the docs with the below value
+            "clientId": settings.KEYCLOAK_CLIENT_ID,  # example-frontend-client-id-for-dev
+            # "scopes": {"openid": "Basic information"}
+            "scopes": ["openid"],
+        },
     )
 
     # see ./middleware

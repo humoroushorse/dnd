@@ -29,17 +29,17 @@ container-clean: # build and tag container
 .PHONY: container-build
 container-build: # build and tag container
 	# todo: build $(CONTAINER_BUILD_FLAGS)
-	${CONTAINER_RUNNER} build --network=host -f image/Dockerfile -t $(REGISTRY_IMAGE_TAG) --target development .
+	${CONTAINER_RUNNER} build --network=host -f deploy/Dockerfile -t $(REGISTRY_IMAGE_TAG) --target development .
 
 .PHONY: container-build-production
 container-build-production: # build and tag container
   # TODO: $(CONTAINER_BUILD_FLAGS)
-	${CONTAINER_RUNNER} build --network=host -f image/Dockerfile -t $(REGISTRY_IMAGE_TAG) --target production .
+	${CONTAINER_RUNNER} build --network=host -f deploy/Dockerfile -t $(REGISTRY_IMAGE_TAG) --target production .
 
 .PHONY: container-build-clean
 container-build-clean: # build and tag container
 	# uses the --no-cache flag to rebuild from scratch
-	${CONTAINER_RUNNER} build --no-cache --network=host -f image/Dockerfile -t $(REGISTRY_IMAGE_TAG) --target development .
+	${CONTAINER_RUNNER} build --no-cache --network=host -f deploy/Dockerfile -t $(REGISTRY_IMAGE_TAG) --target development .
 
 .PHONY: container-run
 container-run: # run container

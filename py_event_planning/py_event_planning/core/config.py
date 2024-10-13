@@ -42,6 +42,11 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
+    KEYCLOAK_SERVER_URL: str
+    KEYCLOAK_REALM_NAME: str
+    KEYCLOAK_CLIENT_ID: str
+    # KEYCLOAK_CLIENT_SECRET_KEY: str
+
 
 @lru_cache
 def get_settings() -> Settings:
