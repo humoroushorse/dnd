@@ -1,6 +1,6 @@
 """Auth Models."""
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, SecretStr
 
 
 class RefreshToken(BaseModel):
@@ -37,7 +37,7 @@ class RegisterUserInput(BaseModel):
     email: str
     first_name: str = Field(alias="firstName")
     last_name: str = Field(alias="lastName")
-    password: str
+    password: SecretStr
 
 
 class DeleteUserInput(BaseModel):

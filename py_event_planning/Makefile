@@ -102,4 +102,5 @@ podman-init:
 	rm -rf ~/.local/share/containers/podman && rm -rf ~/.config/containers && podman machine init
 
 obliterate-migration:
+	echo "My grandfather's deck has no pathetic cards, Kaiba!"
 	poetry run alembic downgrade -1 && rm -rf ~/projects/ttrpg/ttrpg-api/py_event_planning/migrations/versions/* && poetry run alembic revision --autogenerate -m "init" && poetry run alembic upgrade head

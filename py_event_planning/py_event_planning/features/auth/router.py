@@ -2,9 +2,10 @@
 
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Cookie, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Cookie, Depends, Form, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 from loguru import logger
+from pydantic import SecretStr
 
 from py_event_planning.features.auth import service as AuthService
 from py_event_planning.features.auth.schemas import (
@@ -18,11 +19,19 @@ from py_event_planning.features.auth.schemas import (
 router = APIRouter()
 
 
+class CustomOAuth2PasswordRequestForm(OAuth2PasswordRequestForm):
+    """Wrapper around OAuth2PasswordRequestForm to make password a SecretStr."""
+
+    # TODO: grant_type, scope, client_id, client_secret?
+    def __init__(self, username: str = Form(...), password: SecretStr = Form(...)):
+        super().__init__(username=username, password=str(password.get_secret_value()))
+
+
 @router.post(
     "/session/token/unsecured",
     description="Fetch all of the auth token(s) and information. (Only use for educational purposes.)",
 )
-async def login_unsecure(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> Token:
+async def login_unsecure(form_data: Annotated[CustomOAuth2PasswordRequestForm, Depends()]) -> Token:
     """Login user nd pass back all of the information."""
     token = await AuthService.authenticate_user(form_data.username, form_data.password)
     return token
@@ -34,7 +43,7 @@ async def login_unsecure(form_data: Annotated[OAuth2PasswordRequestForm, Depends
 )
 async def login(
     response: Response,
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    form_data: Annotated[CustomOAuth2PasswordRequestForm, Depends()],
 ) -> TokenResponse:
     """Login user and only pass back the non-auth token information."""
     token = await AuthService.authenticate_user(form_data.username, form_data.password)
