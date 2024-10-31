@@ -1,7 +1,7 @@
 """SQLAlchemy Table: dnd_class definition."""
 
-from dnd import schemas
 from dnd.database.base_class import DbBase
+from dnd.schemas.enums import DbSchemaEnum
 from sqlalchemy import ARRAY, Column, ForeignKey, String
 from sqlalchemy.ext.mutable import MutableList
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -12,7 +12,7 @@ class DndClass(DbBase):
 
     # keys
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    source_id: Mapped[int] = mapped_column(ForeignKey(f"{schemas.enums.DbSchemaEnum.DND.value}.source.id"))
+    source_id: Mapped[int] = mapped_column(ForeignKey(f"{DbSchemaEnum.DND.value}.source.id"))
     # fields
     name: Mapped[str] = mapped_column(nullable=False, unique=True)
     description: Mapped[str] = mapped_column(nullable=False)

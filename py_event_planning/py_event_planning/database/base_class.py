@@ -1,10 +1,8 @@
 """SQLAlchemy base for all the table creation models."""
 
-import re
 from typing import Any
 
 from sqlalchemy import JSON, MetaData
-from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import DeclarativeBase
 
 from py_event_planning.shared.enums import DbSchemaEnum
@@ -32,7 +30,7 @@ class EventPlanningSchemaBase(DeclarativeBase):
     id: Any
     __name__: str
 
-    __table_args__ = {
+    __table_args__: tuple | dict = {
         "schema": DbSchemaEnum.EVENT_PLANNING.value,
     }
 
@@ -40,12 +38,12 @@ class EventPlanningSchemaBase(DeclarativeBase):
 
     metadata = MetaData(naming_convention=naming_convention)
 
-    # Generate __tablename__ automatically
-    @declared_attr
-    def __tablename__(self) -> str:
-        # return self.__name__.lower()
-        # e.g. SomeModelName -> some_model_name
-        return re.sub(r"(?<!^)(?=[A-Z])", "_", self.__name__).lower()
+    # # Generate __tablename__ automatically
+    # @declared_attr
+    # def __tablename__(self) -> str:
+    #     # return self.__name__.lower()
+    #     # e.g. SomeModelName -> some_model_name
+    #     return re.sub(r"(?<!^)(?=[A-Z])", "_", self.__name__).lower()
 
     def __repr__(self) -> str:
         columns = ", ".join([f"{k}={repr(v)}" for k, v in self.__dict__.items() if not k.startswith("_")])

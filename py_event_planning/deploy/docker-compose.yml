@@ -15,8 +15,10 @@ services:
       # override connection to localhost with host.docker.internal
       - POSTGRES_DATABASE_URI=postgresql+asyncpg://postgres:admin@postgresql:5432/ttrpg-pg
       - KEYCLOAK_SERVER_URL=http://keycloak:8080/
-      - KEYCLOAK_REALM_NAME=ttrpg
-      - KEYCLOAK_CLIENT_ID=ttrpg-client
+      # - KEYCLOAK_REALM_NAME=ttrpg
+      # - KEYCLOAK_CLIENT_ID=ttrpg-client
+      - KEYCLOAK_REALM_NAME=master
+      - KEYCLOAK_CLIENT_ID=admin-cli
     ports:
       - '8002:8002'
     volumes:

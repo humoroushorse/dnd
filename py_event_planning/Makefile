@@ -87,7 +87,7 @@ test-integration-html:
 ################################################################################
 # Utility
 ################################################################################
-.PHONY: load-seed-data podman-init
+.PHONY: load-seed-data podman-init obliterate-migration
 
 # Load in seed data -> source, dnd_class, spell, spell-to-class
 load-seed-data:
@@ -100,3 +100,6 @@ load-seed-data:
 # temporary
 podman-init:
 	rm -rf ~/.local/share/containers/podman && rm -rf ~/.config/containers && podman machine init
+
+obliterate-migration:
+	poetry run alembic downgrade -1 && rm -rf ~/projects/ttrpg/ttrpg-api/py_event_planning/migrations/versions/* && poetry run alembic revision --autogenerate -m "init" && poetry run alembic upgrade head

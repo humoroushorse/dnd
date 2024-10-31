@@ -2,8 +2,8 @@
 
 import asyncio
 import math
+from collections.abc import Hashable
 from io import BytesIO
-from typing import Hashable
 
 import pandas as pd
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
@@ -11,32 +11,36 @@ from loguru import logger
 from pandas.core.series import Series
 
 from py_event_planning.database.db import AsyncSessionDependency
+from py_event_planning.features.auth.service import UserAuth
 from py_event_planning.features.core.unit_of_work import (
     SqlAlchemyUnitOfWork,
     sqlalchemy_uow,
 )
 from py_event_planning.features.game_session.schemas import (
-    GameEventCreate,
-    GameEventQuery,
-    GameEventSchema,
+    GameSessionCreate,
+    GameSessionQuery,
+    GameSessionSchema,
 )
 from py_event_planning.shared.schemas import BulkLoadResponse, GenericListResponse
 
 router = APIRouter()
 
 
-@router.get("/")
+@router.get("")
 async def read_game_sessions(
+    current_user: UserAuth,
     db: AsyncSessionDependency,
     offset: int = 0,
     limit: int = 100,
-) -> list[GameEventSchema]:
+) -> list[GameSessionSchema]:
     """Retrieve game_sessions."""
     try:
-        with logger.contextualize(user_id=123, user_username="Some User", log_threads=True):
-            # user_logger = logger.bind(user_id=random.randint(0,99), user_username=random_name)
+        with logger.contextualize(
+            user_id=current_user.sub, user_username=current_user.preferred_username, log_threads=True
+        ):
             async with sqlalchemy_uow(db, None) as uow:
-                entities = [entity async for entity in uow.game_session_repo.read_multi(offset=offset, limit=limit)]
+                # entities = [entity async for entity in uow.game_session_repo.read_multi(offset=offset, limit=limit)]
+                entities = await uow.game_session_repo.read_multi(offset=offset, limit=limit)
             return entities
     except HTTPException:
         # assume that the error was already logged
@@ -48,19 +52,22 @@ async def read_game_sessions(
 
 @router.get("/query")
 async def query_game_sessions(
+    current_user: UserAuth,
     db: AsyncSessionDependency,
-    params: GameEventQuery = Depends(),
-) -> GenericListResponse[GameEventSchema]:
+    params: GameSessionQuery = Depends(),
+) -> GenericListResponse[GameSessionSchema]:
     """Retrieve game_sessions."""
     try:
-        with logger.contextualize(user_id=123, user_username="Some User", log_threads=True):
+        with logger.contextualize(
+            user_id=current_user.sub, user_username=current_user.preferred_username, log_threads=True
+        ):
             # user_logger = logger.bind(user_id=random.randint(0,99), user_username=random_name)
             filters = params.model_dump(exclude_none=True, exclude={"limit", "offset"})
             async with sqlalchemy_uow(db, None) as uow:
                 entities, total_entities_count = await uow.game_session_repo.query(
                     params=filters, offset=params.offset, limit=params.limit
                 )
-            return GenericListResponse[GameEventSchema](
+            return GenericListResponse[GameSessionSchema](
                 entities=entities,
                 total_entities_count=total_entities_count,
                 limit=params.limit,
@@ -86,7 +93,7 @@ async def upsert_and_mutate_report(
         df_entity (tuple[Hashable, Series]): _description_
     """
     index, json_entity = df_entity
-    entity: GameEventSchema | None = None
+    entity: GameSessionSchema | None = None
     try:
         if not json_entity.get("source_page") or math.isnan(json_entity.get("source_page")):
             json_entity["source_page"] = None
@@ -102,7 +109,7 @@ async def upsert_and_mutate_report(
             json_entity["difficulty_class_saving_throw"] = str(json_entity["difficulty_class_saving_throw"])
         # TODO: stat_blocks should be handled as a json object (list of stat blocks)
         json_entity["stat_blocks"] = None
-        entity = GameEventCreate(**json_entity)
+        entity = GameSessionCreate(**json_entity)
         _, total_count = await uow.game_session_repo.query(params={"name": entity.name}, limit=1, exact=True)
         if total_count > 0:
             response.warnings.append(f"Game Session with name '{entity.name}' already exists, skipping.")
@@ -110,20 +117,20 @@ async def upsert_and_mutate_report(
             await uow.game_session_repo.create(model_in=entity, return_model=False)
             response.created.append(entity.name)
     except Exception as e:
-        import traceback
-
-        logger.error(traceback.format_exc())
         response.errors.append(f"row {index} [{entity.name if entity else json_entity.iloc[name_index]}]: {str(e)}")
 
 
-@router.post("/")
+@router.post("")
 async def create_game_session(
+    current_user: UserAuth,
     db: AsyncSessionDependency,
-    model_in: GameEventCreate = Depends(),
-) -> GameEventSchema:
+    model_in: GameSessionCreate = Depends(),
+) -> GameSessionSchema:
     """Create game_session."""
     try:
-        with logger.contextualize(user_id=123, user_username="Some User", log_threads=True):
+        with logger.contextualize(
+            user_id=current_user.sub, user_username=current_user.preferred_username, log_threads=True
+        ):
             async with sqlalchemy_uow(db, None) as uow:
                 entity = await uow.game_session_repo.create(model_in=model_in)
             return entity

@@ -17,7 +17,7 @@ branch_labels: str | Sequence[str] | None = ${repr(branch_labels)}
 depends_on: str | Sequence[str] | None = ${repr(depends_on)}
 
 
-def upgrade():
+def upgrade() -> None:
     """Database migration: upgrade."""
     pre_upgrade()
 
@@ -26,7 +26,7 @@ def upgrade():
     post_upgrade()
 
 
-def downgrade():
+def downgrade() -> None:
     """Database migration: downgrade."""
     pre_downgrade()
 
@@ -35,21 +35,21 @@ def downgrade():
     post_downgrade()
 
 
-def pre_upgrade():
+def pre_upgrade() -> None:
     """Processing before upgrading the schema."""
     pass
 
 
-def post_upgrade():
+def post_upgrade() -> None:
     """Processing after upgrading the schema."""
     pass
 
 
-def pre_downgrade():
+def pre_downgrade() -> None:
     """Processing before downgrading the schema."""
     pass
 
 
-def post_downgrade():
+def post_downgrade() -> None:
     """Processing after downgrading the schema."""
     pass

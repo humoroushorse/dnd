@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Dungeons & Dragons",
+    "version": "5e",
+    "release_year": 2014,
+    "description": "Dungeons & Dragons 5th Edition (2014) ... "
+  },
+  {
+    "name": "Dungeons & Dragons",
+    "version": "5e",
+    "release_year": 2024,
+    "description": "Dungeons & Dragons 5th Edition (2024) ... "
+  },
+  {
+    "name": "Pathfinder",
+    "version": "2e",
+    "release_year": 2019,
+    "description": "Pathfinder 2nd edition (2019) ... "
+  },
+  {
+    "name": "Call of Cthulhu",
+    "version": "7e",
+    "release_year": 2014,
+    "description": "Call of Cthulhu 7th edition (2014) ... "
+  }
+]

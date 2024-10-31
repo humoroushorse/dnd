@@ -16,18 +16,25 @@ from py_event_planning.database.base_class import EventPlanningSchemaBase
 from py_event_planning.database.exceptions import handle_sqlalchemy_errors_decorator
 
 ModelType = TypeVar("ModelType", bound=EventPlanningSchemaBase)
+ModelSchemaType = TypeVar("ModelSchemaType", bound=BaseModel)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
 UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
 
-class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
+class RepositoryBase(Generic[ModelType, ModelSchemaType, CreateSchemaType, UpdateSchemaType]):
     """Base repositiroy.
 
     Args:
         Generic (_type_): typings for repository.
     """
 
-    def __init__(self, session: AsyncSession, model: type[ModelType], logger: loguru.Logger | None = None):
+    def __init__(
+        self,
+        session: AsyncSession,
+        model: type[ModelType],
+        schema: type[ModelSchemaType],
+        logger: loguru.Logger | None = None,
+    ):
         """RepositoryBase.
 
         CRUD object with default methods to Create, Read, Update, Delete (CRUD).
@@ -37,6 +44,7 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """
         self.session = session
         self.model = model
+        self.schema = schema
         self.logger = logger if logger else loguru.logger
 
     @handle_sqlalchemy_errors_decorator
@@ -87,7 +95,8 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         *,
         offset: int = 0,
         limit: int = 100,
-    ) -> AsyncIterator[ModelType]:
+    ) -> list[ModelSchemaType]:
+        # ) -> AsyncIterator[ModelType]:
         """Get multiple entities (pagination optional).
 
         Args:
@@ -102,9 +111,11 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """
         self.logger.debug("RepositoryBase::read_multi() called with offset={}, limit={}", offset, limit)
         stmt = select(self.model).offset(offset).limit(limit)
-        stream = await self.session.stream_scalars(stmt.order_by(self.model.id))
-        async for row in stream:
-            yield row
+        # stream = await self.session.stream_scalars(stmt.order_by(self.model.id))
+        # async for row in stream:
+        #     yield row
+        res = await self.session.scalars(stmt.order_by(self.model.id))
+        return [self.schema.model_validate(e) for e in res]
 
     # async def get_multi(self, db: AsyncSession, *, offset: int = 0, limit: int = 100) -> list[ModelType]:
     #     stmt = select(self.model).offset(offset).limit(limit)
@@ -112,7 +123,7 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     #     return result.scalars().all()
 
     @handle_sqlalchemy_errors_decorator
-    async def create(self, *, model_in: CreateSchemaType, return_model: bool = True) -> ModelType | None:
+    async def create(self, *, model_in: CreateSchemaType, return_model: bool = True) -> ModelSchemaType | None:
         """Create an entity.
 
         Args:
@@ -131,10 +142,10 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         # To fetch entity
         if return_model:
             await self.session.flush()
-            new = await self.read_by_id(entity.id)
-            if not new:
-                raise RuntimeError()
-            return new
+            # new = await self.read_by_id(entity.id)
+            # if not new:
+            #     raise RuntimeError()
+            return self.schema.model_validate(entity)
         return None
 
     # async def create(self, db: AsyncSession, *, obj_in: CreateSchemaType) -> ModelType:

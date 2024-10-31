@@ -4,6 +4,9 @@ import contextlib
 from typing import AsyncGenerator
 
 import fastapi
+
+# from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
 from py_event_planning.api.v1.api import api_router
@@ -12,9 +15,6 @@ from py_event_planning.core.logging import init_logging
 from py_event_planning.database import db_init
 from py_event_planning.database.session import sessionmanager
 from py_event_planning.middleware.logging_middleware import LoggingMiddleware
-
-# from fastapi.middleware.trustedhost import TrustedHostMiddleware
-
 
 settings: Settings = get_settings()
 
@@ -25,6 +25,7 @@ async def app_lifespan(_app: fastapi.FastAPI) -> AsyncGenerator:
     # Startup
     await init_logging(settings)
     await db_init.init(settings)
+
     yield
 
     # Shutdown
@@ -69,9 +70,22 @@ def init_app(init_db: bool = True) -> fastapi.FastAPI:
     # see ./middleware
     server.add_middleware(LoggingMiddleware)
 
+    origins = [
+        # "http://localhost:4202", # UI
+        "*"
+    ]
+
     # server.add_middleware(
-    #     TrustedHostMiddleware, allowed_hosts=["localhost:4200"]
+    #     TrustedHostMiddleware, allowed_hosts=[origins]
     # )
+
+    server.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     # see: https://www.starlette.io/middleware/#gzipmiddleware
     server.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=9)  # default 500  # 1-9

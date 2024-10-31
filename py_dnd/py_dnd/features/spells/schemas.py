@@ -11,7 +11,6 @@ from py_dnd.shared.schemas import MixinBookeeping, QueryBase
 class SpellSchema(BaseModel, MixinBookeeping):
     """How the spell shows up in the database."""
 
-    # Settings for the model
     model_config = ConfigDict(
         extra="forbid",
         validate_assignment=True,

@@ -2,8 +2,8 @@
 
 import datetime
 
-from dnd import schemas
 from dnd.database.base_class import DbBase
+from dnd.schemas.enums import DbSchemaEnum, SpellSchoolEnum
 from sqlalchemy import ARRAY, Column, ForeignKey, String, UniqueConstraint, func
 from sqlalchemy.ext.mutable import MutableList
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -14,7 +14,7 @@ class Spell(DbBase):
 
     # keys
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    source_id: Mapped[int] = mapped_column(ForeignKey(f"{schemas.enums.DbSchemaEnum.DND.value}.source.id"))
+    source_id: Mapped[int] = mapped_column(ForeignKey(f"{DbSchemaEnum.DND.value}.source.id"))
     # fields
     name: Mapped[str] = mapped_column(nullable=False)
     casting_time: Mapped[str] = mapped_column(nullable=False)
@@ -25,7 +25,7 @@ class Spell(DbBase):
     level: Mapped[int] = mapped_column(nullable=False)
     range: Mapped[str] = mapped_column(nullable=False)
     ritual: Mapped[bool] = mapped_column(nullable=False)
-    school: Mapped[schemas.enums.SpellSchoolEnum] = mapped_column(nullable=False)
+    school: Mapped[SpellSchoolEnum] = mapped_column(nullable=False)
     created_at: Mapped[datetime.datetime] = mapped_column(default=func.now(), nullable=False)
     created_by: Mapped[str] = mapped_column(nullable=False)
     updated_at: Mapped[datetime.datetime] = mapped_column(

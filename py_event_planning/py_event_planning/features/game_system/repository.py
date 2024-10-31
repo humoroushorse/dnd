@@ -6,21 +6,21 @@ import loguru
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from py_event_planning.features.core.repository import RepositoryBase
-from py_event_planning.features.game_session.models import GameSession
-from py_event_planning.features.game_session.schemas import (
-    GameSessionCreate,
-    GameSessionUpdate,
+from py_event_planning.features.game_system.models import GameSystem
+from py_event_planning.features.game_system.schemas import (
+    GameSystemCreate,
     GameSystemSchema,
+    GameSystemUpdate,
 )
 
 
-class GameSessionRepository(RepositoryBase[GameSession, GameSystemSchema, GameSessionCreate, GameSessionUpdate]):
-    """Game Session Repository.
+class GameSystemRepository(RepositoryBase[GameSystem, GameSystemSchema, GameSystemCreate, GameSystemUpdate]):
+    """Game System Repository.
 
     Args:
         RepositoryBase (_type_): _description_
     """
 
     def __init__(self, session: AsyncSession, logger: loguru.Logger | None = None):
-        super().__init__(session=session, model=GameSession, schema=GameSystemSchema)
+        super().__init__(session=session, model=GameSystem, schema=GameSystemSchema)
         self.logger.trace("{} created!", self.__class__.__name__)
