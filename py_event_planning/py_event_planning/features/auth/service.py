@@ -101,6 +101,7 @@ async def get_auth(
         return AuthUserToken(**decoded_id_token)
 
     except Exception as e:
+        logger.error("Uncaught error: {}", str(e))
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail=str(e)) from e
 
 
@@ -128,6 +129,7 @@ async def get_auth_optional(
         return AuthUserToken(**decoded_id_token)
     except Exception as e:
         # TODO: make 401 ?
+        logger.error("Uncaught error: {}", str(e))
         raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)) from e
 
 
@@ -298,7 +300,7 @@ async def create_keycloak_user(user: RegisterUserInput) -> str:
         "firstName": user.first_name,
         "lastName": user.last_name,
         "enabled": True,
-        "credentials": [{"type": "password", "value": user.password, "temporary": False}],
+        "credentials": [{"type": "password", "value": user.password.get_secret_value(), "temporary": False}],
     }
     logger.debug("Creating user with info: {}", {**user.model_dump(exclude={"paassword"}), "paassword": "REDACTED"})
 

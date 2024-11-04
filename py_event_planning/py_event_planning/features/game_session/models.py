@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import datetime
+import uuid
 from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from py_event_planning.database.base_class import EventPlanningSchemaBase
@@ -28,15 +30,17 @@ class GameSession(MixinBookeeping, EventPlanningSchemaBase):
     __tablename__ = "game_session"
 
     # keys
-    id: Mapped[str] = mapped_column(primary_key=True, index=True)
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     # relationships
     #    game_session(n) : game_system(1)
     game_system_id: Mapped[str] = mapped_column(ForeignKey(f"{DbSchemaEnum.EVENT_PLANNING.value}.game_system.id"))
-    game_system: Mapped[GameSystem] = relationship("GameSystem", back_populates="game_sessions")
+    game_system: Mapped[GameSystem] = relationship("GameSystem", back_populates="game_sessions", lazy="selectin")
     #    game_session(1) : jt_user_game_session(1)
-    jt_user_game_session: Mapped[JtUserGameSession] = relationship("JtUserGameSession", back_populates="game_session")
+    jt_user_game_session: Mapped[list[JtUserGameSession]] = relationship(
+        "JtUserGameSession", back_populates="game_session", lazy="selectin"
+    )
     game_master_id: Mapped[str] = mapped_column(ForeignKey(f"{DbSchemaEnum.EVENT_PLANNING.value}.user.id"))
-    game_master: Mapped[User] = relationship()
+    game_master: Mapped[User] = relationship(lazy="selectin")
     # fields
     # game_master: Mapped[str] = mapped_column(nullable=False) # ik- remove
     title: Mapped[str] = mapped_column(nullable=False)

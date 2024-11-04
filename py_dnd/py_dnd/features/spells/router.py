@@ -2,8 +2,8 @@
 
 import asyncio
 import math
+from collections.abc import Hashable
 from io import BytesIO
-from typing import Hashable
 
 import pandas as pd
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
@@ -29,7 +29,7 @@ async def read_spells(
         with logger.contextualize(user_id=123, user_username="Some User", log_threads=True):
             # user_logger = logger.bind(user_id=random.randint(0,99), user_username=random_name)
             async with sqlalchemy_uow(db, None) as uow:
-                entities = [entity async for entity in uow.spell_repo.read_multi(offset=offset, limit=limit)]
+                entities = await uow.spell_repo.read_multi(offset=offset, limit=limit)
             return entities
     except HTTPException:
         # assume that the error was already logged
@@ -103,9 +103,6 @@ async def upsert_and_mutate_report(
             await uow.spell_repo.create(model_in=entity, return_model=False)
             response.created.append(entity.name)
     except Exception as e:
-        import traceback
-
-        logger.error(traceback.format_exc())
         response.errors.append(f"row {index} [{entity.name if entity else json_entity.iloc[name_index]}]: {str(e)}")
 
 

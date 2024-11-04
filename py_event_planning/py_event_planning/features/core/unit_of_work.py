@@ -10,6 +10,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from py_event_planning.features.game_session.repository import GameSessionRepository
 from py_event_planning.features.game_system.repository import GameSystemRepository
+from py_event_planning.features.jt_user_game_session.repository import (
+    JtUserGameSystemRepository,
+)
 from py_event_planning.features.user.repository import UserRepository
 
 
@@ -22,6 +25,7 @@ class SqlAlchemyUnitOfWork:
         self.game_session_repo = GameSessionRepository(db_session)
         self.game_system_repo = GameSystemRepository(db_session)
         self.user_repo = UserRepository(db_session)
+        self.jt_user_game_system_repo = JtUserGameSystemRepository(db_session)
         self.logger.trace("{} created!", self.__class__.__name__)
 
     async def __aenter__(self) -> SqlAlchemyUnitOfWork:

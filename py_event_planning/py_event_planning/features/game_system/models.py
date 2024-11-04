@@ -24,7 +24,7 @@ class GameSystem(MixinBookeeping, EventPlanningSchemaBase):
     __tablename__ = "game_system"
 
     # keys
-    id: Mapped[str] = mapped_column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     # relationships
     #    game_session(n) : game_system(1)
     game_sessions: Mapped[list[GameSession]] = relationship("GameSession", back_populates="game_system")

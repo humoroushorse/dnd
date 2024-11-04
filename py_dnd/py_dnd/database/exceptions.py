@@ -72,6 +72,7 @@ def handle_sqlalchemy_errors(e: Exception) -> None:
             detail="An error occurred while processing the request.",
         ) from e
     # raise non-sqlalchemy errors
+    logger.error("ik-UNCAUTHT", str(e))
     raise e
 
 

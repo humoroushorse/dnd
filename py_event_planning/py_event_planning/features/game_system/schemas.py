@@ -9,13 +9,14 @@ from py_event_planning.shared.schemas import (
 )
 
 
-class GameSystemSchema(BaseModel, MixinBookeepingCreate, MixinBookeepingUpdate):
+class GameSystemSchemaBase(BaseModel, MixinBookeepingCreate, MixinBookeepingUpdate):
     """How the game system shows up in the database."""
 
     model_config = ConfigDict(
         extra="forbid",
         validate_assignment=True,
         from_attributes=True,
+        str_strip_whitespace=True,
     )
     id: UUID4 = Field(title="Game System ID")
     name: str = Field(title="Name")
@@ -24,12 +25,17 @@ class GameSystemSchema(BaseModel, MixinBookeepingCreate, MixinBookeepingUpdate):
     description: str = Field(title="Description")
 
 
+class GameSystemSchema(GameSystemSchemaBase):
+    """How the game system shows up in the database."""
+
+
 class GameSystemCreateInput(BaseModel):
     """Fields used to create a game system (no generated fields)."""
 
     model_config = ConfigDict(
         extra="ignore",
         validate_assignment=True,
+        str_strip_whitespace=True,
     )
     name: str = Field(title="Name")
     version: str = Field(title="Version")
@@ -47,6 +53,7 @@ class GameSystemUpdateInput(BaseModel):
     model_config = ConfigDict(
         extra="ignore",
         validate_assignment=True,
+        str_strip_whitespace=True,
     )
     name: str = Field(title="Name")
     version: str = Field(title="Version")
@@ -64,6 +71,7 @@ class GameSystemQuery(QueryBase):
     model_config = ConfigDict(
         extra="forbid",
         validate_assignment=True,
+        str_strip_whitespace=True,
     )
     name: str | None = Field(default=None, title="Name")
     version: str | None = Field(default=None, title="Version")

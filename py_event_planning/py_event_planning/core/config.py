@@ -40,6 +40,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=DOTENV,
         extra="ignore",
+        str_strip_whitespace=True,
     )
 
     KEYCLOAK_SERVER_URL: str

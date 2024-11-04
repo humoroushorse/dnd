@@ -164,13 +164,12 @@ async def delete_game_system(
         with logger.contextualize(game_system={id: entity_id}, user=user, log_threads=True):
             async with sqlalchemy_uow(db, None) as uow:
 
-                entity = await uow.game_system_repo.read_by_id(entity_id=entity_id)
-                if not entity:
+                delete_res = uow.game_system_repo.delete(entity_id=entity_id)
+                if not delete_res:
                     logger.warning("Could not find entity to delete")
                     return entity_id
-                await uow.game_system_repo.delete(entity=entity)
                 await uow.commit()
-                return str(entity.id)
+                return str(entity_id)
     except HTTPException:
         # assume that the error was already logged
         raise

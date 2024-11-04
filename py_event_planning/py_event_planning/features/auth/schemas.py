@@ -39,6 +39,11 @@ class RegisterUserInput(BaseModel):
     last_name: str = Field(alias="lastName")
     password: SecretStr
 
+    # @field_serializer("password")
+    # def serialize_secret_str(self, s: SecretStr, _info) -> str:
+    #     """Convert secret to string."""
+    #     return s.get_secret_value()
+
 
 class DeleteUserInput(BaseModel):
     """User deletion fields."""

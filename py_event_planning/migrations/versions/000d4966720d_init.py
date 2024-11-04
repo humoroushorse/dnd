@@ -1,8 +1,8 @@
 """init.
 
-Revision ID: 7feac72f06cd
+Revision ID: 000d4966720d
 Revises:
-Create Date: 2024-10-30 23:08:25.849753
+Create Date: 2024-11-03 07:21:23.829257
 
 """
 
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "7feac72f06cd"
+revision: str = "000d4966720d"
 down_revision: str | None = None
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
@@ -50,25 +50,18 @@ def upgrade() -> None:
     )
     op.create_table(
         "user",
-        sa.Column("id", sa.String(), nullable=False),
-        sa.Column("username", sa.String(), nullable=False),
+        sa.Column("id", sa.UUID(), nullable=False),
+        sa.Column("username", sa.String(), nullable=True),
         sa.Column("profile_picture_url", sa.String(), nullable=True),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
-        sa.Column("created_by", sa.String(), nullable=False),
-        sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
-        sa.Column("updated_by", sa.String(), nullable=False),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_user")),
         schema="event_planning",
     )
     op.create_index(op.f("ix_event_planning_user_id"), "user", ["id"], unique=False, schema="event_planning")
-    op.create_index(
-        op.f("ix_event_planning_user_updated_at"), "user", ["updated_at"], unique=False, schema="event_planning"
-    )
     op.create_table(
         "game_session",
-        sa.Column("id", sa.String(), nullable=False),
+        sa.Column("id", sa.UUID(), nullable=False),
         sa.Column("game_system_id", sa.UUID(), nullable=False),
-        sa.Column("game_master_id", sa.String(), nullable=False),
+        sa.Column("game_master_id", sa.UUID(), nullable=False),
         sa.Column("title", sa.String(), nullable=False),
         sa.Column("description", sa.String(), nullable=False),
         sa.Column("start_date", sa.DateTime(), nullable=False),
@@ -104,9 +97,9 @@ def upgrade() -> None:
     )
     op.create_table(
         "jt_user_game_session",
-        sa.Column("id", sa.String(), nullable=False),
-        sa.Column("user_id", sa.String(), nullable=False),
-        sa.Column("game_session_id", sa.String(), nullable=False),
+        sa.Column("id", sa.UUID(), nullable=False),
+        sa.Column("user_id", sa.UUID(), nullable=False),
+        sa.Column("game_session_id", sa.UUID(), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
         sa.Column("created_by", sa.String(), nullable=False),
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
@@ -160,7 +153,6 @@ def downgrade() -> None:
     )
     op.drop_index(op.f("ix_event_planning_game_session_id"), table_name="game_session", schema="event_planning")
     op.drop_table("game_session", schema="event_planning")
-    op.drop_index(op.f("ix_event_planning_user_updated_at"), table_name="user", schema="event_planning")
     op.drop_index(op.f("ix_event_planning_user_id"), table_name="user", schema="event_planning")
     op.drop_table("user", schema="event_planning")
     op.drop_index(op.f("ix_event_planning_game_system_updated_at"), table_name="game_system", schema="event_planning")

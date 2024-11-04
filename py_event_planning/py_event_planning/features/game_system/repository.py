@@ -10,11 +10,14 @@ from py_event_planning.features.game_system.models import GameSystem
 from py_event_planning.features.game_system.schemas import (
     GameSystemCreate,
     GameSystemSchema,
+    GameSystemSchemaBase,
     GameSystemUpdate,
 )
 
 
-class GameSystemRepository(RepositoryBase[GameSystem, GameSystemSchema, GameSystemCreate, GameSystemUpdate]):
+class GameSystemRepository(
+    RepositoryBase[GameSystem, GameSystemSchema, GameSystemSchemaBase, GameSystemCreate, GameSystemUpdate]
+):
     """Game System Repository.
 
     Args:
@@ -22,5 +25,5 @@ class GameSystemRepository(RepositoryBase[GameSystem, GameSystemSchema, GameSyst
     """
 
     def __init__(self, session: AsyncSession, logger: loguru.Logger | None = None):
-        super().__init__(session=session, model=GameSystem, schema=GameSystemSchema)
+        super().__init__(session=session, model=GameSystem, schema=GameSystemSchema, schema_base=GameSystemSchemaBase)
         self.logger.trace("{} created!", self.__class__.__name__)

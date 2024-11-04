@@ -20,7 +20,7 @@ branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
 
-def upgrade():
+def upgrade() -> None:
     """Database migration: upgrade."""
     pre_upgrade()
 
@@ -121,7 +121,7 @@ def upgrade():
     post_upgrade()
 
 
-def downgrade():
+def downgrade() -> None:
     """Database migration: downgrade."""
     pre_downgrade()
 
@@ -137,23 +137,21 @@ def downgrade():
     post_downgrade()
 
 
-def pre_upgrade():
-    # Processing before upgrading the schema
+def pre_upgrade() -> None:
+    """Processing before upgrading the schema."""
     op.execute(sa.text(f"CREATE SCHEMA IF NOT EXISTS {shared.enums.DbSchemaEnum.DND.value}"))
 
 
-def post_upgrade():
-    # Processing after upgrading the schema
-    pass
+def post_upgrade() -> None:
+    """Processing after upgrading the schema."""
 
 
-def pre_downgrade():
-    # Processing before downgrading the schema
-    pass
+def pre_downgrade() -> None:
+    """Processing before downgrading the schema."""
 
 
-def post_downgrade():
-    # Processing after downgrading the schema
+def post_downgrade() -> None:
+    """Processing after downgrading the schema."""
     sa.Enum(name="spelllevelenum").drop(op.get_bind(), checkfirst=False)
     sa.Enum(name="spellschoolenum").drop(op.get_bind(), checkfirst=False)
     # op.execute(sa.text(f"drop table {shared.enums.DbSchemaEnum.DND.value}.alembic_version"))

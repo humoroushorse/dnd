@@ -1,21 +1,30 @@
 """User schemas."""
 
-from pydantic import BaseModel, ConfigDict, Field
+import uuid
 
-from py_event_planning.shared.schemas import MixinBookeepingCreate, QueryBase
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+from py_event_planning.shared.schemas import QueryBase
 
 
-class UserSchema(BaseModel, MixinBookeepingCreate):
+class UserSchemaBase(BaseModel):
     """How the User shows up in the database."""
 
     model_config = ConfigDict(
         extra="forbid",
         validate_assignment=True,
         from_attributes=True,
+        str_strip_whitespace=True,
     )
 
     # Fields of the model
-    id: str = Field(title="User ID")
+    id: uuid.UUID = Field(title="User ID")
+    username: str | None = Field(default=None, title="Username")
+    profile_picture_url: str | None = Field(default=None, title="Profile Picture URL")
+
+
+class UserSchema(UserSchemaBase):
+    """How the User shows up in the database (with relationships)."""
 
 
 class UserCreate(BaseModel):
@@ -24,9 +33,23 @@ class UserCreate(BaseModel):
     model_config = ConfigDict(
         extra="ignore",
         validate_assignment=True,
+        str_strip_whitespace=True,
     )
+    id: uuid.UUID = Field(title="User ID")
+    username: str | None = Field(default=None, title="Username")
+    profile_picture_url: str | None = Field(default=None, title="Profile Picture URL")
 
-    # Fields of the model
+    @field_validator("id")
+    @classmethod
+    def validate_uuid(cls, v: uuid.UUID | str) -> uuid.UUID:
+        """Force inputs to uuid.UUID."""
+        if isinstance(v, str):
+            return uuid.UUID(v)
+        return v
+
+    # @field_serializer('id')
+    # def serialize_uuid(self, v: uuid.UUID) -> str:
+    #     return str(v)
 
 
 class UserUpdate(BaseModel):
@@ -35,9 +58,11 @@ class UserUpdate(BaseModel):
     model_config = ConfigDict(
         extra="ignore",
         validate_assignment=True,
+        str_strip_whitespace=True,
     )
 
-    # Fields of the model
+    username: str | None = Field(default=None, title="Username")
+    profile_picture_url: str | None = Field(default=None, title="Profile Picture URL")
 
 
 class UserQuery(QueryBase):
@@ -46,6 +71,7 @@ class UserQuery(QueryBase):
     model_config = ConfigDict(
         extra="forbid",
         validate_assignment=True,
+        str_strip_whitespace=True,
     )
-
-    # Fields of the model
+    username: str | None = Field(default=None, title="Username")
+    profile_picture_url: str | None = Field(default=None, title="Profile Picture URL")
