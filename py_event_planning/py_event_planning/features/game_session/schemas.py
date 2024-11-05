@@ -18,7 +18,7 @@ from py_event_planning.shared.schemas import (
 )
 
 
-class GameSessionSchemaBase(BaseModel, MixinBookeepingCreate, MixinImageUrl):
+class GameSessionSchemaBase(BaseModel, MixinBookeepingCreate, MixinBookeepingUpdate, MixinImageUrl):
     """How the game session shows up in the database (no relationships)."""
 
     model_config = ConfigDict(

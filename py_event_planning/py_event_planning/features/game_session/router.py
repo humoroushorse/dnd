@@ -45,7 +45,7 @@ async def read_game_sessions(
         with logger.contextualize(user=user, log_threads=True):
             async with sqlalchemy_uow(db, None) as uow:
                 # entities = [entity async for entity in uow.game_session_repo.read_multi(offset=offset, limit=limit)]
-                entities = await uow.game_session_repo.read_multi_full(offset=offset, limit=limit)
+                entities = await uow.game_session_repo.read_multi(offset=offset, limit=limit)
             return entities
     except HTTPException:
         # assume that the error was already logged
@@ -71,7 +71,7 @@ async def read_game_session(
         with logger.contextualize(user=user, log_threads=True):
             async with sqlalchemy_uow(db, None) as uow:
                 # entities = [entity async for entity in uow.game_session_repo.read_multi(offset=offset, limit=limit)]
-                entitity = await uow.game_session_repo.read_by_id_full(entity_id=entity_id)
+                entitity = await uow.game_session_repo.read_by_id(entity_id=entity_id)
             return entitity
     except HTTPException:
         # assume that the error was already logged

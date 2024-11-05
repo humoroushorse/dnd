@@ -31,7 +31,7 @@ class JtUserGameSession(MixinBookeeping, EventPlanningSchemaBase):
     # Relationships
     #    user(n) : jt_user_game_session(1)
     user_id: Mapped[str] = mapped_column(ForeignKey(f"{DbSchemaEnum.EVENT_PLANNING.value}.user.id"))
-    user: Mapped[User] = relationship("User")
+    user: Mapped[User] = relationship("User", lazy="selectin")
     #    game_session(1) : jt_user_game_session(1)
     game_session_id: Mapped[str] = mapped_column(ForeignKey(f"{DbSchemaEnum.EVENT_PLANNING.value}.game_session.id"))
     game_session: Mapped[GameSession] = relationship("GameSession", back_populates="jt_user_game_session")

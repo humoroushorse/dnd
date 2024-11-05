@@ -1,7 +1,7 @@
 # Dockerfile
 # Uses multi-stage builds requiring Docker 17.05 or higher
 # See https://docs.docker.com/develop/develop-images/multistage-build/
-ARG PYTHON_DOCKER_IMAGE=python:3.12.2-alpine
+ARG PYTHON_DOCKER_IMAGE=python:3.13.0-alpine
 
 ################################################################################
 # python-base

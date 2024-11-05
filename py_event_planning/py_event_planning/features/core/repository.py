@@ -121,7 +121,7 @@ class RepositoryBase(Generic[ModelType, ModelSchemaType, ModelSchemaBaseType, Cr
         # async for row in stream:
         #     yield row
         res = await self.session.scalars(stmt.order_by(self.model.id))
-        return [self.schema_base.model_validate(e) for e in res]
+        return [self.schema.model_validate(e) for e in res]
 
     # async def get_multi(self, db: AsyncSession, *, offset: int = 0, limit: int = 100) -> list[ModelType]:
     #     stmt = select(self.model).offset(offset).limit(limit)
