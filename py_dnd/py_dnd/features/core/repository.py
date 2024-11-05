@@ -77,9 +77,11 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             Iterator[AsyncIterator[ModelType]]: _description_
         """
         stmt = select(self.model).where(self.model.id.in_(entity_ids))
-        stream = await self.session.stream_scalars(stmt.order_by(self.model.id))
-        async for row in stream:
-            yield row
+        # stream = await self.session.stream_scalars(stmt.order_by(self.model.id))
+        # async for row in stream:
+        #     yield row
+        scalars = await self.session.scalars(stmt.order_by(self.model.id))
+        return scalars
 
     @handle_sqlalchemy_errors_decorator
     async def read_multi(
@@ -102,9 +104,11 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """
         self.logger.debug("RepositoryBase::read_multi() called with offset={}, limit={}", offset, limit)
         stmt = select(self.model).offset(offset).limit(limit)
-        stream = await self.session.stream_scalars(stmt.order_by(self.model.id))
-        async for row in stream:
-            yield row
+        # stream = await self.session.stream_scalars(stmt.order_by(self.model.id))
+        # async for row in stream:
+        #     yield row
+        res = await self.session.scalars(stmt.order_by(self.model.id))
+        return res
 
     # async def get_multi(self, db: AsyncSession, *, offset: int = 0, limit: int = 100) -> list[ModelType]:
     #     stmt = select(self.model).offset(offset).limit(limit)

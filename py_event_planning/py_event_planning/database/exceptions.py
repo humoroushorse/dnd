@@ -84,7 +84,7 @@ def handle_sqlalchemy_errors(e: Exception) -> None:
         ) from e
     if isinstance(e, sqlalchemy.exc.SQLAlchemyError):
         logger.error("SQLAlchemy SQLAlchemyError - {}", str(e))
-        if "UNIQUE constraint failed" in str(e.orig):
+        if "UNIQUE constraint failed" in str(e):
             raise ValueError("Duplicate entry found") from e
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

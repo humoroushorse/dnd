@@ -30,7 +30,7 @@ db-up:
 
 run:
 	# poetry env use python3 && poetry run uvicorn py_event_planning.main:app
-	poetry run uvicorn --host=127.0.0.1 --port=8001 py_event_planning.main:app
+	poetry run uvicorn --reload --host=127.0.0.1 --port=8001 py_event_planning.main:app
 
 compose-up:
 	${CONTAINER_RUNNER} compose \

@@ -4,7 +4,7 @@
 #    do not import other files
 COMMON_REPOSITORY_ROOT=~/projects/ttrpg/ttrpg-api
 CONTAINER_RUNNER := $(if $(CONTAINER_RUNNER),$(CONTAINER_RUNNER),"docker")
-CONTAINER_PROJECT_NAME := $(if $(CONTAINER_PROJECT_NAME),$(CONTAINER_PROJECT_NAME),"ttrpg-api")
+CONTAINER_PROJECT_NAME := $(if $(CONTAINER_PROJECT_NAME),$(CONTAINER_PROJECT_NAME),"ttrpg")
 
 
 .PHONY: grafana-compose-up

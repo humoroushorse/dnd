@@ -6,10 +6,10 @@ LOCAL_BRANCH_NAME="$(git rev-parse --abbrev-ref HEAD)"
 # feature/DND-1234-branch-name/allowed_characters
 
 BRANCH_TYPE="(feature|refactor|bugfix|hotfix|release|docs|wip)"
-BRAANCH_TARGET="(core|py-dnd)"
+BRAANCH_TARGET="(core|py-dnd|event-planning)"
 BRANCH_TICKET="(DND)-[0-9]+"
 BRANCH_DESCRIPTION="[a-zA-Z0-9\/_-]*"
-VALID_BRANCH_REGEX=^$BRANCH_TYPE/$BRAANCH_TARGET/$BRANCH_TICKET/$BRANCH_DESCRIPTION$
+VALID_BRANCH_REGEX=^$BRANCH_TICKET/$BRANCH_TYPE/$BRAANCH_TARGET/$BRANCH_DESCRIPTION$
 
 center() {
     termwidth="$(tput cols)"

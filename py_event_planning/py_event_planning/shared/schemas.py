@@ -1,20 +1,49 @@
 """Shared schemas."""
 
 import datetime
-from typing import Any, Generic, TypeVar
+from typing import Annotated, Any, Generic, TypeVar
 
 from pydantic import BaseModel, Field, model_validator
 
 T = TypeVar("T", bound=BaseModel)
 
 
-class MixinBookeeping:
-    """Bookeeping Mixin."""
+class MixinBookeepingCreate:
+    """Entity Creation Bookeeping Mixin."""
 
-    created_at: datetime.datetime | None = Field(default=None)
-    created_by: str
-    updated_at: datetime.datetime | None = Field(default=None)
-    updated_by: str
+    created_at: Annotated[datetime.datetime, Field()]
+    created_by: Annotated[str, Field()]
+
+    # @field_serializer('created_at')
+    # def serialize_created_at(self, dt: datetime.datetime):
+    #     return dt.isoformat()
+
+
+class MixinBookeepingUpdate:
+    """Entity Update Bookeeping Mixin."""
+
+    updated_at: Annotated[datetime.datetime, Field()]
+    updated_by: Annotated[str, Field()]
+
+    # @field_serializer('updated_at')
+    # def serialize_created_by(self, dt: datetime.datetime):
+    #     return dt.isoformat()
+
+
+class MixinImageUrl:
+    """Schema Mixin for adding image information."""
+
+    image_url: str | None = Field(default=None, title="Image URL")
+    image_url_description: str | None = Field(default=None, title="Image URL description (for accessability)")
+
+    @model_validator(mode="before")
+    @classmethod
+    def image_must_also_have_description(cls, data: Any) -> Any:
+        """Validator for forcing images to have descriptions for accessability reasons."""
+        if isinstance(data, dict):
+            if data.get("image_url") and not data.get("image_url_description"):
+                raise ValueError("Image must also have a description for accessability reasons")
+        return data
 
 
 class QueryBase(BaseModel):

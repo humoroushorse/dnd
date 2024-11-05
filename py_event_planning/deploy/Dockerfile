@@ -1,7 +1,7 @@
 # Dockerfile
 # Uses multi-stage builds requiring Docker 17.05 or higher
 # See https://docs.docker.com/develop/develop-images/multistage-build/
-ARG PYTHON_DOCKER_IMAGE=python:3.12.2-alpine
+ARG PYTHON_DOCKER_IMAGE=python:3.13.0-alpine
 
 ################################################################################
 # python-base
@@ -12,9 +12,9 @@ FROM $PYTHON_DOCKER_IMAGE AS python-base
 WORKDIR /tmp
 
 ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1
-    # PIP_NO_CACHE_DIR=off \
-    # PIP_DISABLE_PIP_VERSION_CHECK=on \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=off \
+    PIP_DISABLE_PIP_VERSION_CHECK=on
     # PIP_DEFAULT_TIMEOUT=100 \
     # POETRY_HOME="/opt/poetry" \
     # POETRY_VIRTUALENVS_IN_PROJECT=true \
