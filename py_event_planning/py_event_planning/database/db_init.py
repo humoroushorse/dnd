@@ -5,12 +5,12 @@ from sqlalchemy import text
 
 from py_event_planning import shared
 from py_event_planning.core.config import Settings
-from py_event_planning.database.session import sessionmanager
+from py_event_planning.database.session import master_sessionmanager
 
 
 async def get_all_schemas() -> list[str]:
     """Fetch list of schemas in the connected database."""
-    async with sessionmanager.session() as session:
+    async with master_sessionmanager.session() as session:
         result = await session.execute(
             text(
                 """

@@ -1,0 +1,36 @@
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: Keycloak
+metadata:
+  name: keycloak
+spec:
+  instances: 1
+  db:
+    vendor: postgres
+    host: postgresql
+    usernameSecret:
+      name: keycloak-db-secret
+      key: username
+    passwordSecret:
+      name: keycloak-db-secret
+      key: password
+  http:
+    tlsSecret: example-tls-secret
+  hostname:
+    hostname: test.keycloak.org
+  proxy:
+    headers: xforwarded # double check your reverse proxy sets and overwrites the X-Forwarded-* headers
+
+# TLS Certificate and Key
+
+# openssl req -subj '/CN=test.keycloak.org/O=Test Keycloak./C=US' -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem
+# kubectl create secret tls example-tls-secret --cert certificate.pem --key key.pem
+
+# Deploying keycloak
+
+# kubectl create secret generic keycloak-db-secret \
+#   --from-literal=username=[your_database_username] \
+#   --from-literal=password=[your_database_password]
+# kubectl apply -f deployment.yaml
+
+# Validate
+# kubectl get keycloak -o go-template='{{range .status.conditions}}CONDITION: {{.type}}{{"\n"}}  STATUS: {{.status}}{{"\n"}}  MESSAGE: {{.message}}{{"\n"}}{{end}}'

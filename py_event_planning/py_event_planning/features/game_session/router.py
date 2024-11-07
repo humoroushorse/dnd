@@ -12,7 +12,10 @@ from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from loguru import logger
 from pandas.core.series import Series
 
-from py_event_planning.database.db import AsyncSessionDependency
+from py_event_planning.database.db import (
+    AsyncMasterSessionDependency,
+    AsyncReplicaSessionDependency,
+)
 from py_event_planning.features.auth.schemas import AuthUserToken
 from py_event_planning.features.auth.service import UserAuth, UserAuthOptional
 from py_event_planning.features.core.unit_of_work import (
@@ -33,7 +36,7 @@ router = APIRouter()
 @router.get("")
 async def read_game_sessions(
     current_user: UserAuthOptional,
-    db: AsyncSessionDependency,
+    db: AsyncReplicaSessionDependency,
     offset: int = 0,
     limit: int = 100,
 ) -> list[GameSessionSchema]:
@@ -59,7 +62,7 @@ async def read_game_sessions(
 async def read_game_session(
     entity_id: uuid.UUID,
     current_user: UserAuthOptional,
-    db: AsyncSessionDependency,
+    db: AsyncReplicaSessionDependency,
     # offset: int = 0,
     # limit: int = 100,
 ) -> GameSessionSchema | None:
@@ -84,7 +87,7 @@ async def read_game_session(
 @router.get("/query")
 async def query_game_sessions(
     current_user: UserAuthOptional,
-    db: AsyncSessionDependency,
+    db: AsyncReplicaSessionDependency,
     params: GameSessionQuery = Depends(),
 ) -> GenericListResponse[GameSessionSchema]:
     """Retrieve game_sessions."""
@@ -166,7 +169,7 @@ async def upsert_and_mutate_report(
 @router.post("")
 async def create_game_session(
     current_user: UserAuth,
-    db: AsyncSessionDependency,
+    db: AsyncMasterSessionDependency,
     model_in: GameSessionCreateInput,
 ) -> GameSessionSchema:
     """Create game_session."""
@@ -197,7 +200,7 @@ async def create_game_session(
 @router.delete("/{entity_id}")
 async def delete_game_session(
     current_user: UserAuth,
-    db: AsyncSessionDependency,
+    db: AsyncMasterSessionDependency,
     entity_id: str,
 ) -> str:
     """Delete game_session."""
@@ -223,7 +226,7 @@ async def delete_game_session(
 async def bulk_create(
     current_user: UserAuth,
     *,
-    db: AsyncSessionDependency,
+    db: AsyncMasterSessionDependency,
     file: UploadFile = File(description='Files of type: ["text/csv", "application/json"]'),
 ) -> BulkLoadResponse:
     """Bulk load in a list of game_session objects from a file.

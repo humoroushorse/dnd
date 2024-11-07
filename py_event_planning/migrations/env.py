@@ -55,7 +55,7 @@ def run_migrations_offline() -> None:
 
     """
     context.configure(
-        url=settings.POSTGRES_DATABASE_URI,
+        url=settings.POSTGRES_MASTER_URI,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -91,7 +91,7 @@ async def run_migrations_online() -> None:
     # )
     connectable = AsyncEngine(
         create_engine(
-            settings.POSTGRES_DATABASE_URI,
+            settings.POSTGRES_MASTER_URI,
             # echo=True,  # DEBUGGING
             future=True,
         )
@@ -101,7 +101,7 @@ async def run_migrations_online() -> None:
         await connection.execute(text(f"CREATE SCHEMA IF NOT EXISTS {shared.enums.DbSchemaEnum.EVENT_PLANNING.value}"))
         await connection.commit()
         context.configure(
-            url=settings.POSTGRES_DATABASE_URI,
+            url=settings.POSTGRES_MASTER_URI,
             target_metadata=target_metadata,
             # literal_binds=True,
             dialect_opts={"paramstyle": "named"},

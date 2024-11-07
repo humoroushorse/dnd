@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgresql-replica
+  labels:
+    app: postgresql-replica
+spec:
+  replicas: 2  # Number of replicas (can scale up/down as needed)
+  selector:
+    matchLabels:
+      app: postgresql-replica
+  template:
+    metadata:
+      labels:
+        app: postgresql-replica
+    spec:
+      containers:
+      - name: postgresql
+        image: postgres:15.6-alpine
+        ports:
+        - containerPort: 5432
+        # volumeMounts:
+        # - mountPath: /var/lib/postgresql/data
+        #   name: postgresql-replica-storage
+        env:
+        - name: POSTGRES_USER
+          value: "admin"
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+        - name: POSTGRES_DB
+          value: "ttrpg-pg"
+        - name: POSTGRES_MASTER_HOST
+          value: "postgresql-master"  # Point to the master for replication
+        - name: POSTGRES_REPLICATION_ROLE
+          value: "replica"  # Set the role as replica for replication
+      # volumes:
+      # - name: postgresql-replica-storage
+      #   persistentVolumeClaim:
+      #     claimName: postgresql-replica-pvc  # PVC for replica

@@ -104,3 +104,56 @@ podman-init:
 obliterate-migration:
 	echo "My grandfather's deck has no pathetic cards, Kaiba!"
 	poetry run alembic downgrade -1 && rm -rf ~/projects/ttrpg/ttrpg-api/py_event_planning/migrations/versions/* && poetry run alembic revision --autogenerate -m "init" && poetry run alembic upgrade head
+
+container-build-all:
+	${CONTAINER_RUNNER} build --network=host -f deploy/Dockerfile -t py_event_planning -t latest --target development .
+	${CONTAINER_RUNNER} build --network=host -f ../deploy/keycloak/Dockerfile -t keycloak -t latest .
+	# no docker file for postgresql
+
+k3d-create:
+	k3d cluster create ttrpg
+
+k3d-delete:
+	k3d cluster delete ttrpg
+
+k3d-load-image-all:
+	k3d image import py_event_planning:latest -c ttrpg
+	k3d image import keycloak:latest -c ttrpg
+	# no docker file for postgresql
+
+k3s-load-image-all:
+	docker save py_event_planning:latest | sudo k3s ctr images import -
+	docker save keycloak:latest | sudo k3s ctr images import -
+	# no docker file for postgresql
+
+k8s-deploy-all-old:
+	# PostgreSQL
+	# kubectl apply -f ../deploy/postgres/master-pvc.deployment.yml
+	kubectl apply -f ../deploy/postgres/keycloak.init.deployment.yml
+	kubectl apply -f ../deploy/postgres/master.deployment.yml
+	# kubectl apply -f ../deploy/postgres/replica-pvc.deployment.yml
+	kubectl apply -f ../deploy/postgres/replica.deployment.yml
+	# keycloak
+	openssl req -subj '/CN=test.keycloak.org/O=Test Keycloak./C=US' -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem
+	kubectl create secret tls example-tls-secret --cert certificate.pem --key key.pem
+	kubectl create secret generic keycloak-db-secret \
+		--from-literal=username=admin \
+		--from-literal=password=admin
+	kubectl apply -f ../deploy/keycloak/deployment.yml
+	# FastAPI
+	kubectl apply -f ./deploy/app.deployment.yml
+
+k8s-deploy-all:
+	# PostgreSQL
+	kubectl apply -f ../deploy/postgres/keycloak.init.deployment.yml
+	kubectl apply -f ../deploy/postgres/master.service.yml
+	kubectl apply -f ../deploy/postgres/master.deployment.yml
+	kubectl apply -f ../deploy/postgres/replica.service.yml
+	kubectl apply -f ../deploy/postgres/replica.deployment.yml
+	# keycloak
+	kubectl apply -f ../deploy/keycloak/service.yml
+	kubectl apply -f ../deploy/keycloak/deployment.yml
+	kubectl apply -f ../deploy/keycloak/ingress.yml
+	# FastAPI
+	kubectl apply -f ./deploy/app.service.yml
+	kubectl apply -f ./deploy/app.deployment.yml

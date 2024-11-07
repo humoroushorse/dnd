@@ -6,7 +6,7 @@ import uuid
 from fastapi import APIRouter, HTTPException, status
 from loguru import logger
 
-from py_event_planning.database.db import AsyncSessionDependency
+from py_event_planning.database.db import AsyncMasterSessionDependency
 from py_event_planning.features.auth.service import UserAuth
 from py_event_planning.features.core.unit_of_work import sqlalchemy_uow
 from py_event_planning.features.game_session.schemas import GameSessionSchema
@@ -23,7 +23,7 @@ router = APIRouter()
 @router.post("/{game_session_id}/join-session")
 async def join_game_session(
     current_user: UserAuth,
-    db: AsyncSessionDependency,
+    db: AsyncMasterSessionDependency,
     model_in: JtUserGameSessionCreateInput,
     game_session_id: uuid.UUID,
 ) -> JtUserGameSessionSchemaBase:
@@ -42,7 +42,7 @@ async def join_game_session(
                     updated_at=time_now,
                     updated_by=current_user.sub,
                 )
-                game_session_entity: GameSessionSchema | None = await uow.game_session_repo.read_by_id_full(
+                game_session_entity: GameSessionSchema | None = await uow.game_session_repo.read_by_id(
                     entity_id=game_session_id
                 )
                 if not game_session_entity:
@@ -73,7 +73,7 @@ async def join_game_session(
 @router.post("/{game_session_id}/leave-session")
 async def leave_game_session(
     current_user: UserAuth,
-    db: AsyncSessionDependency,
+    db: AsyncMasterSessionDependency,
     model_in: JtUserGameSessionCreateInput,
     game_session_id: uuid.UUID,
 ) -> uuid.UUID:

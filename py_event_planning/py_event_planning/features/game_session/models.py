@@ -37,7 +37,7 @@ class GameSession(MixinBookeeping, EventPlanningSchemaBase):
     game_system: Mapped[GameSystem] = relationship("GameSystem", back_populates="game_sessions", lazy="selectin")
     #    game_session(1) : jt_user_game_session(1)
     jt_user_game_session: Mapped[list[JtUserGameSession]] = relationship(
-        "JtUserGameSession", back_populates="game_session", lazy="selectin"
+        "JtUserGameSession", back_populates="game_session", lazy="selectin", cascade="all, delete-orphan"
     )
     game_master_id: Mapped[str] = mapped_column(ForeignKey(f"{DbSchemaEnum.EVENT_PLANNING.value}.user.id"))
     game_master: Mapped[User] = relationship(lazy="selectin")
