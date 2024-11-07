@@ -10,7 +10,10 @@ from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from loguru import logger
 from pandas.core.series import Series
 
-from py_event_planning.database.db import AsyncSessionDependency
+from py_event_planning.database.db import (
+    AsyncMasterSessionDependency,
+    AsyncReplicaSessionDependency,
+)
 from py_event_planning.features.auth.schemas import AuthUserToken
 from py_event_planning.features.auth.service import UserAuth, UserAuthOptional
 from py_event_planning.features.core.unit_of_work import (
@@ -31,7 +34,7 @@ router = APIRouter()
 @router.get("")
 async def read_game_systems(
     current_user: UserAuthOptional,
-    db: AsyncSessionDependency,
+    db: AsyncReplicaSessionDependency,
     offset: int = 0,
     limit: int = 100,
 ) -> list[GameSystemSchema]:
@@ -57,7 +60,7 @@ async def read_game_systems(
 @router.get("/query")
 async def query_game_systems(
     current_user: UserAuthOptional,
-    db: AsyncSessionDependency,
+    db: AsyncReplicaSessionDependency,
     params: GameSystemQuery = Depends(),
 ) -> GenericListResponse[GameSystemSchema]:
     """Retrieve game_systems."""
@@ -125,7 +128,7 @@ async def upsert_and_mutate_report(
 @router.post("")
 async def create_game_system(
     current_user: UserAuth,
-    db: AsyncSessionDependency,
+    db: AsyncMasterSessionDependency,
     model_in: GameSystemCreateInput,
 ) -> GameSystemSchema:
     """Create game_system."""
@@ -155,7 +158,7 @@ async def create_game_system(
 @router.delete("/{entity_id}")
 async def delete_game_system(
     current_user: UserAuth,
-    db: AsyncSessionDependency,
+    db: AsyncMasterSessionDependency,
     entity_id: str,
 ) -> str:
     """Delete game_system."""
@@ -182,7 +185,7 @@ async def delete_game_system(
 async def bulk_create(
     *,
     current_user: UserAuth,
-    db: AsyncSessionDependency,
+    db: AsyncMasterSessionDependency,
     file: UploadFile = File(description='Files of type: ["text/csv", "application/json"]'),
 ) -> BulkLoadResponse:
     """Bulk load in a list of game_system objects from a file.

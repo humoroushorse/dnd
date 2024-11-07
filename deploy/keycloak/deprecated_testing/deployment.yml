@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  labels:
+    app: keycloak
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+      - name: keycloak
+        image: quay.io/keycloak/keycloak:21.1.1
+        args:
+          - "start"
+          - "--cache-stack=kubernetes"
+          - "--spi-login-protocol-openid-connect-legacy-logout-redirect-uri=true"
+        env:
+          - name: KC_HOSTNAME
+            value: "localhost"
+          - name: KC_HOSTNAME_PORT
+            value: "8080"
+          - name: KC_HOSTNAME_STRICT_BACKCHANNEL
+            value: "false"
+          - name: KC_HTTP_ENABLED
+            value: "true"
+          - name: KC_HOSTNAME_STRICT_HTTPS
+            value: "false"
+          - name: KC_HEALTH_ENABLED
+            value: "true"
+          - name: KC_BOOTSTRAP_ADMIN_USERNAME
+            value: "admin"
+          - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+            value: "admin"
+          - name: KC_DB
+            value: "postgres"
+          - name: KC_DB_URL
+            value: "jdbc:postgresql://postgresql:5432/ttrpg-pg"
+          - name: KC_DB_SCHEMA
+            value: "keycloak_schema"
+          - name: KC_DB_USERNAME
+            value: "keycloak_user"
+          - name: KC_DB_PASSWORD
+            value: "keycloak_password"
+        ports:
+          - name: http
+            containerPort: 8080
+          - name: https
+            containerPort: 8443
+          - name: jgroups
+            containerPort: 7600
+        volumeMounts:
+          - name: keycloak-data
+            mountPath: /opt/keycloak/data
+          - name: keycloak-init-scripts
+            mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: keycloak-init-scripts
+          configMap:
+            name: keycloak-init-scripts
+        - name: keycloak-data
+          persistentVolumeClaim:
+            claimName: keycloak-data-pvc

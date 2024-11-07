@@ -66,7 +66,7 @@ class RepositoryBase(Generic[ModelType, ModelSchemaType, ModelSchemaBaseType, Cr
         """
         stmt = select(self.model).where(self.model.id == entity_id)
         model: ModelType = await self.session.scalar(stmt.order_by(self.model.id))
-        schema = self.schema_base.model_validate(model)
+        schema = self.schema.model_validate(model)
         return schema
 
     # async def get(self, db: AsyncSession, id: Any) -> Optional[ModelType]:
@@ -266,7 +266,7 @@ class RepositoryBase(Generic[ModelType, ModelSchemaType, ModelSchemaBaseType, Cr
             query = query.limit(limit)
         result: Result = await self.session.execute(query)
         # if no limit/offset assume count is lenght of result
-        entities = [self.schema_base.model_validate(e) for e in result.scalars().all()]
+        entities = [self.schema.model_validate(e) for e in result.scalars().all()]
         if total_count is None:
             self.logger.debug("No limit/offset set, assuming total_count = len(result)")
             total_count = len(entities)

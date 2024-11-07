@@ -8,7 +8,7 @@ from keycloak import KeycloakPostError
 from loguru import logger
 from pydantic import SecretStr
 
-from py_event_planning.database.db import AsyncSessionDependency
+from py_event_planning.database.db import AsyncMasterSessionDependency
 from py_event_planning.features.auth import service as AuthService
 from py_event_planning.features.auth.schemas import (
     AuthUserToken,
@@ -185,7 +185,7 @@ async def get_user(current_user: AuthService.UserAuth) -> AuthUserToken:
 @router.post("/user")
 async def register_user(
     user: RegisterUserInput,
-    db: AsyncSessionDependency,
+    db: AsyncMasterSessionDependency,
 ) -> UserSchema:
     """Create a new user (register).
 
@@ -217,7 +217,7 @@ async def register_user(
 @router.delete("/user")
 async def delete_user_endpoint(
     current_user: AuthService.UserAuth,
-    db: AsyncSessionDependency,
+    db: AsyncMasterSessionDependency,
 ) -> Any:
     """Delete an existing user."""
     try:

@@ -18,6 +18,7 @@ CONTAINER_REGISTRY = idkirk/ttrpg/builds
 CONTAINER_RELEASE_REGISTRY = idkirk/ttrpg/releases
 
 REGISTRY_IMAGE_TAG = $(CONTAINER_REGISTRY)/$(CONTAINER_IMAGE):$(IMAGE_TAG)
+REGISTRY_IMAGE_TAG_LATEST = $(CONTAINER_REGISTRY)/$(CONTAINER_IMAGE):latest
 
 CONTAINER_ID ?= $(shell ${CONTAINER_RUNNER} ps | grep '$(REGISTRY_IMAGE_TAG)')
 
@@ -29,12 +30,12 @@ container-clean: # build and tag container
 .PHONY: container-build
 container-build: # build and tag container
 	# todo: build $(CONTAINER_BUILD_FLAGS)
-	${CONTAINER_RUNNER} build --network=host -f deploy/Dockerfile -t $(REGISTRY_IMAGE_TAG) --target development .
+	${CONTAINER_RUNNER} build --network=host -f deploy/Dockerfile -t $(REGISTRY_IMAGE_TAG) -t $(REGISTRY_IMAGE_TAG_LATEST) --target development .
 
 .PHONY: container-build-production
 container-build-production: # build and tag container
   # TODO: $(CONTAINER_BUILD_FLAGS)
-	${CONTAINER_RUNNER} build --network=host -f deploy/Dockerfile -t $(REGISTRY_IMAGE_TAG) --target production .
+	${CONTAINER_RUNNER} build --network=host -f deploy/Dockerfile -t $(REGISTRY_IMAGE_TAG) -t $(REGISTRY_IMAGE_TAG_LATEST) --target production .
 
 .PHONY: container-build-clean
 container-build-clean: # build and tag container

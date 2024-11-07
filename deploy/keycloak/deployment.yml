@@ -1,0 +1,86 @@
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "keycloak"
+  # namespace: "development"
+spec:
+  selector:
+    matchLabels:
+      app: "keycloak"
+  replicas: 1
+  strategy:
+    type: "RollingUpdate"
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: "keycloak"
+    spec:
+      containers:
+        - name: "keycloak"
+          image: "quay.io/keycloak/keycloak:8.0.2"
+          # TODO: update keycloak to latest
+          # image: "quay.io/keycloak/keycloak:latest"
+          imagePullPolicy: "Always"
+          env:
+
+            - name: KC_HOSTNAME
+              value: localhost
+            - name: KC_HOSTNAME_PORT
+              value: "8080"
+            - name: KC_HOSTNAME_STRICT_BACKCHANNEL
+              value: "false"
+            - name: KC_HTTP_ENABLED
+              value: "true"
+            - name: KC_HOSTNAME_STRICT_HTTPS
+              value: "false"
+            - name: KC_HEALTH_ENABLED
+              value: "true"
+            - name: KC_BOOTSTRAP_ADMIN_USERNAME
+              value: admin
+            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+              value: admin
+
+
+            # - name: "KEYCLOAK_USER"
+            #   value: "admin"
+
+            # - name: "KEYCLOAK_PASSWORD"
+            #   value: "admin"
+
+            # - name: "PROXY_ADDRESS_FORWARDING"
+            #   value: "true"
+            # # - name: "KEYCLOAK_FRONTEND_URL"
+            # #   value: "https:/iankirkpatrick.dev/auth/"
+            # - name: "KEYCLOAK_FRONTEND_URL"
+            #   value: "https:/keycloak:8080/auth/"
+
+            # # - name: "KEYCLOAK_ADMIN_URL"
+            # #   value: "https://iankirkpatrick.dev/auth/realms/master/admin"
+            # - name: "KEYCLOAK_ADMIN_URL"
+            #   value: "http://keycloak:8080/auth/realms/master/admin"
+
+            - name: KC_DB
+              value: "postgres"
+            - name: KC_DB_URL
+              value: "jdbc:postgresql://postgresql:5432/ttrpg-pg"
+            - name: KC_DB_SCHEMA
+              value: "keycloak_schema"
+            - name: KC_DB_USERNAME
+              value: "keycloak_user"
+            - name: KC_DB_PASSWORD
+              value: "keycloak_password"
+
+          ports:
+            - name: "http"
+              containerPort: 8080
+
+            - name: "https"
+              containerPort: 8443
+          readinessProbe:
+            httpGet:
+              path: "/auth/realms/master"
+              port: 8080

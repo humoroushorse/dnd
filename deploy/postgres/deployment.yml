@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgresql
+  # labels:
+  #   app: postgresql
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: postgresql
+  template:
+    metadata:
+      labels:
+        app: postgresql
+    spec:
+      containers:
+      - name: postgresql
+        image: postgres:15.6-alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+          - mountPath: /data
+            name: cache-volume
+        env:
+        - name: POSTGRES_USER
+          value: 'admin'
+        - name: POSTGRES_PASSWORD
+          value: 'postgres'
+        - name: POSTGRES_DB
+          value: 'ttrpg-pg'
+      #   envFrom:
+      #     - configMapRef:
+      #         name: postgresql-secret
+      #   volumeMounts:
+      #     - mountPath: /var/lib/postgresql/data
+      #       name: postgresqldata
+      # volumes:
+      #   - name: postgresqldata
+      #     persistentVolumeClaim:
+      #       claimName: postgresql-volume-claim
+      volumes:
+        - name: cache-volume
+          emptyDir: {}

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgresql-master
+  labels:
+    app: postgresql-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql-master
+  template:
+    metadata:
+      labels:
+        app: postgresql-master
+    spec:
+      containers:
+      - name: postgresql
+        image: postgres:15.6-alpine
+        ports:
+        - containerPort: 5432
+        # Use ephemeral storage if not using PVCs, or re-enable PVCs later
+        env:
+        - name: POSTGRES_USER
+          value: "admin"
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+        - name: POSTGRES_DB
+          value: "ttrpg-pg"
+        - name: POSTGRES_INITDB_WALDIR
+          value: "/var/lib/postgresql/data/pg_wal"
+        - name: PGDATA
+          value: "/var/lib/postgresql/data/db-files/"
+        # - name: POSTGRES_HOST_AUTH_METHOD
+        #   value: "trust"  # Use trust for simplicity in testing
+        volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgresql-data
+            - mountPath: /docker-entrypoint-initdb.d
+              name: keycloak-init-scripts
+            # # Uncomment to enable PVC when needed:
+            # - mountPath: /var/lib/postgresql/data
+            #   name: postgresql-master-storage
+      volumes:
+        - name: postgresql-data
+          emptyDir: {}
+        - name: keycloak-init-scripts
+          configMap:
+            name: keycloak-init-scripts
+
+        # - name: postgresql-master-storage
+        #   persistentVolumeClaim:
+        #     claimName: postgresql-master-pvc  # Link to PVC for persistence

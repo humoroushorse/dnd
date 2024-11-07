@@ -1,4 +1,5 @@
 keycloak_postgres:
+    container_name: keycloak_postgresql
     image: postgres
     volumes:
       # - keycloak_postgres_data:/var/lib/postgresql/data

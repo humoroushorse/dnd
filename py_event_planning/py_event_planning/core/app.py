@@ -13,7 +13,10 @@ from py_event_planning.api.v1.api import api_router
 from py_event_planning.core.config import Settings, get_settings
 from py_event_planning.core.logging import init_logging
 from py_event_planning.database import db_init
-from py_event_planning.database.session import sessionmanager
+from py_event_planning.database.session import (
+    master_sessionmanager,
+    replica_sessionmanager,
+)
 from py_event_planning.middleware.logging_middleware import LoggingMiddleware
 
 settings: Settings = get_settings()
@@ -29,8 +32,10 @@ async def app_lifespan(_app: fastapi.FastAPI) -> AsyncGenerator:
     yield
 
     # Shutdown
-    if sessionmanager.engine is not None:
-        await sessionmanager.close()
+    if master_sessionmanager.engine is not None:
+        await master_sessionmanager.close()
+    if replica_sessionmanager.engine is not None:
+        await replica_sessionmanager.close()
 
 
 def init_app(init_db: bool = True) -> fastapi.FastAPI:
@@ -38,7 +43,8 @@ def init_app(init_db: bool = True) -> fastapi.FastAPI:
     lifespan = None
 
     if init_db:
-        sessionmanager.init(str(settings.POSTGRES_DATABASE_URI))
+        master_sessionmanager.init(str(settings.POSTGRES_MASTER_URI))
+        replica_sessionmanager.init(str(settings.POSTGRES_REPLICA_URI))
         lifespan = app_lifespan
 
     server = fastapi.FastAPI(
