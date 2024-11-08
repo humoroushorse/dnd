@@ -21,9 +21,9 @@ spec:
     spec:
       containers:
         - name: "keycloak"
-          image: "quay.io/keycloak/keycloak:8.0.2"
+          # image: "quay.io/keycloak/keycloak:8.0.2"
           # TODO: update keycloak to latest
-          # image: "quay.io/keycloak/keycloak:latest"
+          image: "quay.io/keycloak/keycloak:latest"
           imagePullPolicy: "Always"
           env:
 
@@ -66,7 +66,7 @@ spec:
             - name: KC_DB
               value: "postgres"
             - name: KC_DB_URL
-              value: "jdbc:postgresql://postgresql:5432/ttrpg-pg"
+              value: "jdbc:postgresql://postgresql-master:5432/ttrpg-pg"
             - name: KC_DB_SCHEMA
               value: "keycloak_schema"
             - name: KC_DB_USERNAME
