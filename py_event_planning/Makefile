@@ -87,7 +87,7 @@ test-integration-html:
 ################################################################################
 # Utility
 ################################################################################
-.PHONY: load-seed-data podman-init obliterate-migration
+.PHONY: load-seed-data podman-init obliterate-migration k8s-deploy-keycloak
 
 # Load in seed data -> source, dnd_class, spell, spell-to-class
 load-seed-data:
@@ -143,6 +143,17 @@ k8s-deploy-all-old:
 	# FastAPI
 	kubectl apply -f ./deploy/app.deployment.yml
 
+k8s-deploy-keycloak:
+	# create TLS cert
+	openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout auth-tls.key -out auth-tls.crt -subj "/CN=auth.localtest.me/O=hotel"
+	# kubectl delete secret tls auth-tls-secret
+	kubectl create secret tls auth-tls-secret --key auth-tls.key --cert auth-tls.crt
+	# deploy Keycloak cluster
+	kubectl apply -f ../deploy/keycloak/kc.service.yml
+	kubectl apply -f ../deploy/keycloak/kc.deployment.yml
+	# create HTTPS ingress for Keycloak
+	kubectl apply -f ../deploy/keycloak/kc.ingress.yml
+
 k8s-deploy-all:
 	# PostgreSQL
 	kubectl apply -f ../deploy/postgres/keycloak.init.deployment.yml
@@ -151,9 +162,7 @@ k8s-deploy-all:
 	kubectl apply -f ../deploy/postgres/replica.service.yml
 	kubectl apply -f ../deploy/postgres/replica.deployment.yml
 	# keycloak
-	kubectl apply -f ../deploy/keycloak/service.yml
-	kubectl apply -f ../deploy/keycloak/deployment.yml
-	kubectl apply -f ../deploy/keycloak/ingress.yml
+	make k8s-deploy-keycloak
 	# FastAPI
 	kubectl apply -f ./deploy/app.service.yml
 	kubectl apply -f ./deploy/app.deployment.yml
