@@ -141,13 +141,20 @@ k8s-deploy-all-old:
 		--from-literal=password=admin
 	kubectl apply -f ../deploy/keycloak/deployment.yml
 	# FastAPI
-	kubectl apply -f ./deploy/app.deployment.yml
+	kubectl apply -f ./deploy/deployment.yml
 
-k8s-deploy-keycloak:
+k8s-deploy-keycloak-initial:
 	# create TLS cert
 	openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout auth-tls.key -out auth-tls.crt -subj "/CN=auth.localtest.me/O=hotel"
 	# kubectl delete secret tls auth-tls-secret
 	kubectl create secret tls auth-tls-secret --key auth-tls.key --cert auth-tls.crt
+	# deploy Keycloak cluster
+	# kubectl apply -f ../deploy/keycloak/kc.service.yml
+	# kubectl apply -f ../deploy/keycloak/kc.deployment.yml
+	# # create HTTPS ingress for Keycloak
+	# kubectl apply -f ../deploy/keycloak/kc.ingress.yml
+
+k8s-deploy-keycloak:
 	# deploy Keycloak cluster
 	kubectl apply -f ../deploy/keycloak/kc.service.yml
 	kubectl apply -f ../deploy/keycloak/kc.deployment.yml
@@ -155,7 +162,7 @@ k8s-deploy-keycloak:
 	kubectl apply -f ../deploy/keycloak/kc.ingress.yml
 
 k8s-deploy-all:
-	# PostgreSQL
+	# PostgreSQLd
 	kubectl apply -f ../deploy/postgres/keycloak.init.deployment.yml
 	kubectl apply -f ../deploy/postgres/master.service.yml
 	kubectl apply -f ../deploy/postgres/master.deployment.yml
@@ -164,5 +171,18 @@ k8s-deploy-all:
 	# keycloak
 	make k8s-deploy-keycloak
 	# FastAPI
-	kubectl apply -f ./deploy/app.service.yml
-	kubectl apply -f ./deploy/app.deployment.yml
+	kubectl apply -f ./deploy/service.yml
+	kubectl apply -f ./deploy/deployment.yml
+
+k8s-purge-all:
+	kubectl delete all --all --all-namespaces
+	kubectl delete secrets --all --all-namespaces
+	kubectl delete configmap --all --all-namespaces
+	kubectl delete pvc --all --all-namespaces
+	kubectl delete pv --all
+	# kubectl delete crd --all
+	# kubectl delete serviceaccount --all --all-namespaces
+	# kubectl delete networkpolicy --all --all-namespaces
+
+k3s-restart:
+	sudo systemctl restart k3s
