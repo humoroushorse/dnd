@@ -44,10 +44,10 @@ spec:
           # - name: POSTGRES_DATABASE_URI
           #   value: 'postgresql+asyncpg://postgres:admin@postgresql:5432/ttrpg-pg'
           - name: POSTGRES_MASTER_URI
-            value: 'postgresql+asyncpg://admin:postgres@postgresql-master:5432/ttrpg-pg'
+            value: 'postgresql+asyncpg://postgres:admin@postgresql-master:5432/ttrpg-pg'
           - name: POSTGRES_REPLICA_URI
-            # value: 'postgresql+asyncpg://admin:postgres@postgresql-replica:5432/ttrpg-pg'
-            value: 'postgresql+asyncpg://admin:postgres@postgresql-master:5432/ttrpg-pg'
+            # value: 'postgresql+asyncpg://postgres:admin@postgresql-replica:5432/ttrpg-pg'
+            value: 'postgresql+asyncpg://postgres:admin@postgresql-master:5432/ttrpg-pg'
           - name: KEYCLOAK_SERVER_URL
             value: 'http://keycloak:8080'
           - name: KEYCLOAK_REALM_NAME
