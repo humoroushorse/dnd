@@ -2,6 +2,7 @@
 
 import asyncio
 import datetime
+import uuid
 from collections.abc import Hashable
 from io import BytesIO
 
@@ -43,12 +44,37 @@ async def read_game_systems(
         user = {}
         if current_user:
             user = {"sub": current_user.sub, "preferred_username": current_user.preferred_username}
-        with logger.contextualize(user=user, log_threads=True):
-            # user_logger = logger.bind(user_id=random.randint(0,99), user_username=random_name)
+        with logger.contextualize(user=user, limit=limit, offset=offset, log_threads=True):
+            logger.info("Fetching game systems")
             async with sqlalchemy_uow(db, None) as uow:
-                # entities = [entity async for entity in uow.game_session_repo.read_multi(offset=offset, limit=limit)]
                 entities = await uow.game_system_repo.read_multi(offset=offset, limit=limit)
             return entities
+    except HTTPException:
+        # assume that the error was already logged
+        raise
+    except Exception as e:
+        logger.error("Uncaught error: {}", str(e))
+        raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, "Internal Error") from e
+
+
+@router.get("/{entity_id}")
+async def read_game_session(
+    entity_id: uuid.UUID,
+    current_user: UserAuthOptional,
+    db: AsyncReplicaSessionDependency,
+    # offset: int = 0,
+    # limit: int = 100,
+) -> GameSystemSchema | None:
+    """Retrieve game_session."""
+    try:
+        user = {}
+        if current_user:
+            user = {"sub": current_user.sub, "preferred_username": current_user.preferred_username}
+        with logger.contextualize(user=user, log_threads=True):
+            async with sqlalchemy_uow(db, None) as uow:
+                # entities = [entity async for entity in uow.game_session_repo.read_multi(offset=offset, limit=limit)]
+                entitity = await uow.game_system_repo.read_by_id(entity_id=entity_id)
+            return entitity
     except HTTPException:
         # assume that the error was already logged
         raise
@@ -68,7 +94,8 @@ async def query_game_systems(
         user = {}
         if current_user:
             user = {"sub": current_user.sub, "preferred_username": current_user.preferred_username}
-        with logger.contextualize(user=user, log_threads=True):
+        with logger.contextualize(user=user, params=params.model_dump(), log_threads=True):
+            logger.info("Querying game systems")
             # user_logger = logger.bind(user_id=random.randint(0,99), user_username=random_name)
             filters = params.model_dump(exclude_none=True, exclude={"limit", "offset"})
             async with sqlalchemy_uow(db, None) as uow:
@@ -115,7 +142,11 @@ async def upsert_and_mutate_report(
             updated_at=time_now,
             updated_by=current_user.sub,
         )
-        _, total_count = await uow.game_system_repo.query(params={"name": entity.name}, limit=1, exact=True)
+        _, total_count = await uow.game_system_repo.query(
+            params={"name": entity.name, "version": entity.version, "release_year": entity.release_year},
+            limit=1,
+            exact=True,
+        )
         if total_count > 0:
             response.warnings.append(f"Game System with name '{entity.name}' already exists, skipping.")
         else:
@@ -134,8 +165,9 @@ async def create_game_system(
     """Create game_system."""
     try:
         user = {"sub": current_user.sub, "preferred_username": current_user.preferred_username}
-        with logger.contextualize(user=user, log_threads=True):
+        with logger.contextualize(user=user, model_in=model_in, log_threads=True):
             async with sqlalchemy_uow(db, None) as uow:
+                logger.info("Creating game system")
                 time_now = datetime.datetime.now(tz=datetime.UTC)
                 model_create = GameSystemCreate(
                     **model_in.model_dump(),
@@ -166,13 +198,13 @@ async def delete_game_system(
         user = {"sub": current_user.sub, "preferred_username": current_user.preferred_username}
         with logger.contextualize(game_system={id: entity_id}, user=user, log_threads=True):
             async with sqlalchemy_uow(db, None) as uow:
-
-                delete_res = uow.game_system_repo.delete(entity_id=entity_id)
+                logger.info("Deting game system")
+                delete_res = await uow.game_system_repo.delete(entity_id=entity_id)
                 if not delete_res:
                     logger.warning("Could not find entity to delete")
                     return entity_id
                 await uow.commit()
-                return str(entity_id)
+            return str(entity_id)
     except HTTPException:
         # assume that the error was already logged
         raise

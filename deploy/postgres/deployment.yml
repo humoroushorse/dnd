@@ -25,9 +25,9 @@ spec:
             name: cache-volume
         env:
         - name: POSTGRES_USER
-          value: 'admin'
-        - name: POSTGRES_PASSWORD
           value: 'postgres'
+        - name: POSTGRES_PASSWORD
+          value: 'admin'
         - name: POSTGRES_DB
           value: 'ttrpg-pg'
       #   envFrom:

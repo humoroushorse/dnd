@@ -1,8 +1,8 @@
 """init.
 
-Revision ID: 000d4966720d
+Revision ID: 89340c64ccfc
 Revises:
-Create Date: 2024-11-03 07:21:23.829257
+Create Date: 2024-11-10 10:48:27.730515
 
 """
 
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "000d4966720d"
+revision: str = "89340c64ccfc"
 down_revision: str | None = None
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
@@ -64,8 +64,8 @@ def upgrade() -> None:
         sa.Column("game_master_id", sa.UUID(), nullable=False),
         sa.Column("title", sa.String(), nullable=False),
         sa.Column("description", sa.String(), nullable=False),
-        sa.Column("start_date", sa.DateTime(), nullable=False),
-        sa.Column("end_date", sa.DateTime(), nullable=False),
+        sa.Column("start_date", sa.DateTime(timezone=True), nullable=False),
+        sa.Column("end_date", sa.DateTime(timezone=True), nullable=False),
         sa.Column("max_players", sa.Integer(), nullable=True),
         sa.Column("image_url", sa.String(), nullable=True),
         sa.Column("image_url_description", sa.String(), nullable=True),

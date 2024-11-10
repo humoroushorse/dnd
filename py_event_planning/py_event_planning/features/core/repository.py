@@ -52,10 +52,7 @@ class RepositoryBase(Generic[ModelType, ModelSchemaType, ModelSchemaBaseType, Cr
         self.logger = logger if logger else loguru.logger
 
     @handle_sqlalchemy_errors_decorator
-    async def read_by_id(
-        self,
-        entity_id: int,
-    ) -> ModelSchemaType | None:
+    async def read_by_id(self, entity_id: int, as_model: bool = False) -> ModelSchemaType | ModelType | None:
         """Get an entity by id.
 
         Args:
@@ -66,8 +63,9 @@ class RepositoryBase(Generic[ModelType, ModelSchemaType, ModelSchemaBaseType, Cr
         """
         stmt = select(self.model).where(self.model.id == entity_id)
         model: ModelType = await self.session.scalar(stmt.order_by(self.model.id))
-        schema = self.schema.model_validate(model)
-        return schema
+        if as_model:
+            return model
+        return self.schema.model_validate(model)
 
     # async def get(self, db: AsyncSession, id: Any) -> Optional[ModelType]:
     #     stmt = select(self.model).where(self.model.id == id)
@@ -174,9 +172,9 @@ class RepositoryBase(Generic[ModelType, ModelSchemaType, ModelSchemaBaseType, Cr
     async def update(
         self,
         *,
-        db_obj: ModelType,
+        db_obj: ModelType | None = None,
         obj_in: UpdateSchemaType | dict[str, Any],
-    ) -> ModelType | None:
+    ) -> ModelSchemaBaseType | None:
         """Update an existing entity.
 
         Args:
@@ -184,7 +182,7 @@ class RepositoryBase(Generic[ModelType, ModelSchemaType, ModelSchemaBaseType, Cr
             obj_in (UpdateSchemaType | dict[str, Any]): _description_
 
         Returns:
-            ModelType: _description_
+            ModelSchemaBaseType: _description_
         """
         obj_data = jsonable_encoder(db_obj)
         if isinstance(obj_in, dict):
@@ -195,9 +193,7 @@ class RepositoryBase(Generic[ModelType, ModelSchemaType, ModelSchemaBaseType, Cr
             if field in update_data:
                 setattr(db_obj, field, update_data[field])
         self.session.add(db_obj)
-        # await db.commit()
-        # await db.refresh(db_obj)
-        return db_obj
+        return self.schema_base.model_validate(db_obj)
 
     @handle_sqlalchemy_errors_decorator
     async def delete(

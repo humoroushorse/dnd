@@ -24,9 +24,9 @@ spec:
         #   name: postgresql-replica-storage
         env:
         - name: POSTGRES_USER
-          value: "admin"
-        - name: POSTGRES_PASSWORD
           value: "postgres"
+        - name: POSTGRES_PASSWORD
+          value: "admin"
         - name: POSTGRES_DB
           value: "ttrpg-pg"
         - name: POSTGRES_MASTER_HOST
