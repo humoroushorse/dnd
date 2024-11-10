@@ -6,7 +6,7 @@ import datetime
 import uuid
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import DateTime, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -45,8 +45,8 @@ class GameSession(MixinBookeeping, EventPlanningSchemaBase):
     # game_master: Mapped[str] = mapped_column(nullable=False) # ik- remove
     title: Mapped[str] = mapped_column(nullable=False)
     description: Mapped[str] = mapped_column(nullable=False)
-    start_date: Mapped[datetime.datetime] = mapped_column(nullable=False)
-    end_date: Mapped[datetime.datetime] = mapped_column(nullable=False)
+    start_date: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    end_date: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     max_players: Mapped[int | None] = mapped_column(nullable=True)
     image_url: Mapped[str | None] = mapped_column(nullable=True)
     image_url_description: Mapped[str | None] = mapped_column(nullable=True)

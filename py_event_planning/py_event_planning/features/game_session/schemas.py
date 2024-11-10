@@ -70,10 +70,10 @@ class GameSessionCreateInput(BaseModel, MixinImageUrl):
 
     @field_validator("start_date", "end_date")
     @classmethod
-    def remove_tz_info_frorm_dates(cls, v: datetime.datetime) -> datetime.datetime:
+    def force_utc(cls, v: datetime.datetime) -> datetime.datetime:
         """Force UTC and replace with no TZ info."""
         dt = v.astimezone(datetime.timezone.utc)
-        return dt.replace(tzinfo=None)
+        return dt
 
 
 class GameSessionCreate(GameSessionCreateInput, MixinBookeepingCreate, MixinBookeepingUpdate):
@@ -98,6 +98,13 @@ class GameSessionUpdate(BaseModel, MixinBookeepingUpdate, MixinImageUrl):
     end_date: datetime.datetime = Field(title="End Date & Time")
     max_players: int | None = Field(default=6, title="Max Players", min=1)
     is_public: bool | None = Field(default=True, title="Is Public?")
+
+    @field_validator("start_date", "end_date")
+    @classmethod
+    def force_utc(cls, v: datetime.datetime) -> datetime.datetime:
+        """Force UTC and replace with no TZ info."""
+        dt = v.astimezone(datetime.timezone.utc)
+        return dt
 
 
 class GameSessionQuery(QueryBase):
