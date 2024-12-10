@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ttrpg-api-dnd
+  labels:
+    app: ttrpg-api-dnd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ttrpg-api-dnd
+  template:
+    metadata:
+      labels:
+        app: ttrpg-api-dnd
+    spec:
+      containers:
+      - name: ttrpg-api-dnd
+        # image: localhost:5001/ttrpg-api/py_dnd:latest
+        # image: idkirk/ttrpg/builds/ttrpg-api/py_dnd:latest
+        image: py_dnd:latest
+        imagePullPolicy: IfNotPresent # this is a local image
+        ports:
+        - containerPort: 8001
+        env:
+          - name: API_NAME
+            value: 'TTRPG API Dungeons & Dragons'
+          - name: API_DESCRIPTION
+            value: 'Personal project for TTRPG Projects'
+          - name: API_VERSION
+            value: '0.1.0'
+          - name: API_V1_STR
+            value: '/api/v1'
+          - name: APP_HOST
+            value: '0.0.0.0'
+          - name: APP_PORT
+            value: "8001"
+          - name: LOG_LEVEL
+            value: 'DEBUG'
+          - name: LOG_DIAGNOSE
+            value: "false"
+          - name: LOG_TO_FILE
+            value: "false"
+          # - name: POSTGRES_DATABASE_URI
+          #   value: 'postgresql+asyncpg://postgres:admin@postgresql:5432/ttrpg-pg'
+          - name: POSTGRES_MASTER_URI
+            value: 'postgresql+asyncpg://postgres:admin@postgresql-master:5432/ttrpg-pg'
+          - name: POSTGRES_REPLICA_URI
+            # value: 'postgresql+asyncpg://postgres:admin@postgresql-replica:5432/ttrpg-pg'
+            value: 'postgresql+asyncpg://postgres:admin@postgresql-master:5432/ttrpg-pg'
+          - name: KEYCLOAK_SERVER_URL
+            value: 'http://keycloak:8080'
+          - name: KEYCLOAK_REALM_NAME
+            value: 'master'
+          - name: KEYCLOAK_CLIENT_ID
+            value: admin-cli
+          - name: KEYCLOAK_ADMIN_USERNAME
+            value: admin
+          - name: KEYCLOAK_ADMIN_PASSWORD
+            value: admin
+          # - name: POSTGRES_TESTING_DATABASE_URI
+          #   value: 'postgresql+asyncpg://postgres:admin@localhost:5433/ttrpg-pg'

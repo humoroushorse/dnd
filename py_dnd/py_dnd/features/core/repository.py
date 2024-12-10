@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from enum import Enum
 from typing import Any, AsyncIterator, Generic, Sequence, TypeVar
 
@@ -16,18 +17,27 @@ from py_dnd.database.base_class import DndSchemaBase
 from py_dnd.database.exceptions import handle_sqlalchemy_errors_decorator
 
 ModelType = TypeVar("ModelType", bound=DndSchemaBase)
+ModelSchemaType = TypeVar("ModelSchemaType", bound=BaseModel)
+ModelSchemaBaseType = TypeVar("ModelSchemaBaseType", bound=BaseModel)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
 UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
 
-class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
+class RepositoryBase(Generic[ModelType, ModelSchemaType, ModelSchemaBaseType, CreateSchemaType, UpdateSchemaType]):
     """Base repositiroy.
 
     Args:
         Generic (_type_): typings for repository.
     """
 
-    def __init__(self, session: AsyncSession, model: type[ModelType], logger: loguru.Logger | None = None):
+    def __init__(
+        self,
+        session: AsyncSession,
+        model: type[ModelType],
+        schema: type[ModelSchemaType],
+        schema_base: type[ModelSchemaBaseType],
+        logger: loguru.Logger | None = None,
+    ):
         """RepositoryBase.
 
         CRUD object with default methods to Create, Read, Update, Delete (CRUD).
@@ -37,23 +47,27 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """
         self.session = session
         self.model = model
+        self.schema = schema
+        self.schema_base = schema_base
         self.logger = logger if logger else loguru.logger
 
     @handle_sqlalchemy_errors_decorator
     async def read_by_id(
-        self,
-        entity_id: int,
-    ) -> ModelType | None:
+        self, entity_id: int | str | uuid.UUID, as_model: bool = False
+    ) -> ModelSchemaType | ModelType | None:
         """Get an entity by id.
 
         Args:
-            entity_id (int): _description_
+            entity_id (: int | str | uuid.UUID): _description_
 
         Returns:
-            ModelType | None: _description_
+            ModelSchemaType | None: _description_
         """
         stmt = select(self.model).where(self.model.id == entity_id)
-        return await self.session.scalar(stmt.order_by(self.model.id))
+        model: ModelType = await self.session.scalar(stmt.order_by(self.model.id))
+        if as_model:
+            return model
+        return self.schema.model_validate(model)
 
     # async def get(self, db: AsyncSession, id: Any) -> Optional[ModelType]:
     #     stmt = select(self.model).where(self.model.id == id)
@@ -63,12 +77,12 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     @handle_sqlalchemy_errors_decorator
     async def read_multi_by_ids(
         self,
-        entity_ids: list[int],
+        entity_ids: list[int | str | uuid.UUID],
     ) -> AsyncIterator[ModelType]:
         """Get multiple entities by ids.
 
         Args:
-            entity_ids (list[int]): _description_
+            entity_ids (list[int | str | uuid.UUID]): _description_
 
         Returns:
             AsyncIterator[ModelType]: _description_
@@ -77,11 +91,9 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             Iterator[AsyncIterator[ModelType]]: _description_
         """
         stmt = select(self.model).where(self.model.id.in_(entity_ids))
-        # stream = await self.session.stream_scalars(stmt.order_by(self.model.id))
-        # async for row in stream:
-        #     yield row
-        scalars = await self.session.scalars(stmt.order_by(self.model.id))
-        return scalars
+        stream = await self.session.stream_scalars(stmt.order_by(self.model.id))
+        async for row in stream:
+            yield row
 
     @handle_sqlalchemy_errors_decorator
     async def read_multi(
@@ -89,7 +101,8 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         *,
         offset: int = 0,
         limit: int = 100,
-    ) -> AsyncIterator[ModelType]:
+    ) -> list[ModelSchemaType]:
+        # ) -> AsyncIterator[ModelType]:
         """Get multiple entities (pagination optional).
 
         Args:
@@ -108,7 +121,7 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         # async for row in stream:
         #     yield row
         res = await self.session.scalars(stmt.order_by(self.model.id))
-        return res
+        return [self.schema.model_validate(e) for e in res]
 
     # async def get_multi(self, db: AsyncSession, *, offset: int = 0, limit: int = 100) -> list[ModelType]:
     #     stmt = select(self.model).offset(offset).limit(limit)
@@ -116,7 +129,7 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     #     return result.scalars().all()
 
     @handle_sqlalchemy_errors_decorator
-    async def create(self, *, model_in: CreateSchemaType, return_model: bool = True) -> ModelType | None:
+    async def create(self, *, model_in: CreateSchemaType, return_model: bool = True) -> ModelSchemaType | None:
         """Create an entity.
 
         Args:
@@ -131,14 +144,14 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """
         entity = self.model(**model_in.model_dump())
         self.session.add(entity)
-
-        # To fetch entity
         if return_model:
             await self.session.flush()
-            new = await self.read_by_id(entity.id)
-            if not new:
-                raise RuntimeError()
-            return new
+            # new = await self.read_by_id(entity.id)
+            # if not new:
+            #     raise RuntimeError()
+            # Note: do not define relationships here or you get greenlit errors
+            #   TODO: look into a better solution?
+            return self.schema_base.model_validate(entity)
         return None
 
     # async def create(self, db: AsyncSession, *, obj_in: CreateSchemaType) -> ModelType:
@@ -161,9 +174,9 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     async def update(
         self,
         *,
-        db_obj: ModelType,
+        db_obj: ModelType | None = None,
         obj_in: UpdateSchemaType | dict[str, Any],
-    ) -> ModelType | None:
+    ) -> ModelSchemaBaseType | None:
         """Update an existing entity.
 
         Args:
@@ -171,7 +184,7 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             obj_in (UpdateSchemaType | dict[str, Any]): _description_
 
         Returns:
-            ModelType: _description_
+            ModelSchemaBaseType: _description_
         """
         obj_data = jsonable_encoder(db_obj)
         if isinstance(obj_in, dict):
@@ -182,15 +195,13 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             if field in update_data:
                 setattr(db_obj, field, update_data[field])
         self.session.add(db_obj)
-        # await db.commit()
-        # await db.refresh(db_obj)
-        return db_obj
+        return self.schema_base.model_validate(db_obj)
 
     @handle_sqlalchemy_errors_decorator
     async def delete(
         self,
-        entity: ModelType,
-    ) -> int:
+        entity_id: int | str | uuid.UUID,
+    ) -> int | str | uuid.UUID | None:
         """Delete an entity.
 
         Args:
@@ -199,9 +210,13 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         Returns:
             int: _description_
         """
-        await self.session.delete(entity)
+        stmt = select(self.model).where(self.model.id == entity_id)
+        model: ModelType = await self.session.scalar(stmt.order_by(self.model.id))
+        if not model:
+            return None
+        await self.session.delete(model)
         # await self.session.flush()
-        return entity.id
+        return entity_id
 
     # async def delete(self, db: AsyncSession, *, id: int) -> ModelType:
     #     obj = await self.get(db, id)
@@ -249,7 +264,7 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             query = query.limit(limit)
         result: Result = await self.session.execute(query)
         # if no limit/offset assume count is lenght of result
-        entities = result.scalars().all()
+        entities = [self.schema.model_validate(e) for e in result.scalars().all()]
         if total_count is None:
             self.logger.debug("No limit/offset set, assuming total_count = len(result)")
             total_count = len(entities)
@@ -303,6 +318,8 @@ class RepositoryBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
                 filters.append(list_query)
                 # filters.append(model_field.in_(value))
             elif isinstance(value, (int, Enum)):
+                filters.append(model_field == value)
+            elif isinstance(value, uuid.UUID):
                 filters.append(model_field == value)
             else:
                 if exact:

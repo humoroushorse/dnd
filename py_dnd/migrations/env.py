@@ -10,11 +10,11 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import AsyncEngine
 
+# all models must be imported before attempting to define relationships
+import py_dnd.database.all_models  # noqa: W0611
 from py_dnd import shared
 from py_dnd.core.config import Settings, get_settings
 from py_dnd.database.base_class import DndSchemaBase
-from py_dnd.features.sources.models import Source  # noqa: W0611
-from py_dnd.features.spells.models import Spell  # noqa: W0611
 from py_dnd.shared.enums import DbSchemaEnum
 
 sys.path.append(str(pathlib.Path(__file__).resolve().parents[1]))
@@ -55,7 +55,7 @@ def run_migrations_offline() -> None:
 
     """
     context.configure(
-        url=settings.POSTGRES_DATABASE_URI,
+        url=settings.POSTGRES_MASTER_URI,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -91,7 +91,7 @@ async def run_migrations_online() -> None:
     # )
     connectable = AsyncEngine(
         create_engine(
-            settings.POSTGRES_DATABASE_URI,
+            settings.POSTGRES_MASTER_URI,
             # echo=True,  # DEBUGGING
             future=True,
         )
@@ -101,7 +101,7 @@ async def run_migrations_online() -> None:
         await connection.execute(text(f"CREATE SCHEMA IF NOT EXISTS {shared.enums.DbSchemaEnum.DND.value}"))
         await connection.commit()
         context.configure(
-            url=settings.POSTGRES_DATABASE_URI,
+            url=settings.POSTGRES_MASTER_URI,
             target_metadata=target_metadata,
             # literal_binds=True,
             dialect_opts={"paramstyle": "named"},

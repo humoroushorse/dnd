@@ -27,8 +27,9 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         Returns:
             Response: _description_
         """
-        # Create a request ID
-        request_id = str(uuid.uuid4())
+        request_id = request.headers.get("X-Request-ID")
+        if not request_id:
+            request_id = str(uuid.uuid4())
 
         # Add context to all loggers in all views
         with logger.contextualize(request_id=request_id):

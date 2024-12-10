@@ -1,107 +1,94 @@
 # Dockerfile
 # Uses multi-stage builds requiring Docker 17.05 or higher
 # See https://docs.docker.com/develop/develop-images/multistage-build/
+ARG PYTHON_DOCKER_IMAGE=python:3.13.0-alpine
 
-# Creating a python base with shared environment variables
-FROM python:3.12.2-slim AS python-base
+################################################################################
+# python-base
+#    Creating a python base with shared environment variables
+################################################################################
+FROM $PYTHON_DOCKER_IMAGE AS python-base
+
+WORKDIR /tmp
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=off \
-    PIP_DISABLE_PIP_VERSION_CHECK=on \
-    PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_HOME="/opt/poetry" \
-    POETRY_VIRTUALENVS_IN_PROJECT=true \
-    POETRY_NO_INTERACTION=1 \
-    PYSETUP_PATH="/opt/pysetup" \
-    VENV_PATH="/opt/pysetup/.venv"
+    PIP_DISABLE_PIP_VERSION_CHECK=on
+    # PIP_DEFAULT_TIMEOUT=100 \
+    # POETRY_HOME="/opt/poetry" \
+    # POETRY_VIRTUALENVS_IN_PROJECT=true \
+    # POETRY_NO_INTERACTION=1 \
+    # PYSETUP_PATH="/opt/pysetup" \
+    # VENV_PATH="/opt/pysetup/.venv"
 
-ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
+# Poetry
+RUN pip install poetry
+COPY . .
+# RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 
-# builder-base is used to build dependencies
-# python3-dev, libpq-dev -> required for psycopg2
+################################################################################
+# builder-base
+#    'builder-base' stage is used to build dependencies
+################################################################################
 FROM python-base AS builder-base
-RUN buildDeps="build-essential" \
-    && apt-get update \
-    && apt-get install --no-install-recommends -y \
-        curl \
-        vim \
-        python3-dev \
-        libpq-dev \
-        gcc \
-    && apt-get install -y --no-install-recommends $buildDeps \
-    && rm -rf /var/lib/apt/lists/*
 
-# Install Poetry - respects $POETRY_VERSION & $POETRY_HOME
-ENV POETRY_VERSION=1.7.1
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=${POETRY_HOME} python3 - --version ${POETRY_VERSION} && \
-    chmod a+x /opt/poetry/bin/poetry
+# RUN buildDeps="build-essential" \
+#     && apt-get update \
+#     && apt-get install --no-install-recommends -y \
+#         curl \
+#         vim \
+#     && apt-get install -y --no-install-recommends $buildDeps \
+#     && rm -rf /var/lib/apt/lists/*
 
-# We copy our Python requirements here to cache them
-# and install only runtime deps using poetry
-# --no-root in poetry install fixes the "/opt/pysetup/app/dnd does not contain any element" error
-WORKDIR $PYSETUP_PATH
-COPY ./poetry.lock ./pyproject.toml ./
-RUN poetry install --only main  --no-root # respects
+WORKDIR /tmp
 
-# 'development' stage installs all dev deps and can be used to develop code.
-# For example using docker-compose to mount local volume under /app
-FROM python-base as development
+RUN poetry build --format wheel
+
+################################################################################
+# development
+#    'development' stage installs all dev deps and can be used to develop code.
+#    For example using docker-compose to mount local volume under /app
+################################################################################
+# FROM python-base as development
+FROM $PYTHON_DOCKER_IMAGE AS development
+
 ENV FASTAPI_ENV=production
+ENV FASTAPI_port=8001
 
-# Copying poetry and venv into image
-COPY --from=builder-base $POETRY_HOME $POETRY_HOME
-COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
+WORKDIR /code
 
-# Copying in our entrypoint
-COPY docker-entrypoint.sh /docker-entrypoint.sh
+# COPY --from=builder-base /tmp/requirements.txt ./requirements.txt
+# RUN pip install --no-cache-dir --upgrade -r ./requirements.txt
+COPY --from=builder-base /tmp/dist/ /dist/
+RUN pip install --no-cache-dir /dist/*.whl
+# COPY . .
+
+# poetry run uvicorn --reload --host=0.0.0.0 --port=8001 --app-dir=py_dnd main:app
+# CMD ["uvicorn", "--reload", "--host=0.0.0.0", "--port=8001", "py_dnd.main:app"]
+WORKDIR /
+COPY --from=python-base /tmp/deploy/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
-# venv already has runtime deps installed we get a quicker install
-WORKDIR $PYSETUP_PATH
-RUN poetry install --no-root
+EXPOSE ${FASTAPI_port}
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
 
-WORKDIR /app
-COPY . .
+################################################################################
+# lint (development)
+#    'lint' stage runs black and isort
+#    running in check mode means build will fail if any linting errors occur
+################################################################################
 
-EXPOSE 8001
-ENTRYPOINT /docker-entrypoint.sh $0 $@
-
-# ENV PYTHONPATH /app
-# poetry run uvicorn --host=127.0.0.1 --port=8001 dnd.main:app
-CMD ["uvicorn", "--reload", "--host=0.0.0.0", "--port=8001", "--app-dir=app", "dnd.main:app"]
-
-# 'lint' stage runs black and isort
-# running in check mode means build will fail if any linting errors occur
 FROM development AS lint
 RUN black --config ./pyproject.toml --check app tests
 RUN isort --settings-path ./pyproject.toml --recursive --check-only
 CMD ["tail", "-f", "/dev/null"]
 
-# 'test' stage runs our unit tests with pytest and
-# coverage.  Build will fail if test coverage is under 95%
+################################################################################
+# test (development)
+#    'test' stage runs our unit tests with pytest and
+#    coverage.  Build will fail if test coverage is under 95%
+################################################################################
 FROM development AS test
 RUN coverage run --rcfile ./pyproject.toml -m pytest ./tests
 RUN coverage report --fail-under 95
-
-# 'production' stage uses the clean 'python-base' stage and copyies
-# in only our runtime deps that were installed in the 'builder-base'
-FROM python-base AS production
-ENV FASTAPI_ENV=production
-
-COPY --from=builder-base $VENV_PATH $VENV_PATH
-
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-
-# Create user with the name poetry
-RUN groupadd -g 1500 poetry && \
-    useradd -m -u 1500 -g poetry poetry
-
-COPY --chown=poetry:poetry ./app /app
-USER poetry
-WORKDIR /app
-
-ENTRYPOINT /docker-entrypoint.sh $0 $@
-CMD ["uvicorn", "--reload", "--host=0.0.0.0", "--port=8001", "--app-dir=app", "dnd.main:app"]

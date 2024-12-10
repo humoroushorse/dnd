@@ -1,23 +1,31 @@
 version: '3.9'
 
 services:
-  api:
+  ttrpg-api-dnd:
+    restart: unless-stopped
     build:
       context: ..
       dockerfile: deploy/Dockerfile
       target: development
       # target: prodcution
-    container_name: dnd-api
+    container_name: ttrpg-api-dnd
     env_file:
       - ../.env
     environment:
       # override connection to localhost with host.docker.internal
-      - POSTGRES_DATABASE_URI=postgresql://postgres:admin@host.docker.internal:5432/ttrpg-pg
-      - POSTGRES_TESTING_DATABASE_URI=postgresql://postgres:admin@host.docker.internal:5433/ttrpg-pg
+      # - POSTGRES_DATABASE_URI=postgresql+asyncpg://postgres:admin@postgresql:5432/ttrpg-pg
+      - POSTGRES_MASTER_URI=postgresql+asyncpg://postgres:admin@postgresql:5432/ttrpg-pg
+      - POSTGRES_REPLICA_URI=postgresql+asyncpg://postgres:admin@postgresql:5432/ttrpg-pg
+      # - KEYCLOAK_REALM_NAME=ttrpg
+      # - KEYCLOAK_CLIENT_ID=ttrpg-client
+      - KEYCLOAK_REALM_NAME=master
+      - KEYCLOAK_CLIENT_ID=admin-cli
     ports:
       - '8001:8001'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    restart: "no"
-    depends_on:
-      - postgresql # see ROOT/deploy/postgres/postgres.compose.yml
+      - ./logs/backend:/logs
+    # restart: "no"
+    # depends_on:
+    #   - postgresql # see ROOT/deploy/postgres/postgres.compose.yml
+    #   - keycloak # see ROOT/deploy/keycloak/keycloak.compose.yml

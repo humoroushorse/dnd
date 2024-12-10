@@ -9,9 +9,8 @@ import loguru
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from py_dnd.features.sources.repository import SourceRepository
-
-# from py_dnd.features import spells
 from py_dnd.features.spells.repository import SpellRepository
+from py_dnd.features.user.repository import UserRepository
 
 
 class SqlAlchemyUnitOfWork:
@@ -22,6 +21,7 @@ class SqlAlchemyUnitOfWork:
         self.logger = logger if logger else loguru.logger
         self.spell_repo = SpellRepository(db_session)
         self.source_repo = SourceRepository(db_session)
+        self.user_repo = UserRepository(db_session)
         self.logger.trace("{} created!", self.__class__.__name__)
 
     async def __aenter__(self) -> SqlAlchemyUnitOfWork:

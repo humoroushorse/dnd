@@ -1,8 +1,8 @@
 """init.
 
-Revision ID: 82afae973ec2
+Revision ID: f1ff2c861b04
 Revises:
-Create Date: 2024-09-17 21:52:20.138317
+Create Date: 2024-12-07 04:26:26.885859
 
 """
 
@@ -11,10 +11,8 @@ from typing import Sequence
 import sqlalchemy as sa
 from alembic import op
 
-from py_dnd import shared
-
 # revision identifiers, used by Alembic.
-revision: str = "82afae973ec2"
+revision: str = "f1ff2c861b04"
 down_revision: str | None = None
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
@@ -33,9 +31,9 @@ def upgrade() -> None:
         sa.Column("dnd_version", sa.String(), nullable=False),
         sa.Column("dnd_version_year", sa.Integer(), nullable=False),
         sa.Column("publish_year", sa.Integer(), nullable=True),
-        sa.Column("created_at", sa.DateTime(), server_default=sa.text("now()"), nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
         sa.Column("created_by", sa.String(), nullable=False),
-        sa.Column("updated_at", sa.DateTime(), nullable=False),
+        sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("updated_by", sa.String(), nullable=False),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_source")),
         sa.UniqueConstraint("name", name=op.f("uq_source_name")),
@@ -44,6 +42,15 @@ def upgrade() -> None:
     )
     op.create_index(op.f("ix_dnd_source_id"), "source", ["id"], unique=False, schema="dnd")
     op.create_index(op.f("ix_dnd_source_updated_at"), "source", ["updated_at"], unique=False, schema="dnd")
+    op.create_table(
+        "user",
+        sa.Column("id", sa.UUID(), nullable=False),
+        sa.Column("username", sa.String(), nullable=True),
+        sa.Column("profile_picture_url", sa.String(), nullable=True),
+        sa.PrimaryKeyConstraint("id", name=op.f("pk_user")),
+        schema="dnd",
+    )
+    op.create_index(op.f("ix_dnd_user_id"), "user", ["id"], unique=False, schema="dnd")
     op.create_table(
         "spell",
         sa.Column("id", sa.String(), nullable=False),
@@ -106,9 +113,9 @@ def upgrade() -> None:
         sa.Column("difficulty_class_type", sa.String(), nullable=True),
         sa.Column("stat_blocks", sa.JSON(), nullable=True),
         sa.Column("is_homebrew", sa.Boolean(), nullable=False),
-        sa.Column("created_at", sa.DateTime(), server_default=sa.text("now()"), nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
         sa.Column("created_by", sa.String(), nullable=False),
-        sa.Column("updated_at", sa.DateTime(), nullable=False),
+        sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("updated_by", sa.String(), nullable=False),
         sa.ForeignKeyConstraint(["source_id"], ["dnd.source.id"], name=op.f("fk_spell_source_id_source")),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_spell")),
@@ -129,6 +136,8 @@ def downgrade() -> None:
     op.drop_index(op.f("ix_dnd_spell_updated_at"), table_name="spell", schema="dnd")
     op.drop_index(op.f("ix_dnd_spell_id"), table_name="spell", schema="dnd")
     op.drop_table("spell", schema="dnd")
+    op.drop_index(op.f("ix_dnd_user_id"), table_name="user", schema="dnd")
+    op.drop_table("user", schema="dnd")
     op.drop_index(op.f("ix_dnd_source_updated_at"), table_name="source", schema="dnd")
     op.drop_index(op.f("ix_dnd_source_id"), table_name="source", schema="dnd")
     op.drop_table("source", schema="dnd")
@@ -139,7 +148,6 @@ def downgrade() -> None:
 
 def pre_upgrade() -> None:
     """Processing before upgrading the schema."""
-    op.execute(sa.text(f"CREATE SCHEMA IF NOT EXISTS {shared.enums.DbSchemaEnum.DND.value}"))
 
 
 def post_upgrade() -> None:
@@ -152,7 +160,3 @@ def pre_downgrade() -> None:
 
 def post_downgrade() -> None:
     """Processing after downgrading the schema."""
-    sa.Enum(name="spelllevelenum").drop(op.get_bind(), checkfirst=False)
-    sa.Enum(name="spellschoolenum").drop(op.get_bind(), checkfirst=False)
-    # op.execute(sa.text(f"drop table {shared.enums.DbSchemaEnum.DND.value}.alembic_version"))
-    # op.execute(sa.text(f"drop schema {shared.enums.DbSchemaEnum.DND.value}"))

@@ -7,10 +7,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from py_dnd.features.core.repository import RepositoryBase
 from py_dnd.features.spells.models import Spell
-from py_dnd.features.spells.schemas import SpellCreate, SpellUpdate
+from py_dnd.features.spells.schemas import (
+    SpellCreate,
+    SpellSchema,
+    SpellSchemaBase,
+    SpellUpdate,
+)
 
 
-class SpellRepository(RepositoryBase[Spell, SpellCreate, SpellUpdate]):
+class SpellRepository(RepositoryBase[Spell, SpellSchema, SpellSchemaBase, SpellCreate, SpellUpdate]):
     """Spell Repository.
 
     Args:
@@ -18,7 +23,7 @@ class SpellRepository(RepositoryBase[Spell, SpellCreate, SpellUpdate]):
     """
 
     def __init__(self, session: AsyncSession, logger: loguru.Logger | None = None):
-        super().__init__(session=session, model=Spell)
+        super().__init__(session=session, model=Spell, schema=SpellSchema, schema_base=SpellSchemaBase)
         self.logger.trace("{} created!", self.__class__.__name__)
 
 
