@@ -2,4 +2,4 @@
 [report]
 show_missing = True
 omit =
-  py_event_planning/tests/*
+  py_dnd/tests/*

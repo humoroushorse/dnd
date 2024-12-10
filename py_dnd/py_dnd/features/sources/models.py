@@ -9,6 +9,8 @@ from py_dnd.shared.models import MixinBookeeping
 class Source(MixinBookeeping, DndSchemaBase):
     """SQLAlchemy source model."""
 
+    __tablename__ = "source"
+
     # keys
     id: Mapped[str] = mapped_column(primary_key=True, index=True)
     # fields

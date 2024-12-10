@@ -7,10 +7,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from py_dnd.features.core.repository import RepositoryBase
 from py_dnd.features.sources.models import Source
-from py_dnd.features.sources.schemas import SourceCreate, SourceUpdate
+from py_dnd.features.sources.schemas import (
+    SourceCreate,
+    SourceSchema,
+    SourceSchemaBase,
+    SourceUpdate,
+)
 
 
-class SourceRepository(RepositoryBase[Source, SourceCreate, SourceUpdate]):
+class SourceRepository(RepositoryBase[Source, SourceSchema, SourceSchemaBase, SourceCreate, SourceUpdate]):
     """Source Repository.
 
     Args:
@@ -18,7 +23,7 @@ class SourceRepository(RepositoryBase[Source, SourceCreate, SourceUpdate]):
     """
 
     def __init__(self, session: AsyncSession, logger: loguru.Logger | None = None):
-        super().__init__(session=session, model=Source)
+        super().__init__(session=session, model=Source, schema=SourceSchema, schema_base=SourceSchemaBase)
         self.logger.trace("{} created!", self.__class__.__name__)
 
 

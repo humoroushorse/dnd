@@ -126,4 +126,5 @@ class DatabaseSessionManager:
 
 
 # Initialize the DatabaseSessionManager
-sessionmanager = DatabaseSessionManager()
+master_sessionmanager = DatabaseSessionManager()
+replica_sessionmanager = DatabaseSessionManager()

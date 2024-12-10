@@ -14,6 +14,8 @@ from py_dnd.shared.models import MixinBookeeping
 class Spell(MixinBookeeping, DndSchemaBase):
     """SQLAlchemy spell model."""
 
+    __tablename__ = "spell"
+
     # keys
     id: Mapped[str] = mapped_column(primary_key=True, index=True)
     source_id: Mapped[str] = mapped_column(ForeignKey(Source.id))

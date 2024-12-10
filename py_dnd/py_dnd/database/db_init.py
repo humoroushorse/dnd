@@ -5,12 +5,12 @@ from sqlalchemy import text
 
 from py_dnd import shared
 from py_dnd.core.config import Settings
-from py_dnd.database.session import sessionmanager
+from py_dnd.database.session import master_sessionmanager
 
 
 async def get_all_schemas() -> list[str]:
     """Fetch list of schemas in the connected database."""
-    async with sessionmanager.session() as session:
+    async with master_sessionmanager.session() as session:
         result = await session.execute(
             text(
                 """

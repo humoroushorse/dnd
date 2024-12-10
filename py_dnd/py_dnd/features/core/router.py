@@ -29,7 +29,7 @@ async def app_base_route(
     )
 
 
-@router.get("/health", tags=["Staatus"])
+@router.get("/health", tags=["Status"])
 async def health_check_route() -> Literal["ok"]:
     """Root API endpoint used for health check."""
     return "ok"

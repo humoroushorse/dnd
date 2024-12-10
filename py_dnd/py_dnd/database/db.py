@@ -5,54 +5,22 @@ from typing import Annotated, AsyncGenerator
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from .session import sessionmanager
-
-# TODO: ik-remove doc link https://praciano.com.br/fastapi-and-async-sqlalchemy-20-with-pytest-done-right.html
-
-# ik-todo remove doc link https://dev.to/akarshan/asynchronous-database-sessions-in-fastapi-with-sqlalchemy-1o7e
-
-# async def get_session() -> AsyncIterator[AsyncSession]:
-#     """Get databaase session instance.
-
-#     Raises:
-#         Exception: _description_
-
-#     Returns:
-#         AsyncIterator[AsyncSession]: an async db session
-
-#     Yields:
-#         Iterator[AsyncIterator[AsyncSession]]: an async session
-
-#     Usage:
-#         session: AsyncSession = Depends(get_db)
-
-#     Example Usage:
-#         async def delete_spells(spell_ids: list[int]):
-#             async for db_session in get_db():
-#                 async with db_session as session:
-#                     await delete_spells_batch(session, spell_ids)
-#     """
-#     session = sessionmanager.session()
-#     if session is None:
-#         raise Exception("DatabaseSessionManager is not initialized")
-#     try:
-#         # Setting the search path and yielding the session...
-#         await session.execute(
-#             text(f"SET search_path TO {enums.DbSchemaEnum.DND.value}")
-#         )
-#         yield session
-#     except Exception:
-#         await session.rollback()
-#         raise
-#     finally:
-#         # Closing the session after use...
-#         await session.close()
+from .session import master_sessionmanager, replica_sessionmanager
 
 
-async def get_db() -> AsyncGenerator[AsyncSession, None]:
-    """Get database session (async)."""
-    async with sessionmanager.session() as session:
+async def get_master_db() -> AsyncGenerator[AsyncSession, None]:
+    """Get master database session (async)."""
+    async with master_sessionmanager.session() as session:
         yield session
 
 
-AsyncSessionDependency = Annotated[async_sessionmaker, Depends(get_db)]
+AsyncMasterSessionDependency = Annotated[async_sessionmaker, Depends(get_master_db)]
+
+
+async def get_replica_db() -> AsyncGenerator[AsyncSession, None]:
+    """Get replica session (async)."""
+    async with replica_sessionmanager.session() as session:
+        yield session
+
+
+AsyncReplicaSessionDependency = Annotated[async_sessionmaker, Depends(get_replica_db)]

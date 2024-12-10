@@ -2,12 +2,12 @@
 # Site metadata ###
 ################################################################################
 
-site_name: TTRPG Event Planning API (Python)
+site_name: TTRPG API Dungeons & Dragons (Python)
 site_description: Documentation for the DnD API
 # site_url: N/A
 
 repo_url: https://github.com/humoroushorse/ttrpg-api
-edit_uri: edit/main/py_event_planning/docs
+edit_uri: edit/main/py_dnd/docs
 
 ################################################################################
 # Build settings

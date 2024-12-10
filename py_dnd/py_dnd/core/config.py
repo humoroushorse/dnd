@@ -30,17 +30,38 @@ class Settings(BaseSettings):
     SWAGGER_URL: str | None = "/docs"
 
     # SECRET_KEY: str = secrets.token_urlsafe(32)
-    POSTGRES_DATABASE_URI: str = os.getenv(
-        "POSTGRES_DATABASE_URI",
-        f"postgresql+asyncpg://{os.getenv("POSTGRES_USER", "postgres")}:{os.getenv("POSTGRES_PASSWORD", "admin")}"
-        + f"@{os.getenv("POSTGRES_HOST", "localhost")}:{os.getenv("POSTGRES_PORT", "5432")}"
-        + f"/{os.getenv("POSTGRES_NAME", "ttrpg-pg")}",
+    # default: postgresql+asyncpg://postgres:admin@localhost:5432/ttrpg-pg
+    POSTGRES_MASTER_URI: str = os.getenv(
+        "POSTGRES_MASTER_URI",
+        f"postgresql+asyncpg://{os.getenv("POSTGRES_MASTER_USER", "postgres")}"
+        + f":{os.getenv("POSTGRES_MASTER_PASSWORD", "admin")}"
+        + f"@{os.getenv("POSTGRES_MASTER_HOST", "localhost")}"
+        + f":{os.getenv("POSTGRES_MASTER_PORT", "5432")}"
+        + f"/{os.getenv("POSTGRES_MASTER_NAME", "ttrpg-pg")}",
+    )
+
+    # default: postgresql+asyncpg://postgres:admin@localhost:5432/ttrpg-pg
+    POSTGRES_REPLICA_URI: str = os.getenv(
+        "POSTGRES_REPLICA_URI",
+        f"postgresql+asyncpg://{os.getenv("POSTGRES_REPLICA_USER", "postgres")}"
+        + f":{os.getenv("POSTGRES_REPLICA_PASSWORD", "admin")}"
+        + f"@{os.getenv("POSTGRES_REPLICA_HOST", "localhost")}"
+        + f":{os.getenv("POSTGRES_REPLICA_PORT", "5432")}"
+        + f"/{os.getenv("POSTGRES_REPLICA_NAME", "ttrpg-pg")}",
     )
 
     model_config = SettingsConfigDict(
         env_file=DOTENV,
         extra="ignore",
+        str_strip_whitespace=True,
     )
+
+    KEYCLOAK_SERVER_URL: str
+    KEYCLOAK_REALM_NAME: str
+    KEYCLOAK_CLIENT_ID: str
+    KEYCLOAK_ADMIN_USERNAME: str
+    KEYCLOAK_ADMIN_PASSWORD: str
+    # KEYCLOAK_CLIENT_SECRET_KEY: str
 
 
 @lru_cache
